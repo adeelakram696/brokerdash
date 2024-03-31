@@ -1,0 +1,41 @@
+@import './Scrollbars.scss';
+
+.cardContainer {
+  & > div {
+    padding: 16px 20px !important;
+  }
+}
+.tableContainer {
+  margin-top: 23px;
+}
+.red {
+  background-color: #FD3737;
+  color: #FFF;
+}
+.white {
+  background-color: #FFF;
+  color: #FD3737;
+}
+.actionsHighlight {
+  background-color: #3B6370;
+  color: #FFF;
+}
+.approvalHover {
+  &:hover {
+    background-color: #52B172;
+    color: #FFF;
+    & path {
+      fill: #FFF;
+    }
+  }
+}
+.contractsHover {
+  &:hover {
+    background-color: #1A4049;
+    color: #FFF;
+    & path {
+      fill: #FFF;
+    }
+  }
+}
+

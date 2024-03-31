@@ -1,0 +1,37 @@
+.textStyle {
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 28px;
+}
+.headerContainer {
+}
+.itemContainer {
+  max-height: 144px;
+  overflow-y: auto;
+}
+.rowPadding {
+  padding: 0px 7px;
+  border-radius: 40px;
+};
+.headerRow {
+};
+.itemRow {
+  margin-bottom: 1px;
+  background: #FAFAFA;
+};
+.itemColumn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.phoneIcon {
+  margin-right: 5.5px;
+};
+.newTag {
+  font-size: 6px;
+  height: 10px;
+  margin-left: 5px;
+  border-radius: 5px;
+  padding: 0px 3px;
+};

@@ -1,0 +1,31 @@
+.totalcount {
+  font-size: 24px;
+  margin-left: 13px;
+  border-radius: 100%;
+  padding: 4px 15px;
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.03));
+}
+.title {
+  font-size: 16px;
+  margin: 0;
+}
+.subtitle {
+  font-size: 10px;
+  margin: 0;
+}
+.white {
+  background: white;
+}
+.red {
+  background: #FD3737;
+  color: white;
+}
+.green {
+  background: white;
+  color: #52B172;
+}
+.backgroundImage {
+  position: absolute;
+  top: 13px;
+  right: 167px;
+}
