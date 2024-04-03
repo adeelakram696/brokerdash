@@ -1,0 +1,23 @@
+.contentContainer {
+  background-color: white;
+  width: 100%;
+  border-start-end-radius: 10px;
+  border-end-end-radius: 10px;
+  padding: 10px 20px;
+}
+.typeText {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+}
+.dndContainer {
+  max-width: 10px;
+  align-items: center;
+  background: #6B9DAD;
+  padding: 1px 4px;
+  border-start-start-radius: 10px;
+  border-end-start-radius: 10px;
+  color: white;
+}

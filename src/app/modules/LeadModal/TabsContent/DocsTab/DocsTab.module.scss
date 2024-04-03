@@ -1,0 +1,63 @@
+.heading {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1A4049;
+  margin-bottom: 10px;
+}
+.fullWidth {
+  width: 100%;
+}
+.sendRequestBtn {
+  background-color: #1A4049;
+  font-size: 10px;
+  font-weight: bold;
+}
+.folderTitle {
+ font-size: 11px;
+ font-weight: bold;
+ color: #17A1FA;
+}
+.forwardtext {
+  font-size: 11px;
+  color: #1A4049;
+  margin: 0 5px;
+}
+.dealNumber {
+  font-size: 11px;
+  color: #1A4049;
+}
+.sorting {
+  font-size: 11px;
+  font-weight: 300;
+}
+.documentList {
+  margin-top: 5px;
+}
+.documentItem {
+  margin-top: 15px;
+}
+.tickBox {
+  margin-right: 10px;
+}
+.fileIcon {
+  margin-right: 10px;
+}
+.docName {
+  font-size: 12px;
+  font-weight: 300;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 300px;
+  white-space: nowrap;
+}
+.breadcrumbRow {
+  margin-top: 10px;
+}
+.uploadCard {
+  & > div {
+    padding: 10px !important;
+  }
+}
+.uploadContainer {
+  max-width: 300px;
+}

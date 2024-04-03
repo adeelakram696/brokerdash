@@ -1,7 +1,17 @@
+@import './variables.scss';
+
+.modalBody {
+}
 .logo {
+}
+.cardContainer {
+  & > div {
+    padding: 16px 20px !important;
+  }
 }
 .title {
   font-size: 30px;
+  color: $color;
 }
 .statusLabel {
   font-size: 9px;
@@ -19,4 +29,102 @@
   border-radius: 20px;
   background-color: #E1EFF2;
   font-size: 10px;
+}
+.applicationState {
+  background: $color;
+  height: 22px;
+  color: white;
+  font-size: 10px;
+  padding: 2px 22px;
+  border-end-end-radius: 17px;
+  border-end-start-radius: 17px;
+  margin-top: -16px;
+  align-items: center;
+}
+.subRow {
+  margin-top: 10px;
+  padding: 0 13px;
+}
+.subHeadingLabel {
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 5px;
+  color: $color;
+}
+.subHeadingValue {
+  font-size: 12px;
+  font-weight: 400;
+  color: $color;
+}
+.actionRow {
+  margin-top: 10px;
+}
+.columnLeft {
+  margin-right: 5px;
+}
+.columnRight {
+  margin-left: 5px;
+}
+.tabs {
+  width: 100%;
+}
+.notification {
+  padding: 5px 10px;
+  background: #3B6370;
+  color: white;
+  border-radius: 20px;
+  font-size: 11px;
+}
+.actionsContainer {
+  border-radius: 25px;
+  background: #FFF;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.25);
+  align-items: center;
+  padding: 9px 19px;
+}
+.actions {
+  margin-right: 10px;
+  &:hover {
+    background-color: #9F9F9F;
+    border-radius: 20px;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+}
+.actionIcon {
+  margin-right: 10px;
+}
+.actionText {
+  font-size: 7px;
+}
+
+.mainContentContainer {
+  margin-top: 8px;
+}
+.contentBody {
+  background-color: #E1EFF2;
+  padding: 15px;
+  border-radius: 15px;
+}
+.activityBtnContainer {
+  padding: 5px 10px;
+}
+.activityInput {
+  border-radius: 15px;
+}
+.markImportant {
+  font-size: 8px;
+  color: #CC4141;
+}
+.smallIcon {
+  margin-right: 5px;
+}
+.activityButtons {
+  font-size: 10px;
+  margin-Left: 10px;
+}
+.threadList {
+  margin-top: 5px;
+  max-height: 650px;
+  overflow-y: auto;
 }

@@ -16,6 +16,7 @@
     "lintFix": "eslint ./src --ext .js --fix"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.6",
     "@ant-design/nextjs-registry": "^1.0.0",
     "@mondaycom/apps-sdk": "^2.1.2",
     "antd": "^5.15.4",

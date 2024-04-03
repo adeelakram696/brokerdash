@@ -5,6 +5,16 @@ const en = {
       efficiencyTitle: 'Efficiency Score',
     },
   },
+  titles: {
+    clientInformation: 'Client Information',
+    partnerInformation: 'Partner Information',
+    businessInformation: 'Business Information',
+    qualificationMatrix: 'Qualification Matrix',
+    documents: 'Documents',
+  },
+  documents: {
+    sendRequestCTA: 'Send Doc Request',
+  },
   Cards: {
     new: 'new',
     newLeads: {

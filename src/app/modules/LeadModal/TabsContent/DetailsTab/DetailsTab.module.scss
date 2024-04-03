@@ -1,0 +1,79 @@
+.heading {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1A4049;
+  margin-bottom: 10px;
+}
+.labelsContainer {
+  width: 100px;
+}
+.valuesContainer {
+
+}
+.actionsLabelContainer {
+  margin-right: 10px;
+}
+.label {
+  font-size: 10px;
+  font-weight: 300;
+  color: #1A4049;
+  line-height: 22px;
+}
+.value {
+  font-size: 11px;
+  font-weight: bold;
+  color: #1A4049;
+  line-height: 22px;
+}
+.fullWidth {
+  width: 100%;
+}
+.informationCard {
+  margin-bottom: 10px;
+}
+.actionItems {
+  background: #E1EFF2;
+  padding: 4px 8px;
+  position: absolute;
+  border-end-start-radius: 20px;
+  right: 0;
+  border-start-start-radius: 20px;
+  max-width: 146px;
+  overflow-x: hidden;
+}
+.actionLabels {
+  height: 37px;
+}
+.actionItemIcon {
+  margin-right: 5px;
+}
+
+.addPartnerCardContainer {
+  & > div {
+    padding: 4px 20px 4px 11px !important;
+  }
+  font-size: 12px;
+}
+.edit {
+  color: #17A1FA;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 22px;
+}
+.qualificationCard {
+  background-color: #3B6370;
+  color: white;
+}
+.qulificationBtn {
+  background-color: #52B172;
+  font-size: 10px;
+  font-weight: bold;
+}
+.qualificationTotalHeading {
+  font-size: 12px;
+  font-weight: bold;
+}
+.qualificationTotalamount {
+  font-size: 10px;
+  line-height: 18px;
+}
