@@ -41,6 +41,21 @@ body {
     padding: 16px;
   }
 }
+.stageDropdown {
+  & .ant-select-selector {
+    border-radius: 20px;
+    background: #52B172 !important;
+  }
+  & .ant-select-arrow {
+    & path {
+      fill: white;
+    }
+  }
+  & .ant-select-selection-item {
+    font-size: 12px;
+    color: white;
+  }
+}
 .App {
   height: 100vh;
   width: 100vw;

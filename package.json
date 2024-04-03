@@ -1,8 +1,11 @@
 {
   "name": "broker-dashboard",
   "version": "0.0.1",
-  "private": true,
+  "private": false,
+  "homepage": "https://adeelakram696.github.io/brokerdash",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "npm run stop && concurrently \"npm run server\" \"npm run expose\"",
     "build": "react-scripts build",
     "expose": "mapps tunnel:create -p 8301",
@@ -17,9 +20,10 @@
     "@mondaycom/apps-sdk": "^2.1.2",
     "antd": "^5.15.4",
     "classnames": "^2.5.1",
+    "gh-pages": "^6.1.1",
+    "monday-sdk-js": "^0.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "monday-sdk-js": "^0.5.0"
+    "react-dom": "^18.2.0"
   },
   "eslintConfig": {
     "extends": "react-app"
