@@ -1,5 +1,3 @@
-'use client';
-
 import styles from './HeaderTitle.module.css';
 
 function HeaderTitle({ children }) {

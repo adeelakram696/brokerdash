@@ -1,13 +1,21 @@
-import React from 'react';
+import { useState } from 'react';
 import { Flex } from 'antd';
 import classNames from 'classnames';
 import { PhoneIcon } from 'app/images/icons/PhoneIcon';
 import en from 'app/locales/en';
+import LeadModal from 'app/modules/LeadModal';
 import styles from './DataTable.module.scss';
 
 function DataTable({
-  columns, data, highlightClass, newTagClass, hoverClass, handleRowClick = () => {},
+  columns, data, highlightClass, newTagClass, hoverClass,
 }) {
+  const [isModalOpen, setIsModalOpen] = useState();
+  const handleRowClick = () => {
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
   return (
     <Flex className={styles.textStyle} vertical>
       <Flex justify="space-between" className={styles.headerContainer}>
@@ -39,6 +47,7 @@ function DataTable({
           ))
         }
       </Flex>
+      <LeadModal show={isModalOpen} handleClose={handleClose} />
     </Flex>
   );
 }

@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Flex, Progress, Row, Col,
 } from 'antd';

@@ -1,5 +1,3 @@
-'use client';
-
 import { Flex } from 'antd';
 import classnames from 'classnames';
 import IconImg from 'app/components/IconImg';

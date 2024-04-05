@@ -1,5 +1,3 @@
-'use client';
-
 import { Col } from 'antd';
 import ProgressCard from 'app/components/ProgressCard';
 import en from 'app/locales/en';

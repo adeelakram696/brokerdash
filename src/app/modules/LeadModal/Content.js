@@ -4,6 +4,7 @@ import styles from './LeadModal.module.scss';
 import DetailsTab from './TabsContent/DetailsTab';
 import DocsTab from './TabsContent/DocsTab';
 import SubmissionsTab from './TabsContent/SubmissionsTab';
+import RenewalTab from './TabsContent/RenewalTab';
 
 function Content() {
   const onChange = (key) => {
@@ -28,7 +29,7 @@ function Content() {
     {
       key: '4',
       label: 'Renewal',
-      children: 'Content of Tab Pane 4',
+      children: <RenewalTab />,
     },
   ];
   return (

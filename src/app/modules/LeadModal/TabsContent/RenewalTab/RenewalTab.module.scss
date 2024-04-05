@@ -45,6 +45,7 @@
   margin-right: 10px;
 }
 .notesInput {
+  border-radius: 15px;
   font-size: 9px;
 }
 .expendDataHeading {
@@ -54,8 +55,4 @@
 .expandDataValues {
   font-size: 10px;
   line-height: 20px;
-}
-.offersList {
-  max-height: 650px;
-  overflow-y: auto;
 }

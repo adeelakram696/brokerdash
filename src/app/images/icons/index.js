@@ -23,3 +23,7 @@ export { PlusCircleIcon } from './PlusCircleIcon';
 export { ThumbsUpIcon } from './ThumbsUpIcon';
 export { DownloadIcon } from './DownloadIcon';
 export { DeleteIcon } from './DeleteIcon';
+export { DragingIcon } from './DragingIcon';
+export { PencilIcon } from './PencilIcon';
+export { ExpendCollapseIcon } from './ExpendCollapseIcon';
+export { QuestionIcon } from './QuestionIcon';

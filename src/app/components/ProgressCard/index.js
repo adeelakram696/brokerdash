@@ -1,5 +1,3 @@
-'use client';
-
 import { Card, Progress, Flex } from 'antd';
 import styles from './ProgressCard.module.scss';
 
@@ -19,7 +17,8 @@ function ProgressText({ value, total }) {
 function ProgressCard({
   value, total, title, subTitle, color, icon,
 }) {
-  const percent = (value * 100) / total;
+  const remaining = total - value;
+  const percent = (remaining * 100) / total;
 
   return (
     <Card className={styles.progressCard}>

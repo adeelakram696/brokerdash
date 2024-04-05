@@ -61,6 +61,13 @@ body {
     padding: 16px;
   }
 }
+.selectField {
+  width: 100%;
+  & .ant-select-selector {
+    border-radius: 20px;
+    font-size: 12px;
+  }
+}
 .stageDropdown {
   & .ant-select-selector {
     border-radius: 20px;
@@ -75,6 +82,69 @@ body {
     font-size: 12px;
     color: white;
     font-weight: bold;
+  }
+}
+.statusDropDown {
+  height: 20px;
+  & .ant-select-selector {
+    border-radius: 20px;
+    border: none !important;
+  }
+  & .ant-select-arrow {
+    & path {
+      fill: white;
+    }
+  }
+  & .ant-select-selection-item {
+    font-size: 10px;
+    font-weight: 300;
+    color: white;
+  }
+  &.submitted {
+    & .ant-select-selector {
+      background: #92E4FF !important;
+    }
+    & .ant-select-selection-item {
+      color: #1A4049;
+    }
+    & .ant-select-arrow {
+      & path {
+        fill: #1A4049;
+      }
+    }
+  }
+  &.recieved {
+    & .ant-select-selector {
+      background: #FFC530 !important;
+    }
+    & .ant-select-selection-item {
+      color: #1A4049;
+    }
+    & .ant-select-arrow {
+      & path {
+        fill: #1A4049;
+      }
+    }
+  }
+  &.selected {
+    & .ant-select-selector {
+      background: #52B172 !important;
+    }
+  }
+  &.approved {
+    & .ant-select-selector {
+      background: #6C3DFF !important;
+    }
+  }
+  &.killedafc {
+    & .ant-select-selector {
+      background: #CF6A0D !important;
+    }
+  }
+  &.declined {
+    & .ant-select-selector {
+      background: #AE1E1E !important;
+    }
   }
 }
 .App {

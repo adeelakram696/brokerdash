@@ -1,10 +1,19 @@
 import { Flex, Card, Divider } from 'antd';
 import classNames from 'classnames';
 import { DialCallIcon, PaperBoardIcon, SendEmailIcon } from 'app/images/icons';
+import { useState } from 'react';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
+import LeadIntakeModal from '../../Forms/LeadIntake';
 
 function InformationCard({ heading }) {
+  const [isIntakeModalOpen, setIsIntakeModalOpen] = useState();
+  const handleIntakeClick = () => {
+    setIsIntakeModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsIntakeModalOpen(false);
+  };
   return (
     <Card
       className={classNames(
@@ -61,7 +70,7 @@ function InformationCard({ heading }) {
                 <Flex align="center">
                   <Divider type="vertical" />
                 </Flex>
-                <Flex align="center">
+                <Flex align="center" onClick={handleIntakeClick}>
                   <PaperBoardIcon />
                 </Flex>
               </Flex>
@@ -93,6 +102,7 @@ function InformationCard({ heading }) {
           </Flex>
         </Flex>
       </Flex>
+      <LeadIntakeModal show={isIntakeModalOpen} handleClose={handleClose} />
     </Card>
   );
 }

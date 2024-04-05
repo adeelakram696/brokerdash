@@ -1,22 +1,28 @@
 import {
-  Flex,
+  Flex, Divider,
 } from 'antd';
+import SubmissionCard from '../Common/SubmissionCard';
+import QualificationMatrixCard from '../Common/QualificationMatrixCard';
+import FundingOffer from './FundingOffer';
 import styles from './SubmissionsTab.module.scss';
 
 function SubmissionsTab() {
   return (
-    <Flex>
-      <Flex className={styles.dndContainer} vertical justify="space-between">
-        <Flex>.</Flex>
-        <Flex className={styles.typeText}>MCA</Flex>
-        <Flex>.</Flex>
+    <Flex vertical>
+      <Flex>
+        <SubmissionCard />
+        <QualificationMatrixCard />
       </Flex>
-      <Flex className={styles.contentContainer} vertical>
-        <Flex>asdfasdf</Flex>
-        <Flex>asdfasdf</Flex>
-        <Flex>asdfasdf</Flex>
-        <Flex>asdfasdf</Flex>
-        <Flex>asdfasdf</Flex>
+      <Flex><Divider style={{ margin: '10px 0px' }} /></Flex>
+      <Flex vertical className={styles.offersList}>
+        <FundingOffer type="MCA" />
+        <FundingOffer type="Credit Line" />
+        <FundingOffer type="Credit Line" />
+        <FundingOffer type="Credit Line" />
+        <FundingOffer type="Credit Line" />
+        <FundingOffer type="Credit Line" />
+        <FundingOffer type="Credit Line" />
+        <FundingOffer type="Credit Line" />
       </Flex>
     </Flex>
   );
