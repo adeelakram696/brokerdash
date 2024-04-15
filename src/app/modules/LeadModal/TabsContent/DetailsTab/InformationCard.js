@@ -15,6 +15,14 @@ function InformationCard({ heading, details, board }) {
   const handleClose = () => {
     setIsIntakeModalOpen(false);
   };
+  const dialNumber = () => {
+    const number = details[columnIds[board].phone];
+    window.open(`tel:${number}`);
+  };
+  const emailUser = () => {
+    const email = details[columnIds[board].email];
+    window.open(`mailto:${email}`);
+  };
   return (
     <Card
       className={classNames(
@@ -62,10 +70,10 @@ function InformationCard({ heading, details, board }) {
                 className={classNames(styles.value, styles.actionItems)}
                 style={{ top: 45 }}
               >
-                <Flex align="center" className={styles.actionItemIcon}>
+                <Flex align="center" className={styles.actionItemIcon} onClick={dialNumber}>
                   <DialCallIcon />
                 </Flex>
-                <Flex align="center">
+                <Flex align="center" onClick={dialNumber}>
                   {details[columnIds[board].phone]}
                 </Flex>
                 <Flex align="center">
@@ -80,10 +88,10 @@ function InformationCard({ heading, details, board }) {
                 style={{ top: 82 }}
                 flex={1}
               >
-                <Flex align="center" className={styles.actionItemIcon}>
+                <Flex align="center" className={styles.actionItemIcon} onClick={emailUser}>
                   <SendEmailIcon />
                 </Flex>
-                <Flex align="center">
+                <Flex align="center" onClick={emailUser}>
                   {details[columnIds[board].email]}
                 </Flex>
               </Flex>

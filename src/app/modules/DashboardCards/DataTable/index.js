@@ -42,7 +42,8 @@ function DataTable({
               {columns.map((column, cindex) => (
                 <Flex className={styles.itemColumn} flex={cindex === 0 ? 1 : 0.6} key={column.key} justify={column.align} align="center">
                   {cindex === 0 ? <span className={styles.phoneIcon}><PhoneIcon color={item.isNew ? '#FFF' : undefined} /></span> : null}
-                  {item[column.dataIndex]}
+                  {item[column.dataIndex]?.substring(0, column.maxLength || 20)}
+                  {item[column.dataIndex].length > 30 ? '...' : ''}
                   {cindex === 0 && item.isNew ? <Flex justify="center" align="center" className={classNames(styles.newTag, newTagClass)}>{en.Cards.new}</Flex> : null}
                 </Flex>
               ))}
@@ -50,12 +51,14 @@ function DataTable({
           ))
         }
       </Flex>
-      <LeadModal
-        show={isModalOpen}
-        handleClose={handleClose}
-        leadId={selectedLeadId}
-        board={board}
-      />
+      {isModalOpen ? (
+        <LeadModal
+          show={isModalOpen}
+          handleClose={handleClose}
+          leadId={selectedLeadId}
+          board={board}
+        />
+      ) : null}
     </Flex>
   );
 }

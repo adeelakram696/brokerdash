@@ -1,60 +1,35 @@
-/* eslint-disable no-unused-vars */
-import { Flex, Select } from 'antd';
+import { Flex, Select, message } from 'antd';
+import drawer from 'drawerjs';
 import classNames from 'classnames';
-import _ from 'lodash';
 import { FireFilledIcon } from 'app/images/icons';
-import { columnIds, stages } from 'utils/constants';
+import { columnIds } from 'utils/constants';
 import { useEffect, useState } from 'react';
-import monday from 'utils/mondaySdk';
+import { updateStage } from 'app/apis/mutation';
+import { fetchLeadHeaderData } from 'app/apis/query';
 import styles from './LeadModal.module.scss';
 import SubRow from './SubRow';
 
 function ModalHeader({ leadId, board }) {
+  const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState({});
   const [selectedStage, setSelectedStage] = useState('');
+  const stages = drawer.get('stages');
   const getData = async () => {
-    const {
-      sequence_step,
-      sequence_name,
-      stage,
-      creation_date,
-      last_touched,
-      source,
-    } = columnIds[board];
-    const query = `query {
-      items(ids: [${leadId}]) {
-        id
-        name
-        group {
-          id
-        }
-        column_values(ids: [
-          "${sequence_step}",
-          "${sequence_name}",
-          "${stage}",
-          "${creation_date}",
-          "${last_touched}",
-          "${source}",
-        ]) {
-          id
-          text
-        }
-      }
-    }`;
-    const res = await monday.api(query);
-    let columns = _.mapKeys(res.data.items[0].column_values, 'id');
-    columns = _.mapValues(columns, 'text');
+    const { res, columns } = await fetchLeadHeaderData(columnIds, board, leadId);
     setSelectedStage(res.data.items[0].group.id);
     setData({ ...res.data.items[0], ...columns });
   };
   useEffect(() => {
     getData();
   }, [leadId]);
-  const handleChange = (value) => {
+  const handleChange = async (value) => {
+    const res = await updateStage(leadId, value);
+    if (res) messageApi.success('Successfully updated');
     setSelectedStage(value);
   };
   return (
     <>
+      {contextHolder}
       <Flex justify="space-between" flex={0.65}>
         <Flex>
           <Flex className={classNames(styles.logo, styles.marginRight)} align="center"><FireFilledIcon /></Flex>

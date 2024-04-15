@@ -7,27 +7,15 @@ import { DeleteIcon, DownloadIcon } from 'app/images/icons';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import FileIcon from 'app/components/FileIcon';
 import FileUploadDnD from 'app/components/FileUploadDnD';
-import monday from 'utils/mondaySdk';
 import { useEffect, useState } from 'react';
+import { fetchLeadDocs } from 'app/apis/query';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
 function DocsTab({ leadId }) {
   const [docs, setDocs] = useState({});
   const getData = async () => {
-    const query = `query {
-      docs: items(ids:["${leadId}"]) {
-        name
-        assets {
-          id
-          name
-          file_size
-          file_extension
-          created_at
-        }
-      }
-    }`;
-    const res = await monday.api(query);
+    const res = await fetchLeadDocs(leadId);
     setDocs(res.data.docs[0]);
   };
   useEffect(() => {

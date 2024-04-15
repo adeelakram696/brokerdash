@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import {
   Layout, theme, ConfigProvider, Spin,
 } from 'antd';
-import { fetchUserName, removeBoardHeader } from 'utils/helpers';
+import { removeBoardHeader } from 'utils/helpers';
+import { fetchGroups, fetchUserName } from 'app/apis/query';
 import dayjs from 'dayjs';
 import Dashboard from './app/pages/dashboard';
 import './App.scss';
@@ -22,6 +23,7 @@ function App() {
   useEffect(() => {
     removeBoardHeader();
     fetchUserName().then((res) => setUserName(res));
+    fetchGroups();
   }, []);
 
   return (

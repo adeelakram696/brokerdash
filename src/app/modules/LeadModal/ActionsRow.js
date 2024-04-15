@@ -58,7 +58,7 @@ function ActionRow() {
       </Flex>
       <Flex className={styles.columnRight} flex={0.4}>
         <Flex className={styles.actionsContainer} flex={1} align="center">
-          {actions.map(({ icon, text }) => <ActionBtn icon={icon} text={text} />)}
+          {actions.map(({ icon, text }) => <ActionBtn key={text} icon={icon} text={text} />)}
         </Flex>
       </Flex>
     </Flex>

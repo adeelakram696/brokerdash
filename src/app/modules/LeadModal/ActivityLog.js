@@ -7,9 +7,10 @@ import {
   ActivityClockIcon, CommentsIcon, MarkIcon,
 } from 'app/images/icons';
 import ThreadBox from 'app/components/ThreadBox';
-import monday from 'utils/mondaySdk';
 import dayjs from 'dayjs';
 import _ from 'lodash';
+import { fetchLeadUpdates } from 'app/apis/query';
+import { createNewUpdate } from 'app/apis/mutation';
 import styles from './LeadModal.module.scss';
 
 function ActivityLog({ leadId }) {
@@ -20,39 +21,15 @@ function ActivityLog({ leadId }) {
   const [form] = Form.useForm();
 
   const getData = async () => {
-    const query = `query {
-      users {
-        id
-      }
-      items(ids:["${leadId}"]) {
-        name
-        updates (limit: 500) {
-          creator_id
-          id
-          updated_at
-          created_at
-          body
-          text_body
-        }
-      }
-    }`;
     setLoading(true);
-    const res = await monday.api(query);
+    const res = await fetchLeadUpdates(leadId);
     setUpdates(res.data.items[0]?.updates);
     setUsers(res.data.users);
     setLoading(false);
   };
   const createUpdate = async (text) => {
-    const query = `mutation {
-      create_update(body: "${text}", item_id: "${leadId}") {
-        creator_id
-        id
-        updated_at
-        text_body
-      }
-    }`;
     setLoading(true);
-    const res = await monday.api(query);
+    const res = await createNewUpdate(leadId, text);
     form.resetFields();
     setUpdates([res.data.create_update, ...updates]);
     setLoading(false);

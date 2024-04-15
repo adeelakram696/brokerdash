@@ -1,8 +1,7 @@
 import { Flex } from 'antd';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
-import monday from 'utils/mondaySdk';
-import _ from 'lodash';
+import { fetchLeadClientDetails } from 'app/apis/query';
 import ClientBaseInfo from './ClientBaseInfo';
 import InformationCard from './InformationCard';
 import parentStyles from '../../LeadModal.module.scss';
@@ -14,20 +13,7 @@ import PartnerInformationCard from './PartnerInformationCard';
 function DetailsTab({ leadId, board }) {
   const [details, setDetails] = useState({});
   const getData = async () => {
-    const query = `query {
-      details: items(ids: [${leadId}]) {
-        id
-        name
-        email
-        column_values {
-          id
-          text
-        }
-      }
-    }`;
-    const res = await monday.api(query);
-    let columns = _.mapKeys(res.data.details[0].column_values, 'id');
-    columns = _.mapValues(columns, 'text');
+    const { res, columns } = await fetchLeadClientDetails(leadId);
     setDetails({ ...res.data.details[0], ...columns });
   };
   useEffect(() => {
