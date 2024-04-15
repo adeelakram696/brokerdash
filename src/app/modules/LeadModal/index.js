@@ -1,12 +1,16 @@
 import { Modal, Flex } from 'antd';
 import styles from './LeadModal.module.scss';
 import ModalHeader from './Header';
-import SubRow from './SubRow';
 import ActionRow from './ActionsRow';
 import Content from './Content';
 import ActivityLog from './ActivityLog';
 
-function LeadModal({ show, handleClose }) {
+function LeadModal({
+  show,
+  handleClose,
+  leadId,
+  board,
+}) {
   return (
     <Modal
       open={show}
@@ -17,12 +21,11 @@ function LeadModal({ show, handleClose }) {
       style={{ top: 20 }}
     >
       <Flex className={styles.modalBody} vertical>
-        <ModalHeader />
-        <SubRow />
-        <ActionRow />
+        <ModalHeader leadId={leadId} board={board} />
+        <ActionRow leadId={leadId} board={board} />
         <Flex className={styles.mainContentContainer} flex={1}>
-          <Content />
-          <ActivityLog />
+          <Content leadId={leadId} board={board} />
+          <ActivityLog leadId={leadId} board={board} />
         </Flex>
       </Flex>
     </Modal>

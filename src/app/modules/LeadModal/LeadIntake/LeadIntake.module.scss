@@ -1,0 +1,38 @@
+.subTitles {
+  font-size: 18px;
+  line-height: 31px;
+  margin-bottom: 5px;
+  margin-top: 15px;
+}
+.inputRow {
+  margin: 5px 0;
+  font-size: 12px;
+}
+.footerSubmitCTA {
+  background-color: #52B172;
+  font-size: 12px;
+  font-weight: bold;
+}
+.infoIcon {
+  margin-left: 5px;
+}
+.tooltipContainer {
+  padding: 10px;
+}
+.tooltipTitle {
+  font-size: 13px;
+  line-height: 24px;
+  font-weight: bold;
+}
+.tooltipPara {
+  font-size: 10px;
+  font-style: italic;
+  line-height: 17px;
+}
+.tooltipList {
+  font-size: 10px;
+  line-height: 20px;
+  & ul {
+    padding-inline-start: 30px;
+  }
+}

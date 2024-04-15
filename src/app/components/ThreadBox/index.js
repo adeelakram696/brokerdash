@@ -3,13 +3,14 @@ import { Flex } from 'antd';
 import {
   BellIcon, ThreeDotsIcon,
 } from 'app/images/icons';
+import classNames from 'classnames';
 import styles from './ThreadBox.module.scss';
 
 function ThreadBox({
-  text, time, type, typeIcon,
+  text, time, type, typeIcon, isHide,
 }) {
   return (
-    <Flex className={styles.activityThreadContainer} vertical>
+    <Flex className={classNames(styles.activityThreadContainer, { [styles.hide]: isHide })} vertical>
       <Flex flex={1} align="center" justify="space-between">
         <Flex align="center">
           <Flex className={styles.threadIcon}>{typeIcon}</Flex>

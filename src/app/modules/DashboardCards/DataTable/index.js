@@ -7,13 +7,16 @@ import LeadModal from 'app/modules/LeadModal';
 import styles from './DataTable.module.scss';
 
 function DataTable({
-  columns, data, highlightClass, newTagClass, hoverClass,
+  columns, data, highlightClass, newTagClass, hoverClass, board,
 }) {
   const [isModalOpen, setIsModalOpen] = useState();
-  const handleRowClick = () => {
+  const [selectedLeadId, setSelectedLeadId] = useState();
+  const handleRowClick = (id) => {
+    setSelectedLeadId(id);
     setIsModalOpen(true);
   };
   const handleClose = () => {
+    setSelectedLeadId('');
     setIsModalOpen(false);
   };
   return (
@@ -35,7 +38,7 @@ function DataTable({
       <Flex justify="space-between" className={styles.itemContainer} vertical>
         {
           data.map((item) => (
-            <Flex key={item.key} onClick={() => { handleRowClick(item); }} className={classNames(styles.itemRow, styles.rowPadding, hoverClass, { [highlightClass]: item.isNew })} align="center">
+            <Flex key={item.key} onClick={() => { handleRowClick(item.key); }} className={classNames(styles.itemRow, styles.rowPadding, hoverClass, { [highlightClass]: item.isNew })} align="center">
               {columns.map((column, cindex) => (
                 <Flex className={styles.itemColumn} flex={cindex === 0 ? 1 : 0.6} key={column.key} justify={column.align} align="center">
                   {cindex === 0 ? <span className={styles.phoneIcon}><PhoneIcon color={item.isNew ? '#FFF' : undefined} /></span> : null}
@@ -47,7 +50,12 @@ function DataTable({
           ))
         }
       </Flex>
-      <LeadModal show={isModalOpen} handleClose={handleClose} />
+      <LeadModal
+        show={isModalOpen}
+        handleClose={handleClose}
+        leadId={selectedLeadId}
+        board={board}
+      />
     </Flex>
   );
 }

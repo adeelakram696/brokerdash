@@ -1,9 +1,10 @@
 import { Flex, Card, Divider } from 'antd';
 import classNames from 'classnames';
+import { columnIds } from 'utils/constants';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
-function BusinessInformationCard({ heading }) {
+function BusinessInformationCard({ heading, details, board }) {
   return (
     <Card
       className={classNames(
@@ -27,11 +28,13 @@ function BusinessInformationCard({ heading }) {
               <Flex className={styles.label}>Zip</Flex>
             </Flex>
             <Flex vertical justify="flex-start" className={styles.valuesContainer}>
-              <Flex className={styles.value}>Alpine Radiant Construction</Flex>
-              <Flex className={styles.value}>1613 Nuzum Court</Flex>
-              <Flex className={styles.value}>Buffalo</Flex>
-              <Flex className={styles.value}>NY</Flex>
-              <Flex className={styles.value}>21738</Flex>
+              <Flex className={styles.value}>{details.name}</Flex>
+              <Flex className={styles.value}>
+                {details[columnIds[board].business_street_address]}
+              </Flex>
+              <Flex className={styles.value}>{details[columnIds[board].business_city]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].business_state]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].business_zip]}</Flex>
             </Flex>
           </Flex>
         </Flex>
@@ -46,11 +49,11 @@ function BusinessInformationCard({ heading }) {
               <Flex className={styles.label}>Tax Id</Flex>
             </Flex>
             <Flex vertical justify="flex-start" className={styles.valuesContainer}>
-              <Flex className={styles.value}>any name</Flex>
-              <Flex className={styles.value}>here</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].dba]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].entity_type]}</Flex>
               <Flex className={styles.value} vertical>
                 <Flex>Corporation</Flex>
-                <Flex>92-0509982</Flex>
+                <Flex>{details[columnIds[board].tax_id_ein]}</Flex>
               </Flex>
             </Flex>
           </Flex>

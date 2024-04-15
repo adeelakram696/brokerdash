@@ -7,7 +7,7 @@ import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 import LeadIntakeModal from '../../LeadIntake';
 
-function InformationCard({ heading, details, board }) {
+function PartnerInformationCard({ heading, details, board }) {
   const [isIntakeModalOpen, setIsIntakeModalOpen] = useState();
   const handleIntakeClick = () => {
     setIsIntakeModalOpen(true);
@@ -39,12 +39,12 @@ function InformationCard({ heading, details, board }) {
               <Flex className={styles.label}>Zip</Flex>
             </Flex>
             <Flex vertical justify="flex-start" className={styles.valuesContainer}>
-              <Flex className={styles.value}>{details[columnIds[board].first_name]}</Flex>
-              <Flex className={styles.value}>{details[columnIds[board].last_name]}</Flex>
-              <Flex className={styles.value}>{details[columnIds[board].home_address] || '-'}</Flex>
-              <Flex className={styles.value}>{details[columnIds[board].home_city] || '-'}</Flex>
-              <Flex className={styles.value}>{details[columnIds[board].home_state] || '-'}</Flex>
-              <Flex className={styles.value}>{details[columnIds[board].home_zip] || '-'}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_first_name]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_last_name]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_address]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_city]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_state]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_zip]}</Flex>
             </Flex>
           </Flex>
         </Flex>
@@ -66,7 +66,7 @@ function InformationCard({ heading, details, board }) {
                   <DialCallIcon />
                 </Flex>
                 <Flex align="center">
-                  {details[columnIds[board].phone]}
+                  {details[columnIds[board].partner_phone]}
                 </Flex>
                 <Flex align="center">
                   <Divider type="vertical" />
@@ -84,7 +84,7 @@ function InformationCard({ heading, details, board }) {
                   <SendEmailIcon />
                 </Flex>
                 <Flex align="center">
-                  {details[columnIds[board].email]}
+                  {details[columnIds[board].partner_email]}
                 </Flex>
               </Flex>
             </Flex>
@@ -96,9 +96,11 @@ function InformationCard({ heading, details, board }) {
               <Flex className={styles.label}>Ownership %</Flex>
             </Flex>
             <Flex vertical justify="flex-start" className={styles.valuesContainer}>
-              <Flex className={styles.value}>{details[columnIds[board].social_security] || '-'}</Flex>
-              <Flex className={styles.value}>{details[columnIds[board].dob] || '-'}</Flex>
-              <Flex className={styles.value}>{details[columnIds[board].ownership] || '-'}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_ssn]}</Flex>
+              <Flex className={styles.value}>{details[columnIds[board].partner_dob]}</Flex>
+              <Flex className={styles.value}>
+                {details[columnIds[board].partner_ownership_percentage]}
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
@@ -108,4 +110,4 @@ function InformationCard({ heading, details, board }) {
   );
 }
 
-export default InformationCard;
+export default PartnerInformationCard;

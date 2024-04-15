@@ -1,0 +1,57 @@
+.subTitles {
+  font-size: 18px;
+  line-height: 31px;
+  margin-bottom: 5px;
+  margin-top: 15px;
+}
+.footerSubmitCTA {
+  background-color: #52B172;
+  font-size: 12px;
+  font-weight: bold;
+  &:hover {
+    background-color: #3e8154 !important;
+  }
+}
+.footerBackBtn {
+  background-color: #E6E6E6;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 10px;
+  color: #858585;
+  &:hover {
+    background-color: #e6e6e6be !important;
+  }
+}
+.listContainer {
+  border-radius: 15px;
+  height: 312px;
+  overflow-y: auto;
+  border: 1px solid black;
+}
+.listItemRow {
+  margin: 0;
+  padding: 2px 15px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 32px;
+}
+.listIcon {
+  margin-right: 10px;
+}
+.listTitle {
+
+}
+.listStatus {
+  color: #9F9F9F;
+}
+.selectedItem {
+  background-color: #E1EFF2;
+}
+.footerText {
+  margin: 15px 0;
+}
+.linkStyle {
+  font-size: 15px;
+  color: #135EA3;
+  text-decoration: underline;
+}

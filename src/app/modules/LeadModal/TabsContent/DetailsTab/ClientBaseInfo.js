@@ -1,10 +1,11 @@
 import { Flex, Card } from 'antd';
 import en from 'app/locales/en';
 import classNames from 'classnames';
+import { columnIds } from 'utils/constants';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
-function ClientBaseInfo() {
+function ClientBaseInfo({ details, board }) {
   return (
     <Card className={classNames(
       parentStyles.cardContainer,
@@ -31,16 +32,18 @@ function ClientBaseInfo() {
             <Flex className={styles.label}>Est. Date:</Flex>
           </Flex>
           <Flex vertical justify="flex-start" className={styles.valuesContainer}>
-            <Flex className={styles.value}>$20k - $49k</Flex>
-            <Flex className={styles.value}>650-700</Flex>
-            <Flex className={styles.value}>150,000,000</Flex>
-            <Flex className={styles.value}>next 3 days</Flex>
-            <Flex className={styles.value}>Amount of capital</Flex>
-            <Flex className={styles.value}>Working</Flex>
-            <Flex className={styles.value}>$100,000</Flex>
-            <Flex className={styles.value}>Home & Garden</Flex>
-            <Flex className={styles.value}>New York</Flex>
-            <Flex className={styles.value}>12/23/24</Flex>
+            <Flex className={styles.value}>
+              {details[columnIds[board].monthly_revenue_dropdown]}
+            </Flex>
+            <Flex className={styles.value}>{details[columnIds[board].credit_score]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].requested_amount]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].money_due_in]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].most_important]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].needs_money_for]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].existing_debt]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].industry]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].state_incorporated]}</Flex>
+            <Flex className={styles.value}>{details[columnIds[board].business_start_date]}</Flex>
           </Flex>
         </Flex>
       </Flex>

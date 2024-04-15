@@ -1,10 +1,15 @@
-import { Modal, Flex, Button } from 'antd';
+import {
+  Modal, Flex, Button,
+} from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
 import InputField from 'app/components/Forms/InputField';
 import SelectField from 'app/components/Forms/SelectField';
 import TextAreaField from 'app/components/Forms/TextAreaField';
+import { QuestionIcon } from 'app/images/icons';
+import TooltipWrap from 'app/components/TooltipWrap';
 import { existingDepts, importantToYou, loadPurpose } from './data';
-import styles from './Forms.module.scss';
+import styles from './LeadIntake.module.scss';
+import { ExploreMindTooltip, GoalTooltip, PastNCurrentTooltip } from './tooltipsData';
 
 function LeadIntakeModal({ show, handleClose }) {
   return (
@@ -30,11 +35,31 @@ function LeadIntakeModal({ show, handleClose }) {
     >
       <Flex vertical>
         <Flex vertical>
-          <Flex className={styles.subTitles}>Goals</Flex>
+          <Flex className={styles.subTitles} align="center">
+            Goals
+            <TooltipWrap
+              title={(
+                <GoalTooltip />
+                )}
+            >
+              <Flex className={styles.infoIcon}>
+                <QuestionIcon color="#B3B3B3" />
+              </Flex>
+            </TooltipWrap>
+          </Flex>
           <Flex className={styles.inputRow}><InputField placeholder="Notes" /></Flex>
         </Flex>
         <Flex vertical>
-          <Flex className={styles.subTitles}>Explore Mindset</Flex>
+          <Flex className={styles.subTitles} align="center">
+            Explore Mindset
+            <TooltipWrap
+              title={(
+                <ExploreMindTooltip />
+                )}
+            >
+              <Flex className={styles.infoIcon}><QuestionIcon color="#B3B3B3" /></Flex>
+            </TooltipWrap>
+          </Flex>
           <Flex vertical>
             <Flex flex={1} className={styles.inputRow} justify="space-between">
               <Flex flex={0.6}>What purpose would your loan serve?</Flex>
@@ -50,7 +75,16 @@ function LeadIntakeModal({ show, handleClose }) {
           </Flex>
         </Flex>
         <Flex vertical>
-          <Flex className={styles.subTitles}>Past and current</Flex>
+          <Flex className={styles.subTitles} align="center">
+            Past and current
+            <TooltipWrap
+              title={(
+                <PastNCurrentTooltip />
+                )}
+            >
+              <Flex className={styles.infoIcon}><QuestionIcon color="#B3B3B3" /></Flex>
+            </TooltipWrap>
+          </Flex>
           <Flex vertical>
             <Flex flex={1} className={styles.inputRow} justify="space-between">
               <Flex flex={0.6}>Do they have any existing debts</Flex>

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 export function QuestionIcon({
-  color = 'white', width = '15', height = '',
+  color = 'white', width = '15', height = '21',
 }) {
   return (
     <svg width={width} height={height} viewBox="0 0 15 21" fill="none" xmlns="http://www.w3.org/2000/svg">

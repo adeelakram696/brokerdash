@@ -29,6 +29,8 @@
   border-radius: 20px;
   background-color: #E1EFF2;
   font-size: 10px;
+  min-height: 14px;
+  min-width: 130px;
 }
 .applicationState {
   background: $color;
@@ -122,6 +124,7 @@
 .activityButtons {
   font-size: 10px;
   margin-Left: 10px;
+  cursor: pointer;
 }
 .threadList {
   margin-top: 5px;

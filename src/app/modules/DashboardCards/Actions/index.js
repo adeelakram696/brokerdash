@@ -17,6 +17,7 @@ function ActionsCard() {
           data={data}
           highlightClass={styles.actionsHighlight}
           newTagClass={styles.red}
+          board="leads"
         />
       </div>
     </Card>

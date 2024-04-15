@@ -7,10 +7,32 @@ import { DeleteIcon, DownloadIcon } from 'app/images/icons';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import FileIcon from 'app/components/FileIcon';
 import FileUploadDnD from 'app/components/FileUploadDnD';
-import parentStyles from '../../LeadModal.module.scss';
+import monday from 'utils/mondaySdk';
+import { useEffect, useState } from 'react';
 import styles from './DocsTab.module.scss';
+import parentStyles from '../../LeadModal.module.scss';
 
-function DocsTab() {
+function DocsTab({ leadId }) {
+  const [docs, setDocs] = useState({});
+  const getData = async () => {
+    const query = `query {
+      docs: items(ids:["${leadId}"]) {
+        name
+        assets {
+          id
+          name
+          file_size
+          file_extension
+          created_at
+        }
+      }
+    }`;
+    const res = await monday.api(query);
+    setDocs(res.data.docs[0]);
+  };
+  useEffect(() => {
+    getData();
+  }, [leadId]);
   return (
     <Flex flex={1}>
       <Flex className={parentStyles.columnLeft} flex={0.6} vertical>
@@ -33,7 +55,7 @@ function DocsTab() {
           </Flex>
           <Flex justify="space-between" className={styles.breadcrumbRow}>
             <Flex>
-              <Flex className={styles.folderTitle}>Alpine_Radiant_Construction</Flex>
+              <Flex className={styles.folderTitle}>{docs.name}</Flex>
               {' '}
               <Flex className={styles.forwardtext}>{'>'}</Flex>
               {' '}
@@ -49,36 +71,15 @@ function DocsTab() {
             </Flex>
           </Flex>
           <Flex className={styles.documentList} vertical>
-            <Flex className={styles.documentItem} align="center">
-              <Flex className={styles.tickBox}><Checkbox /></Flex>
-              <Flex className={styles.fileIcon}><FileIcon extension="pdf" /></Flex>
-              <Flex className={styles.docName}>Bank Statements From January to March.pdf</Flex>
-            </Flex>
-            <Flex className={styles.documentItem} align="center">
-              <Flex className={styles.tickBox}><Checkbox /></Flex>
-              <Flex className={styles.fileIcon}><FileIcon extension="png" /></Flex>
-              <Flex className={styles.docName}>Bank Statements 2_23_24.png</Flex>
-            </Flex>
-            <Flex className={styles.documentItem} align="center">
-              <Flex className={styles.tickBox}><Checkbox /></Flex>
-              <Flex className={styles.fileIcon}><FileIcon extension="txt" /></Flex>
-              <Flex className={styles.docName}>Chase_Statement_raymond_2324321.txt</Flex>
-            </Flex>
-            <Flex className={styles.documentItem} align="center">
-              <Flex className={styles.tickBox}><Checkbox /></Flex>
-              <Flex className={styles.fileIcon}><FileIcon extension="jpg" /></Flex>
-              <Flex className={styles.docName}>March Bank Statements_9238133.jpg</Flex>
-            </Flex>
-            <Flex className={styles.documentItem} align="center">
-              <Flex className={styles.tickBox}><Checkbox /></Flex>
-              <Flex className={styles.fileIcon}><FileIcon extension="doc" /></Flex>
-              <Flex className={styles.docName}>Chase_Statement_raymond_2324321.doc</Flex>
-            </Flex>
-            <Flex className={styles.documentItem} align="center">
-              <Flex className={styles.tickBox}><Checkbox /></Flex>
-              <Flex className={styles.fileIcon}><FileIcon extension="pptx" /></Flex>
-              <Flex className={styles.docName}>March Bank Statements_9238133.pptx</Flex>
-            </Flex>
+            {
+              docs.assets?.map((doc) => (
+                <Flex key={doc.id} className={styles.documentItem} align="center">
+                  <Flex className={styles.tickBox}><Checkbox /></Flex>
+                  <Flex className={styles.fileIcon}><FileIcon extension={doc.file_extension.replace('.', '')} /></Flex>
+                  <Flex className={styles.docName}>{doc.name}</Flex>
+                </Flex>
+              ))
+            }
           </Flex>
         </Card>
       </Flex>

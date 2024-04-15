@@ -1,56 +1,50 @@
 import { Col } from 'antd';
-import ProgressCard from 'app/components/ProgressCard';
-import en from 'app/locales/en';
-import {
-  ClockIcon, DocIcon, FireIcon, PaperPlanIcon,
-} from 'app/images/icons';
+import dayjs from 'dayjs';
 import ColdProspecting from './ColdProspecting';
+import ReadyForSubmission from './ReadyForSubmission';
+import DocReviews from './DocReviews';
+import WaitingForOffer from './WaitingForOffer';
+import FollowUpRemaining from './FollowUpRemaining';
 
-function ProgressCards() {
+function ProgressCards({
+  handleChange,
+}) {
+  const updateTotal = (value, totalkey, setTotal, cardKey) => {
+    const currentDate = dayjs().format();
+    let total = {
+      value,
+      expiry: currentDate,
+    };
+    const storedValue = localStorage.getItem(totalkey);
+    if (!storedValue) {
+      localStorage.setItem(totalkey, JSON.stringify(total));
+      return setTotal(total);
+    }
+    const parsedValue = JSON.parse(storedValue);
+    if (dayjs(parsedValue.expiry).isAfter(dayjs().subtract(1, 'day'))) {
+      total = parsedValue;
+    } else {
+      localStorage.setItem(totalkey, JSON.stringify(total));
+    }
+    handleChange({ [cardKey]: { value, total } });
+    return setTotal(total);
+  };
   return (
     <>
       <Col style={{ width: '20%' }}>
-        <ProgressCard
-          value={30}
-          total={100}
-          title={en.Cards.progess.followup.title}
-          subTitle={en.Cards.progess.followup.subtitle}
-          color="#429A65"
-          icon={<FireIcon />}
-        />
+        <FollowUpRemaining updateTotal={updateTotal} />
       </Col>
       <Col style={{ width: '20%' }}>
-        <ColdProspecting />
+        <ColdProspecting updateTotal={updateTotal} />
       </Col>
       <Col style={{ width: '20%' }}>
-        <ProgressCard
-          value={4}
-          total={6}
-          title={en.Cards.progess.docReview.title}
-          subTitle={en.Cards.progess.docReview.subtitle}
-          color="#358069"
-          icon={<DocIcon />}
-        />
+        <DocReviews updateTotal={updateTotal} />
       </Col>
       <Col style={{ width: '20%' }}>
-        <ProgressCard
-          value={3}
-          total={9}
-          title={en.Cards.progess.readySubmission.title}
-          subTitle={en.Cards.progess.readySubmission.subtitle}
-          color="#52B975"
-          icon={<PaperPlanIcon />}
-        />
+        <ReadyForSubmission updateTotal={updateTotal} />
       </Col>
       <Col style={{ width: '20%' }}>
-        <ProgressCard
-          value={0}
-          total={9}
-          title={en.Cards.progess.waitingOffer.title}
-          subTitle={en.Cards.progess.waitingOffer.subtitle}
-          color="#5FD372"
-          icon={<ClockIcon />}
-        />
+        <WaitingForOffer updateTotal={updateTotal} />
       </Col>
     </>
   );

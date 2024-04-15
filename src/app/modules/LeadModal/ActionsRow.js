@@ -26,27 +26,27 @@ function ActionRow() {
     },
     {
       icon: <SMSMobileIcon />,
-      text: 'Email Client',
+      text: 'SMS Client',
     },
     {
       icon: <CalenderIcon />,
-      text: 'Email Client',
+      text: 'Schedule Follow up',
     },
     {
       icon: <TelescopeIcon />,
-      text: 'Email Client',
+      text: 'Research Links',
     },
     {
       icon: <DocumentRequestIcon />,
-      text: 'Email Client',
+      text: 'Document Request',
     },
     {
       icon: <PaperPlanIcon width="13" height="11" color="#447989" />,
-      text: 'Email Client',
+      text: 'Send Application',
     },
     {
       icon: <FailedCallIcon />,
-      text: 'Email Client',
+      text: 'Tried to reach',
     },
   ];
   return (

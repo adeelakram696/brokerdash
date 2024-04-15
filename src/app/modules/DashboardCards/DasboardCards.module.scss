@@ -3,6 +3,7 @@
 .cardContainer {
   & > div {
     padding: 16px 20px !important;
+    min-height: 272px;
   }
 }
 .tableContainer {
