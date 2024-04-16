@@ -57,14 +57,17 @@ function ModalHeader({ leadId, board }) {
           </Flex>
         </Flex>
         <Flex justify="flex-start" flex={0.35}>
-          <Flex className={styles.applicationState}>
-            Renewel
-          </Flex>
+          {data[columnIds[board].type] === 'Renewal' ? (
+            <Flex className={styles.applicationState}>
+              {data[columnIds[board].type]}
+            </Flex>
+          ) : null}
         </Flex>
       </Flex>
       <SubRow
         lastCreated={data[columnIds[board].creation_date]}
         lastSpoke={data[columnIds[board].last_touched]}
+        nextFollowUp={data[columnIds[board].next_followup]}
         source={data[columnIds[board].source]}
       />
     </>

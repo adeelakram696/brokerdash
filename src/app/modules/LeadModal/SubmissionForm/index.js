@@ -51,7 +51,7 @@ function SubmissionForm({ show, handleClose }) {
               </Button>
             ) : null}
           <Button onClick={handleNextStep} className={styles.footerSubmitCTA} type="primary" shape="round">
-            {step === 1 ? 'Next Step' : 'Submit Application'}
+            {step === 1 ? 'Next Step' : 'Submit'}
           </Button>
         </Flex>
 )}

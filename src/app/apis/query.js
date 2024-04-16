@@ -353,6 +353,9 @@ export const fetchLeadClientDetails = async (leadId) => {
       id
       name
       email
+      board {
+        id
+      }
       column_values {
         id
         text
@@ -390,6 +393,8 @@ export const fetchLeadHeaderData = async (columnIds, board, leadId) => {
     creation_date,
     last_touched,
     source,
+    type,
+    next_followup,
   } = columnIds[board];
   const query = `query {
     items(ids: [${leadId}]) {
@@ -405,6 +410,8 @@ export const fetchLeadHeaderData = async (columnIds, board, leadId) => {
         "${creation_date}",
         "${last_touched}",
         "${source}",
+        "${type}",
+        "${next_followup}",
       ]) {
         id
         text

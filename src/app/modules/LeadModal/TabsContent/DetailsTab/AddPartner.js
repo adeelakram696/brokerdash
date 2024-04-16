@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { PlusCircleIcon } from 'app/images/icons';
 import styles from './DetailsTab.module.scss';
 
-function AddPartner() {
+function AddPartner({ onClick }) {
   return (
     <Card
       className={classNames(
@@ -13,11 +13,10 @@ function AddPartner() {
       )}
     >
       <Flex justify="space-between">
-        <Flex align="center">
+        <Flex style={{ cursor: 'pointer' }} align="center" onClick={onClick}>
           <Flex style={{ marginRight: 10 }}><PlusCircleIcon /></Flex>
           <Flex>Add Partner Information</Flex>
         </Flex>
-        <Flex className={styles.edit}>Edit</Flex>
       </Flex>
     </Card>
   );
