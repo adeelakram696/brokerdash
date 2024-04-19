@@ -1,7 +1,6 @@
 import { Flex } from 'antd';
 import en from 'app/locales/en';
-import { useEffect, useState } from 'react';
-import { fetchLeadClientDetails } from 'app/apis/query';
+import { useState } from 'react';
 import { columnIds } from 'utils/constants';
 import ClientBaseInfo from './ClientBaseInfo';
 import InformationCard from './InformationCard';
@@ -11,17 +10,10 @@ import AddPartner from './AddPartner';
 import QualificationMatrix from './QualificationMatrix';
 import PartnerInformationCard from './PartnerInformationCard';
 
-function DetailsTab({ leadId, board }) {
-  const [details, setDetails] = useState({});
+function DetailsTab({
+  leadId, board, details, getData,
+}) {
   const [showPartner, setShowPartner] = useState(false);
-  const getData = async () => {
-    const { res, columns } = await fetchLeadClientDetails(leadId);
-    setDetails({ ...res.data.details[0], ...columns });
-  };
-  useEffect(() => {
-    getData();
-  }, [leadId]);
-
   return (
     <Flex flex={1}>
       <Flex className={parentStyles.columnLeft} flex={0.67} vertical>
@@ -56,7 +48,7 @@ function DetailsTab({ leadId, board }) {
           leadId={leadId}
           updateInfo={getData}
         />
-        <QualificationMatrix />
+        <QualificationMatrix data={details} />
       </Flex>
     </Flex>
   );

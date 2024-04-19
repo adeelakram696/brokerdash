@@ -1,3 +1,51 @@
+export const qualifications = [
+  {
+    key: 'NYSCEF',
+    name: 'NYSCEF',
+  },
+  {
+    key: 'Secretary of State',
+    name: 'Secretary of State',
+  },
+];
+export const docs = [
+  {
+    key: '1',
+    name: 'March Bank Statements_9238133.png',
+    extension: 'png',
+  },
+  {
+    key: '2',
+    name: 'March Bank Statements_9238133.pdf',
+    extension: 'pdf',
+  },
+  {
+    key: '3',
+    name: 'March Bank Statements_9238133.ppt',
+    extension: 'ppt',
+  },
+  {
+    key: '4',
+    name: 'March Bank Statements_9238133.pptx',
+    extension: 'pptx',
+  },
+  {
+    key: '5',
+    name: 'March Bank Statements_9238133.xls',
+    extension: 'xlsx',
+  },
+  {
+    key: '6',
+    name: 'March Bank Statements_9238133.doc',
+    extension: 'doc',
+  },
+  {
+    key: '7',
+    name: 'March Bank Statements_9238133.jpg',
+    extension: 'jpg',
+  },
+];
+
 export const funders = [
   {
     key: '1',
@@ -42,40 +90,27 @@ export const funders = [
     status: '',
   },
 ];
-export const docs = [
-  {
-    key: '1',
-    name: 'March Bank Statements_9238133.png',
-    extension: 'png',
+
+export const steps = {
+  qualification: 'qualification',
+  funders: 'funders',
+  documents: 'documents',
+};
+export const stepData = {
+  [steps.qualification]: {
+    title: 'Qualification Check',
+    subText: 'Please confirm that you checked the below items',
+    nextStep: steps.funders,
   },
-  {
-    key: '2',
-    name: 'March Bank Statements_9238133.pdf',
-    extension: 'pdf',
+  [steps.funders]: {
+    title: 'Select Funders',
+    subText: 'Select the funder(s) from the list below',
+    nextStep: steps.documents,
+    prevStep: steps.qualification,
   },
-  {
-    key: '3',
-    name: 'March Bank Statements_9238133.ppt',
-    extension: 'ppt',
+  [steps.documents]: {
+    title: 'Select documents to Submit',
+    subText: 'Select the file(2) below that you would like to submit',
+    prevStep: steps.funders,
   },
-  {
-    key: '4',
-    name: 'March Bank Statements_9238133.pptx',
-    extension: 'pptx',
-  },
-  {
-    key: '5',
-    name: 'March Bank Statements_9238133.xls',
-    extension: 'xlsx',
-  },
-  {
-    key: '6',
-    name: 'March Bank Statements_9238133.doc',
-    extension: 'doc',
-  },
-  {
-    key: '7',
-    name: 'March Bank Statements_9238133.jpg',
-    extension: 'jpg',
-  },
-];
+};

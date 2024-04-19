@@ -21,6 +21,9 @@ function ReadyForSubmission({ updateTotal }) {
       clearInterval(intervalId);
     };
   }, []);
+  const handleClick = () => {
+    window.open(env.views.readyForSubmission, '_blank');
+  };
   return (
     <ProgressCard
       value={currentValue}
@@ -29,6 +32,7 @@ function ReadyForSubmission({ updateTotal }) {
       subTitle={en.Cards.progess.readySubmission.subtitle}
       color="#52B975"
       icon={<PaperPlanIcon />}
+      onClick={handleClick}
     />
   );
 }

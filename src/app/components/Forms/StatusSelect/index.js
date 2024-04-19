@@ -5,7 +5,7 @@ import {
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 
-function StatusSelect({ values, value = 'submitted', onChange }) {
+function StatusSelect({ values, value = 'New', onChange }) {
   const [selected, setSelected] = useState();
   useEffect(() => {
     const selectedItem = values.find((v) => v.value === value);
@@ -17,7 +17,7 @@ function StatusSelect({ values, value = 'submitted', onChange }) {
   };
   return (
     <Select
-      className={classNames('statusDropDown', selected?.value)}
+      className={classNames('statusDropDown', selected?.value.replace(/ /g, '_'))}
       popupClassName="statusDropDownItem"
       value={selected?.value}
       options={values}

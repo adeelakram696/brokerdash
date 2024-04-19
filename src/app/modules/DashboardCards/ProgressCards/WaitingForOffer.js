@@ -21,6 +21,9 @@ function WaitingForOffer({ updateTotal }) {
       clearInterval(intervalId);
     };
   }, []);
+  const handleClick = () => {
+    window.open(env.views.waitingForOffer, '_blank');
+  };
   return (
     <ProgressCard
       value={currentValue}
@@ -29,6 +32,7 @@ function WaitingForOffer({ updateTotal }) {
       subTitle={en.Cards.progess.waitingOffer.subtitle}
       color="#5FD372"
       icon={<ClockIcon />}
+      onClick={handleClick}
     />
   );
 }

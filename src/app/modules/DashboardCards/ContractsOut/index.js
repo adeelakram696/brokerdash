@@ -13,7 +13,6 @@ import { columns } from './data';
 import { transformData } from './transform';
 
 function ContractsOutCard() {
-  // eslint-disable-next-line no-unused-vars
   const [list, setList] = useState([]);
   const [contractSignedCount, setContractSignedCount] = useState(0);
   const getContractsOutData = async () => {
@@ -35,15 +34,22 @@ function ContractsOutCard() {
       clearInterval(intervalId2);
     };
   }, []);
+  const handleContractSignedClick = () => {
+    window.open(env.views.contractSignedUrl, '_target');
+  };
   return (
     <Card className={classNames(styles.cardContainer, styles.contractsCard)}>
       <Header
         title={en.Cards.contractsOut.title}
         count={list.length.toString()}
         backgroundImg={signature}
-        rightComponent={
-          <TextWithCount count={contractSignedCount} text={en.Cards.contractsOut.rightTitle} />
-      }
+        rightComponent={(
+          <TextWithCount
+            count={contractSignedCount}
+            text={en.Cards.contractsOut.rightTitle}
+            onClick={handleContractSignedClick}
+          />
+        )}
       />
       <div className={styles.tableContainer}>
         <DataTable columns={columns} data={list} hoverClass={styles.contractsHover} board="deals" />

@@ -9,11 +9,15 @@ import FileIcon from 'app/components/FileIcon';
 import FileUploadDnD from 'app/components/FileUploadDnD';
 import { useEffect, useState } from 'react';
 import { fetchLeadDocs } from 'app/apis/query';
+import { addFilesToLead } from 'app/apis/mutation';
+import { columnIds } from 'utils/constants';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
-function DocsTab({ leadId }) {
+function DocsTab({ leadId, board }) {
   const [docs, setDocs] = useState({});
+  const [downloadDocs, setDownloadDocs] = useState([]);
+  const [selectedDocs, setSelectedDocs] = useState([]);
   const getData = async () => {
     const res = await fetchLeadDocs(leadId);
     setDocs(res.data.docs[0]);
@@ -21,6 +25,19 @@ function DocsTab({ leadId }) {
   useEffect(() => {
     getData();
   }, [leadId]);
+
+  const uploadFile = async (file) => {
+    await addFilesToLead(leadId, columnIds[board].incoming_files, file);
+    await getData();
+  };
+  const handleDownload = async () => {
+    const fitlered = docs.assets.filter((doc) => selectedDocs.indexOf(doc.id) >= 0);
+    setDownloadDocs(fitlered);
+    setTimeout(() => {
+      setDownloadDocs([]);
+    }, 1000);
+  };
+
   return (
     <Flex flex={1}>
       <Flex className={parentStyles.columnLeft} flex={0.6} vertical>
@@ -31,23 +48,32 @@ function DocsTab({ leadId }) {
         >
           <Flex justify="space-between">
             <Flex className={styles.heading} flex={0.6}>{en.titles.documents}</Flex>
-            <Flex justify="space-between" align="center" flex={0.4}>
+            <Flex justify="flex-end" align="center" flex={0.4}>
               <Flex>
                 <Button className={styles.sendRequestBtn} type="primary" shape="round">
                   {en.documents.sendRequestCTA}
                 </Button>
               </Flex>
-              <Flex><DownloadIcon /></Flex>
-              <Flex><DeleteIcon /></Flex>
+              {selectedDocs.length >= 1 ? (
+                <Flex
+                  style={{ cursor: 'pointer', margin: '0 10px' }}
+                  onClick={handleDownload}
+                >
+                  <DownloadIcon />
+                </Flex>
+              ) : null}
+              {selectedDocs.length >= 1 ? (
+                <Flex
+                  style={{ cursor: 'pointer', margin: '0 5px' }}
+                >
+                  <DeleteIcon />
+                </Flex>
+              ) : null}
             </Flex>
           </Flex>
           <Flex justify="space-between" className={styles.breadcrumbRow}>
             <Flex>
               <Flex className={styles.folderTitle}>{docs.name}</Flex>
-              {' '}
-              <Flex className={styles.forwardtext}>{'>'}</Flex>
-              {' '}
-              <Flex className={styles.dealNumber}>Deal_8_22_24</Flex>
             </Flex>
             <Flex>
               <Flex className={styles.sorting}>
@@ -62,7 +88,19 @@ function DocsTab({ leadId }) {
             {
               docs.assets?.map((doc) => (
                 <Flex key={doc.id} className={styles.documentItem} align="center">
-                  <Flex className={styles.tickBox}><Checkbox /></Flex>
+                  <Flex className={styles.tickBox}>
+                    <Checkbox onClick={() => {
+                      let docsList = [...selectedDocs, doc.id];
+                      const index = selectedDocs.indexOf(doc.id);
+                      if (selectedDocs.indexOf(doc.id) >= 0) {
+                        docsList = [...selectedDocs];
+                        docsList.splice(index, 1);
+                      }
+
+                      setSelectedDocs(docsList);
+                    }}
+                    />
+                  </Flex>
                   <Flex className={styles.fileIcon}><FileIcon extension={doc.file_extension.replace('.', '')} /></Flex>
                   <Flex className={styles.docName}>{doc.name}</Flex>
                 </Flex>
@@ -83,9 +121,15 @@ function DocsTab({ leadId }) {
         )}
         >
           <Flex justify="center">
-            <FileUploadDnD />
+            <FileUploadDnD uploadFile={uploadFile} />
           </Flex>
         </Card>
+      </Flex>
+      <Flex style={{ display: 'none' }}>
+        {
+          // eslint-disable-next-line jsx-a11y/iframe-has-title
+          downloadDocs?.map(({ id, url }) => <iframe key={id} src={url} />)
+        }
       </Flex>
     </Flex>
   );

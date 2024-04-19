@@ -1,4 +1,5 @@
 import { Progress, Flex } from 'antd';
+import { formatTimeIn } from 'utils/helpers';
 import styles from './GoalProgressBar.module.scss';
 
 const progressText = () => (
@@ -18,7 +19,10 @@ function GoalProgressBar({ time = 150, max = 300, goal = 150 }) {
   const progressPrec = (time * 100) / max;
   return (
     <Flex className={styles.goalProgressContainer} flex="1" vertical justify="center" align="center">
-      <Flex className={styles.progressTime}>3:32s</Flex>
+      <Flex className={styles.progressTime}>
+        {formatTimeIn(time)}
+        s
+      </Flex>
       <Progress
         className="goal-progress-bar"
         percent={progressPrec}

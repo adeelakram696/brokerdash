@@ -7,8 +7,10 @@ import { columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
 import { useEffect, useState } from 'react';
 import InputField from 'app/components/Forms/InputField';
+import SelectField from 'app/components/Forms/SelectField';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
+import { existingDepts, importantToYou, loanPurpose } from '../../LeadIntake/data';
 
 function ClientBaseInfo({
   details, board, leadId, updateInfo,
@@ -17,7 +19,7 @@ function ClientBaseInfo({
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
 
-  useEffect(() => {
+  const setFieldsValues = () => {
     form.setFieldsValue({
       [columnIds[board].monthly_revenue_dropdown]:
         details[columnIds[board].monthly_revenue_dropdown],
@@ -31,8 +33,11 @@ function ClientBaseInfo({
       [columnIds[board].state_incorporated]: details[columnIds[board].state_incorporated],
       [columnIds[board].business_start_date]: details[columnIds[board].business_start_date],
     });
+  };
+  useEffect(() => {
+    if (!details.name) return;
+    setFieldsValues();
   }, [details]);
-
   const handleUpdate = async (values) => {
     setLoading(true);
     await updateClientInformation(leadId, details.board.id, values);
@@ -56,16 +61,31 @@ function ClientBaseInfo({
       >
         <Flex justify="space-between">
           <Flex className={styles.heading}>{en.titles.clientInformation}</Flex>
-          <Flex
-            className={classNames(styles.edit, styles.cursor)}
-            onClick={() => { setIsEdit(true); }}
-          >
-            {isEdit ? (
+
+          {isEdit ? (
+            <Flex>
+              <Flex
+                className={classNames(styles.edit, styles.cursor, styles.cancel)}
+                onClick={() => {
+                  setIsEdit(false);
+                  setFieldsValues();
+                }}
+              >
+                Cancel
+              </Flex>
               <Button className={styles.saveBtn} size="small" htmlType="submit">
                 Update
               </Button>
-            ) : 'Edit'}
-          </Flex>
+            </Flex>
+          ) : (
+            <Flex
+              className={classNames(styles.edit, styles.cursor)}
+              onClick={() => { setIsEdit(true); }}
+            >
+              Edit
+            </Flex>
+          )}
+
         </Flex>
         <Flex className={styles.information}>
           <Flex flex={1}>
@@ -162,7 +182,7 @@ function ClientBaseInfo({
                         },
                       ]}
                     >
-                      <InputField />
+                      <SelectField options={importantToYou} />
                     </Form.Item>
                   )
                   : details[columnIds[board].most_important] || '-'}
@@ -179,7 +199,7 @@ function ClientBaseInfo({
                         },
                       ]}
                     >
-                      <InputField />
+                      <SelectField options={loanPurpose} />
                     </Form.Item>
                   )
                   : details[columnIds[board].needs_money_for] || '-'}
@@ -196,7 +216,7 @@ function ClientBaseInfo({
                         },
                       ]}
                     >
-                      <InputField />
+                      <SelectField options={existingDepts} />
                     </Form.Item>
                   )
                   : details[columnIds[board].existing_debt] || '-'}

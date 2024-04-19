@@ -6,11 +6,11 @@ import {
 import classNames from 'classnames';
 import styles from './InputField.module.scss';
 
-function InputField({ classnames, ...restProps }) {
+function InputField({ classnames, noBorder, ...restProps }) {
   return (
     <Input
       {...restProps}
-      className={classNames(classnames, styles.inputClass)}
+      className={classNames(classnames, styles.inputClass, { [styles.noBoard]: noBorder })}
     />
   );
 }

@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { Flex } from 'antd';
+import { Flex, Dropdown } from 'antd';
 import {
   BellIcon, ThreeDotsIcon,
 } from 'app/images/icons';
@@ -7,8 +7,19 @@ import classNames from 'classnames';
 import styles from './ThreadBox.module.scss';
 
 function ThreadBox({
-  text, time, type, typeIcon, isHide,
+  text, time, type, typeIcon, isHide, id, handleMarkImportant,
 }) {
+  const handleMenuClick = (e) => {
+    if (e.key === 'mark') {
+      handleMarkImportant(id);
+    }
+  };
+  const items = [
+    {
+      label: 'Mark as important',
+      key: 'mark',
+    },
+  ];
   return (
     <Flex className={classNames(styles.activityThreadContainer, { [styles.hide]: isHide })} vertical>
       <Flex flex={1} align="center" justify="space-between">
@@ -21,12 +32,20 @@ function ThreadBox({
             {time}
           </Flex>
           <Flex style={{ marginRight: 10 }}><BellIcon /></Flex>
-          <Flex><ThreeDotsIcon /></Flex>
+          <Dropdown
+            menu={{
+              items,
+              onClick: handleMenuClick,
+            }}
+            trigger={['click']}
+          >
+            <Flex style={{ cursor: 'pointer' }}>
+              <ThreeDotsIcon />
+            </Flex>
+          </Dropdown>
         </Flex>
       </Flex>
-      <Flex className={styles.threadComment}>
-        {text}
-      </Flex>
+      <Flex wrap="wrap" className={styles.threadComment} dangerouslySetInnerHTML={{ __html: text }} />
     </Flex>
   );
 }

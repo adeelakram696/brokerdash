@@ -2,29 +2,21 @@ import {
   Flex, Card, Divider, Form, Button,
 } from 'antd';
 import classNames from 'classnames';
-import { DialCallIcon, PaperBoardIcon, SendEmailIcon } from 'app/images/icons';
+import { DialCallIcon, SendEmailIcon } from 'app/images/icons';
 import { useEffect, useState } from 'react';
 import { columnIds } from 'utils/constants';
 import InputField from 'app/components/Forms/InputField';
 import { updateClientInformation } from 'app/apis/mutation';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
-import LeadIntakeModal from '../../LeadIntake';
 
 function PartnerInformationCard({
   heading, details, board, leadId, updateInfo,
 }) {
-  const [isIntakeModalOpen, setIsIntakeModalOpen] = useState();
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
 
-  const handleIntakeClick = () => {
-    setIsIntakeModalOpen(true);
-  };
-  const handleClose = () => {
-    setIsIntakeModalOpen(false);
-  };
   const dialNumber = () => {
     const number = details[columnIds[board].phone];
     window.open(`tel:${number}`);
@@ -33,7 +25,7 @@ function PartnerInformationCard({
     const email = details[columnIds[board].email];
     window.open(`mailto:${email}`);
   };
-  useEffect(() => {
+  const setFieldsValues = () => {
     form.setFieldsValue({
       [columnIds[board].partner_first_name]: details[columnIds[board].partner_first_name],
       [columnIds[board].partner_last_name]: details[columnIds[board].partner_last_name],
@@ -48,6 +40,11 @@ function PartnerInformationCard({
       [columnIds[board]
         .partner_ownership_percentage]: details[columnIds[board].partner_ownership_percentage],
     });
+  };
+
+  useEffect(() => {
+    if (!details.name) return;
+    setFieldsValues();
   }, [details]);
 
   const handleUpdate = async (values) => {
@@ -79,16 +76,29 @@ function PartnerInformationCard({
       >
         <Flex justify="space-between">
           <Flex className={styles.heading}>{heading}</Flex>
-          <Flex
-            className={classNames(styles.edit, styles.cursor)}
-            onClick={() => { setIsEdit(true); }}
-          >
-            {isEdit ? (
+          {isEdit ? (
+            <Flex>
+              <Flex
+                className={classNames(styles.edit, styles.cursor, styles.cancel)}
+                onClick={() => {
+                  setIsEdit(false);
+                  setFieldsValues();
+                }}
+              >
+                Cancel
+              </Flex>
               <Button className={styles.saveBtn} size="small" htmlType="submit">
                 Update
               </Button>
-            ) : 'Edit'}
-          </Flex>
+            </Flex>
+          ) : (
+            <Flex
+              className={classNames(styles.edit, styles.cursor)}
+              onClick={() => { setIsEdit(true); }}
+            >
+              Edit
+            </Flex>
+          )}
         </Flex>
 
         <Flex flex={1}>
@@ -219,9 +229,6 @@ function PartnerInformationCard({
                     <Flex align="center">
                       <Divider type="vertical" />
                     </Flex>
-                    <Flex align="center" onClick={handleIntakeClick}>
-                      <PaperBoardIcon />
-                    </Flex>
                   </Flex>
                 )}
                 {isEdit ? (
@@ -295,7 +302,6 @@ function PartnerInformationCard({
           </Flex>
         </Flex>
       </Form>
-      <LeadIntakeModal show={isIntakeModalOpen} handleClose={handleClose} />
     </Card>
   );
 }

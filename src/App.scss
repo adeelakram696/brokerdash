@@ -126,24 +126,39 @@ body {
       }
     }
   }
-  &.selected {
+  &.Submitted {
+    & .ant-select-selector {
+      background: #92E4FF !important;
+    }
+  }
+  &.Response_Recieved {
+    & .ant-select-selector {
+      background: #FFC530 !important;
+    }
+  }
+  &.Selected {
     & .ant-select-selector {
       background: #52B172 !important;
     }
   }
-  &.approved {
+  &.Approved {
     & .ant-select-selector {
       background: #6C3DFF !important;
     }
   }
-  &.killedafc {
+  &.Killed_at_Funding_call {
     & .ant-select-selector {
       background: #CF6A0D !important;
     }
   }
-  &.declined {
+  &.Declined {
     & .ant-select-selector {
       background: #AE1E1E !important;
+    }
+  }
+  &.New {
+    & .ant-select-selector {
+      background: #B0B0B0 !important;
     }
   }
 }
@@ -153,4 +168,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.ql-snow {
+  border: none !important;
+}
+.ql-toolbar {
+  border-bottom: 0.5px solid #D6D6D6 !important;
 }

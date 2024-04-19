@@ -4,10 +4,16 @@ import {
 import en from 'app/locales/en';
 import classNames from 'classnames';
 import { ThumbsUpIcon } from 'app/images/icons';
+import { useState } from 'react';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
+import QualificationMatrixForm from '../../QualificationMatrixForm';
 
-function QualificationMatrix() {
+function QualificationMatrix({ data }) {
+  const [openForm, setOpenForm] = useState();
+  const onClose = () => {
+    setOpenForm(false);
+  };
   return (
     <Card className={classNames(
       parentStyles.cardContainer,
@@ -17,7 +23,7 @@ function QualificationMatrix() {
     )}
     >
       <Flex justify="center">
-        <Button className={styles.qulificationBtn} type="primary" shape="round" icon={<ThumbsUpIcon />}>
+        <Button onClick={() => { setOpenForm(true); }} className={styles.qulificationBtn} type="primary" shape="round" icon={<ThumbsUpIcon />}>
           {en.titles.qualificationMatrix}
         </Button>
       </Flex>
@@ -56,6 +62,7 @@ function QualificationMatrix() {
           <Flex>0</Flex>
         </Flex>
       </Flex>
+      <QualificationMatrixForm show={openForm} handleClose={onClose} data={data} />
     </Card>
   );
 }

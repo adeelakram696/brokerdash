@@ -12,6 +12,15 @@ export const env = {
     contractsOut: process.env.REACT_APP_CONTRACTS_OUT_PAGE_ID,
     contractsSigned: process.env.REACT_APP_CONTRACTS_SIGNED_PAGE_ID,
   },
+  views: {
+    pitcheNotClosedUrl: process.env.REACT_APP_PITCH_NOT_CLOSED_VIEW_URL,
+    contractSignedUrl: process.env.REACT_APP_CONTRACTS_SIGNED_VIEW_URL,
+    followupToday: process.env.REACT_APP_TODAYS_FOLLOW_UP_VIEW_URL,
+    coldProspecting: process.env.REACT_APP_COLD_PROSPECTING_VIEW_URL,
+    docReview: process.env.REACT_APP_DOC_REVIEW_VIEW_URL,
+    readyForSubmission: process.env.REACT_APP_READY_FOR_SUBMISSION_VIEW_URL,
+    waitingForOffer: process.env.REACT_APP_WAITING_FOR_OFFER_VIEW_URL,
+  },
   intervalTime: process.env.REACT_APP_REFETCH_TIME_SECONDS,
 };
 
@@ -136,6 +145,7 @@ export const columnIds = {
     funded_email_notification: 'checkbox_4',
     sequence_name: 'text63',
     sequence_step: 'text_1',
+    mark_as_important: 'text__1',
   },
   leads: {
     name: 'name',
@@ -266,9 +276,44 @@ export const columnIds = {
     doc_review_timer: 'status20',
     doc_review_reminder: 'status1',
     last_action: 'status72',
+    mark_as_important: 'text__1',
+    last_activity: 'text8__1',
+  },
+  subItem: {
+    funding_accounts: 'connect_boards5',
+    product_type: 'text__1',
+    status: 'status',
+    funding_amount: 'numbers0',
+    factor_rate: 'text6',
+    ach_amount: 'numbers07',
+    ach_frequency: 'status_1',
+    payback_period: 'formula9',
+    notes: 'notes',
+    date_received: 'date0',
+    payback_amount: 'formula6',
+    funder_fee_perc: 'numbers4',
+    funder_fee: 'formula93',
+    net_funding_amt: 'formula2',
+    commission_calc_on: 'commission_calc__on',
+    commission_perc: 'numbers5',
+    gross_commision: 'formula0',
+    comission_amt: 'formula',
+    professional_fee_perc: 'numbers41',
+    professional_service_fee: 'formula3',
+    submission_to_response_time: 'time_tracking',
+    thread_id: 'text4',
+    create_psf_only: 'status_16',
+    owner: 'person',
+    dropbox_url: 'dropbox_url',
   },
 };
-
+export const actionsNeeded = [
+  'Email',
+  'Sms',
+  'Files Uploaded',
+  'Ans Received',
+  'Approved',
+];
 export const stages = {
   deals: [
     {

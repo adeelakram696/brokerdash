@@ -21,6 +21,9 @@ function ColdProspecting({ updateTotal }) {
       clearInterval(intervalId);
     };
   }, []);
+  const handleClick = () => {
+    window.open(env.views.coldProspecting, '_blank');
+  };
   return (
     <ProgressCard
       value={currentValue}
@@ -29,6 +32,7 @@ function ColdProspecting({ updateTotal }) {
       subTitle={en.Cards.progess.coldProspecting.subtitle}
       color="#1A4049"
       icon={<SnowIcon />}
+      onClick={handleClick}
     />
   );
 }

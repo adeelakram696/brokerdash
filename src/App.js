@@ -5,13 +5,16 @@ import {
 import { removeBoardHeader } from 'utils/helpers';
 import { fetchGroups, fetchUserName } from 'app/apis/query';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Dashboard from './app/pages/dashboard';
 import './App.scss';
 
-const relativeTime = require('dayjs/plugin/relativeTime');
-
+// Extend Day.js with duration and customParseFormat plugins
+dayjs.extend(duration);
+dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
-// Usage of mondaySDK example, for more information visit here: https://developer.monday.com/apps/docs/introduction-to-the-sdk/
 const { Content } = Layout;
 
 function App() {

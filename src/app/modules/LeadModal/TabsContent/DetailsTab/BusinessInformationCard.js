@@ -16,7 +16,7 @@ function BusinessInformationCard({
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
 
-  useEffect(() => {
+  const setFieldsValues = () => {
     form.setFieldsValue({
       name: details.name,
       [columnIds[board].business_street_address]: details[columnIds[board].business_street_address],
@@ -27,6 +27,11 @@ function BusinessInformationCard({
       [columnIds[board].entity_type]: details[columnIds[board].entity_type],
       [columnIds[board].tax_id_ein]: details[columnIds[board].tax_id_ein],
     });
+  };
+
+  useEffect(() => {
+    if (!details.name) return;
+    setFieldsValues();
   }, [details]);
 
   const handleUpdate = async (values) => {
@@ -51,16 +56,29 @@ function BusinessInformationCard({
       >
         <Flex justify="space-between">
           <Flex className={styles.heading}>{heading}</Flex>
-          <Flex
-            className={classNames(styles.edit, styles.cursor)}
-            onClick={() => { setIsEdit(true); }}
-          >
-            {isEdit ? (
+          {isEdit ? (
+            <Flex>
+              <Flex
+                className={classNames(styles.edit, styles.cursor, styles.cancel)}
+                onClick={() => {
+                  setIsEdit(false);
+                  setFieldsValues();
+                }}
+              >
+                Cancel
+              </Flex>
               <Button className={styles.saveBtn} size="small" htmlType="submit">
                 Update
               </Button>
-            ) : 'Edit'}
-          </Flex>
+            </Flex>
+          ) : (
+            <Flex
+              className={classNames(styles.edit, styles.cursor)}
+              onClick={() => { setIsEdit(true); }}
+            >
+              Edit
+            </Flex>
+          )}
         </Flex>
         <Flex flex={1}>
           <Flex className={styles.information} flex={0.6}>

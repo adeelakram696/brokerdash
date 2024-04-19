@@ -5,16 +5,29 @@ import {
 import { CloseCircleFilled } from '@ant-design/icons';
 import { useState } from 'react';
 import styles from './SubmissionForm.module.scss';
-import { docs, funders } from './data';
+import {
+  docs, funders, qualifications, stepData, steps,
+} from './data';
 import SelectFunders from './SelectFundersForm';
 import SelectDocuments from './SelectDocuments';
+import QualificationCheck from './QualificationCheck';
 
 function SubmissionForm({ show, handleClose }) {
+  const [selectedQualifications, setSelectedQualifications] = useState([]);
   const [selectedFunders, setSelectedFunders] = useState([]);
   const [selectedDocs, setSelectedFDoucments] = useState([]);
   const [showText, setShowText] = useState(false);
   const [textNote, setTextNote] = useState('');
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(steps.qualification);
+  const handleQualificationSelect = (key) => {
+    let updated = [];
+    if (selectedQualifications.includes(key)) {
+      updated = selectedQualifications.filter((item) => item !== key);
+    } else {
+      updated = [...selectedQualifications, key];
+    }
+    setSelectedQualifications(updated);
+  };
   const handleFunderSelect = (key) => {
     let updated = [];
     if (selectedFunders.includes(key)) {
@@ -33,10 +46,8 @@ function SubmissionForm({ show, handleClose }) {
     }
     setSelectedFDoucments(updated);
   };
-  const handleNextStep = () => {
-    if (selectedFunders.length > 0) {
-      setStep(2);
-    }
+  const handleNextStep = (nextStep) => {
+    setStep(nextStep);
   };
 
   return (
@@ -44,35 +55,42 @@ function SubmissionForm({ show, handleClose }) {
       open={show}
       footer={(
         <Flex justify="flex-end">
-          {step === 2
+          {stepData[step].prevStep
             ? (
-              <Button onClick={() => { setStep(1); }} className={styles.footerBackBtn} shape="round">
-                Back to Funder Selection
+              <Button onClick={() => { setStep(stepData[step].prevStep); }} className={styles.footerBackBtn} shape="round">
+                Back
               </Button>
             ) : null}
-          <Button onClick={handleNextStep} className={styles.footerSubmitCTA} type="primary" shape="round">
-            {step === 1 ? 'Next Step' : 'Submit'}
+          <Button onClick={() => handleNextStep(stepData[step].nextStep)} className={styles.footerSubmitCTA} type="primary" shape="round">
+            {stepData[step].nextStep ? 'Next Step' : 'Submit'}
           </Button>
         </Flex>
 )}
       onCancel={handleClose}
       className="submissionForm"
-      style={{ top: 20 }}
       closeIcon={<CloseCircleFilled />}
       title={(
         <Flex vertical>
-          <Flex style={{ fontSize: 24 }}>{step === 1 ? 'Select Funders' : 'Select documents to Submit'}</Flex>
-          <Flex style={{ fontSize: 15, fontWeight: '400' }}>{step === 1 ? 'Select the funder(s) from the list below' : 'Select the file(2) below that you would like to submit'}</Flex>
+          <Flex style={{ fontSize: 24 }}>{stepData[step].title}</Flex>
+          <Flex style={{ fontSize: 15, fontWeight: '400' }}>{stepData[step].subText}</Flex>
         </Flex>
 )}
     >
-      {step === 1 ? (
+      {step === steps.qualification ? (
+        <QualificationCheck
+          selectedItems={selectedQualifications}
+          handleSelect={handleQualificationSelect}
+          data={qualifications}
+        />
+      ) : null}
+      {step === steps.funders ? (
         <SelectFunders
           selectedItems={selectedFunders}
           handleSelect={handleFunderSelect}
           data={funders}
         />
-      ) : (
+      ) : null}
+      {step === steps.documents ? (
         <SelectDocuments
           selectedItems={selectedDocs}
           handleSelect={handleDocSelect}
@@ -82,7 +100,7 @@ function SubmissionForm({ show, handleClose }) {
           text={textNote}
           handleTextChange={setTextNote}
         />
-      )}
+      ) : null}
     </Modal>
   );
 }

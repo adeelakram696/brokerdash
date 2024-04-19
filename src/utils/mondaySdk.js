@@ -1,6 +1,6 @@
 import mondaySdk from 'monday-sdk-js';
 
 const monday = mondaySdk();
-monday.setToken('eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMzOTgxMjU0OSwiYWFpIjoxMSwidWlkIjo1NzgzMDM5OCwiaWFkIjoiMjAyNC0wMy0yOVQyMzowMTo0OS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTk5MjAzMzYsInJnbiI6InVzZTEifQ.eNy7kj8F6kQzwLu4H0hXw2EhWc0f9s0lnTmWwpmXs7s');
+monday.setToken(process.env.REACT_APP_API_KEY);
 
 export default monday;

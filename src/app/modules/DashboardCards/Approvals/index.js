@@ -34,9 +34,12 @@ function ApprovalsCard() {
       clearInterval(intervalId2);
     };
   }, []);
+  const handlePitchedClick = () => {
+    window.open(env.views.pitcheNotClosedUrl, '_target');
+  };
   return (
     <Card className={classNames(styles.cardContainer, styles.approvalsCard)}>
-      <Header title={en.Cards.approvals.title} count={list.length.toString()} countColor="green" backgroundImg={approvalTick} rightComponent={<TextWithCount count={pitchedCount} text={en.Cards.approvals.rightTitle} />} />
+      <Header title={en.Cards.approvals.title} count={list.length.toString()} countColor="green" backgroundImg={approvalTick} rightComponent={<TextWithCount onClick={handlePitchedClick} count={pitchedCount} text={en.Cards.approvals.rightTitle} />} />
       <div className={styles.tableContainer}>
         <DataTable columns={columns} data={list} hoverClass={styles.approvalHover} board="deals" />
       </div>

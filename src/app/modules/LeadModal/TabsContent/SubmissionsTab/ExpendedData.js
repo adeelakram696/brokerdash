@@ -1,9 +1,10 @@
 import {
   Flex, Divider, Button,
 } from 'antd';
+import { columnIds } from 'utils/constants';
 import styles from './SubmissionsTab.module.scss';
 
-function ExpendedData({ isExpended = false }) {
+function ExpendedData({ isExpended = false, data }) {
   return (
     <Flex justify="space-around" style={{ marginTop: 15, display: isExpended ? 'flex' : 'none' }}>
       <Flex vertical flex={0.4}>
@@ -16,9 +17,18 @@ function ExpendedData({ isExpended = false }) {
               <Flex>Net Funding Amt</Flex>
             </Flex>
             <Flex vertical>
-              <Flex>4%</Flex>
-              <Flex>$1000</Flex>
-              <Flex>$240000</Flex>
+              <Flex>
+                {data[columnIds.subItem.funder_fee_perc]}
+                %
+              </Flex>
+              <Flex>
+                $
+                {data[columnIds.subItem.funder_fee]}
+              </Flex>
+              <Flex>
+                $
+                {data[columnIds.subItem.net_funding_amt]}
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
@@ -30,8 +40,11 @@ function ExpendedData({ isExpended = false }) {
               <Flex>Payback Amount</Flex>
             </Flex>
             <Flex vertical>
-              <Flex>70d</Flex>
-              <Flex>$1000000</Flex>
+              <Flex>{data[columnIds.subItem.payback_period]}</Flex>
+              <Flex>
+                $
+                {data[columnIds.subItem.payback_amount]}
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
@@ -50,11 +63,20 @@ function ExpendedData({ isExpended = false }) {
             <Flex>Professional Service Fee</Flex>
           </Flex>
           <Flex vertical>
-            <Flex>On Funding</Flex>
-            <Flex>10%</Flex>
-            <Flex>$25000</Flex>
-            <Flex>0%</Flex>
-            <Flex>0</Flex>
+            <Flex>{data[columnIds.subItem.commission_calc_on]}</Flex>
+            <Flex>
+              {data[columnIds.subItem.commission_perc]}
+              %
+            </Flex>
+            <Flex>
+              $
+              {data[columnIds.subItem.comission_amt]}
+            </Flex>
+            <Flex>
+              {data[columnIds.subItem.professional_fee_perc]}
+              %
+            </Flex>
+            <Flex>{data[columnIds.subItem.professional_service_fee]}</Flex>
           </Flex>
         </Flex>
       </Flex>

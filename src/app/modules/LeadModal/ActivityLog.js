@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
-  Flex, Input, Form, Skeleton,
+  Flex, Form, Skeleton, Button,
 } from 'antd';
 import classNames from 'classnames';
 import {
@@ -10,14 +10,21 @@ import ThreadBox from 'app/components/ThreadBox';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { fetchLeadUpdates } from 'app/apis/query';
-import { createNewUpdate } from 'app/apis/mutation';
+import { createNewUpdate, updateMarkImportant } from 'app/apis/mutation';
+import { columnIds } from 'utils/constants';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import styles from './LeadModal.module.scss';
 
-function ActivityLog({ leadId }) {
+function ActivityLog({ leadId, board, markImportant }) {
   const [updates, setUpdates] = useState([]);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
+  const [boardId, setBoardId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [comment, setComment] = useState('');
+  const [disablePost, setDisablePost] = useState(true);
+  const refEditor = useRef();
   const [form] = Form.useForm();
 
   const getData = async () => {
@@ -25,6 +32,7 @@ function ActivityLog({ leadId }) {
     const res = await fetchLeadUpdates(leadId);
     setUpdates(res.data.items[0]?.updates);
     setUsers(res.data.users);
+    setBoardId(res.data.items[0]?.board.id);
     setLoading(false);
   };
   const createUpdate = async (text) => {
@@ -45,6 +53,16 @@ function ActivityLog({ leadId }) {
     }
     setFilter(updatedKey);
   };
+  const handleMarkImportant = async (id) => {
+    await updateMarkImportant(leadId, boardId, id, columnIds[board].mark_as_important);
+    markImportant();
+  };
+  const handleCommentChange = (value) => {
+    const plain = refEditor.current.unprivilegedEditor.getText();
+    console.log(plain);
+    setDisablePost(!plain.toString().trim());
+    setComment(value);
+  };
   return (
     <Flex className={classNames(styles.columnRight, styles.contentBody)} flex={0.4} vertical>
       <Flex align="flex-start">
@@ -54,6 +72,18 @@ function ActivityLog({ leadId }) {
           style={{ width: '100%' }}
           disabled={loading}
         >
+          <Flex justify="flex-end">
+            <Button
+              className={styles.commentCTA}
+              type="primary"
+              shape="round"
+              onClick={() => { form.submit(); }}
+              loading={loading}
+              disabled={disablePost}
+            >
+              Post
+            </Button>
+          </Flex>
           <Form.Item
             noStyle
             name="update"
@@ -64,9 +94,12 @@ function ActivityLog({ leadId }) {
               },
             ]}
           >
-            <Input
-              className={styles.activityInput}
+            <ReactQuill
+              ref={refEditor}
+              value={comment}
+              onChange={handleCommentChange}
               placeholder="Write an update....."
+              className={styles.activityInput}
             />
           </Form.Item>
         </Form>
@@ -81,9 +114,9 @@ function ActivityLog({ leadId }) {
             <Flex className={styles.smallIcon}><CommentsIcon /></Flex>
             Comments only
           </Flex>
-          <Flex className={styles.activityButtons} onClick={() => { handleFitlerUpdate('activity'); }}>
+          <Flex className={styles.activityButtons} onClick={() => { handleFitlerUpdate(''); }}>
             <Flex className={styles.smallIcon}><ActivityClockIcon /></Flex>
-            Activity only
+            All
           </Flex>
         </Flex>
       </Flex>
@@ -95,7 +128,9 @@ function ActivityLog({ leadId }) {
           return (
             <ThreadBox
               key={update.id}
-              text={update.text_body}
+              id={update.id}
+              handleMarkImportant={handleMarkImportant}
+              text={update.body}
               time={dayjs(update.updated_at).format('MMM DD [@] HH:mm A')}
               type={isUser ? 'Comment' : 'Activity'}
               typeIcon={isUser ? <CommentsIcon width="12" height="14" /> : <ActivityClockIcon width="12" height="14" />}

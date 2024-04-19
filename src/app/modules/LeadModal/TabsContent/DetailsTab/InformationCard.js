@@ -33,7 +33,7 @@ function InformationCard({
     const email = details[columnIds[board].email];
     window.open(`mailto:${email}`);
   };
-  useEffect(() => {
+  const setFieldsValues = () => {
     form.setFieldsValue({
       [columnIds[board].first_name]: details[columnIds[board].first_name],
       [columnIds[board].last_name]: details[columnIds[board].last_name],
@@ -47,6 +47,11 @@ function InformationCard({
       [columnIds[board].dob]: details[columnIds[board].dob],
       [columnIds[board].ownership]: details[columnIds[board].ownership],
     });
+  };
+
+  useEffect(() => {
+    if (!details.name) return;
+    setFieldsValues();
   }, [details]);
 
   const handleUpdate = async (values) => {
@@ -78,16 +83,29 @@ function InformationCard({
       >
         <Flex justify="space-between">
           <Flex className={styles.heading}>{heading}</Flex>
-          <Flex
-            className={classNames(styles.edit, styles.cursor)}
-            onClick={() => { setIsEdit(true); }}
-          >
-            {isEdit ? (
+          {isEdit ? (
+            <Flex>
+              <Flex
+                className={classNames(styles.edit, styles.cursor, styles.cancel)}
+                onClick={() => {
+                  setIsEdit(false);
+                  setFieldsValues();
+                }}
+              >
+                Cancel
+              </Flex>
               <Button className={styles.saveBtn} size="small" htmlType="submit">
                 Update
               </Button>
-            ) : 'Edit'}
-          </Flex>
+            </Flex>
+          ) : (
+            <Flex
+              className={classNames(styles.edit, styles.cursor)}
+              onClick={() => { setIsEdit(true); }}
+            >
+              Edit
+            </Flex>
+          )}
         </Flex>
 
         <Flex flex={1}>
@@ -294,7 +312,14 @@ function InformationCard({
           </Flex>
         </Flex>
       </Form>
-      <LeadIntakeModal show={isIntakeModalOpen} handleClose={handleClose} />
+      <LeadIntakeModal
+        show={isIntakeModalOpen}
+        handleClose={handleClose}
+        board={board}
+        details={details}
+        leadId={leadId}
+        updateInfo={updateInfo}
+      />
     </Card>
   );
 }

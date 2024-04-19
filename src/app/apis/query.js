@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import drawer from 'drawerjs';
-import _ from 'lodash';
-import { env } from 'utils/constants';
+import { actionsNeeded, columnIds, env } from 'utils/constants';
+import { normalizeColumnValues } from 'utils/helpers';
 import monday from 'utils/mondaySdk';
 
 export const fetchUser = () => drawer.get('userName');
@@ -52,7 +52,7 @@ export const fetchApprovalsList = async () => {
       boards(ids: [${env.boards.deals}]) {
         offersReadyApproval: groups(ids: "${env.pages.offersReadyApproved}"){
          items_page(
-           limit: 100
+           limit: 500
            query_params:{
              rules: [
                { column_id: "deal_owner", compare_value: "${me}", operator:contains_text}
@@ -123,7 +123,7 @@ export const fetchContractsOutData = async () => {
     boards(ids: [${env.boards.deals}]) {
       contractsOut: groups(ids: "${env.pages.contractsOut}"){
        items_page(
-         limit: 100
+         limit: 500
          query_params:{
            rules: [
              { column_id: "deal_owner", compare_value: "${me}", operator:contains_text}
@@ -185,11 +185,11 @@ export const fetchContractsSignedCount = async () => {
   return items;
 };
 
-export const fetchNewLeadsData = async (columnIds) => {
+export const fetchNewLeadsData = async () => {
   const me = fetchUser();
   const query = `query {
     leads: items_page_by_column_values(
-      limit: 100
+      limit: 500
       board_id: ${env.boards.leads}
       columns: [{
         column_id: "${columnIds.leads.sales_rep}",
@@ -200,6 +200,36 @@ export const fetchNewLeadsData = async (columnIds) => {
         name
         id
         column_values(ids: ["${columnIds.leads.stage}","${columnIds.leads.time_in_the_que}", "${columnIds.leads.new_lead_or_touched}"]) {
+          id
+          text
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  const { items } = res.data.leads;
+  return items;
+};
+export const fetchActionsNeededLeadsData = async () => {
+  const me = fetchUser();
+  const query = `query {
+    leads: items_page_by_column_values(
+      limit: 500
+      board_id: ${env.boards.leads}
+      columns: [{
+        column_id: "${columnIds.leads.sales_rep}",
+        column_values: "${me}"
+      },
+      {
+        column_id: "${columnIds.leads.last_activity}",
+        column_values: ${JSON.stringify(actionsNeeded)}
+      }
+    ]
+    ) {
+      items {
+        name
+        id
+        column_values(ids: ["${columnIds.leads.last_activity}","${columnIds.leads.last_updated}"]) {
           id
           text
         }
@@ -231,7 +261,7 @@ export const fetchColdProspectings = async () => {
   return value;
 };
 
-export const fetchDocReviews = async (columnIds) => {
+export const fetchDocReviews = async () => {
   const me = fetchUser();
   const currentDate = fetchCurrentDate();
   const res = await monday.api(`query {
@@ -263,7 +293,7 @@ export const fetchFollowUps = async () => {
   const currentDate = fetchCurrentDate();
   const res = await monday.api(`query {
     deals: items_page_by_column_values(
-      limit: 100
+      limit: 500
       board_id: ${env.boards.deals}
       columns: [
         { column_id: "date_1", column_values: "${currentDate}"},
@@ -275,7 +305,7 @@ export const fetchFollowUps = async () => {
       }
     }
     leads: items_page_by_column_values(
-      limit: 100
+      limit: 500
       board_id: ${env.boards.leads}
       columns: [
         { column_id: "date_1", column_values: "${currentDate}"},
@@ -293,7 +323,7 @@ export const fetchFollowUps = async () => {
   return value;
 };
 
-export const fetchReadyForSubmissions = async (columnIds) => {
+export const fetchReadyForSubmissions = async () => {
   const me = fetchUser();
   const currentDate = fetchCurrentDate();
   const res = await monday.api(`query {
@@ -320,7 +350,7 @@ export const fetchReadyForSubmissions = async (columnIds) => {
   return value;
 };
 
-export const fetchWaitingForOffer = async (columnIds) => {
+export const fetchWaitingForOffer = async () => {
   const me = fetchUser();
   const currentDate = fetchCurrentDate();
   const res = await monday.api(`query {
@@ -356,16 +386,38 @@ export const fetchLeadClientDetails = async (leadId) => {
       board {
         id
       }
+      group {
+        id
+      }
       column_values {
         id
         text
       }
+      subitems {
+        id
+        name
+        email
+        updated_at
+        board {
+          id
+        }
+        column_values {
+          id
+          text
+        }
+      }
     }
   }`;
   const res = await monday.api(query);
-  let columns = _.mapKeys(res.data.details[0].column_values, 'id');
-  columns = _.mapValues(columns, 'text');
-  return { res, columns };
+  const columns = normalizeColumnValues(res.data.details[0].column_values);
+  const subitems = res.data.details[0]?.subitems?.map((item) => {
+    const subItemcolumns = normalizeColumnValues(item.column_values);
+    return {
+      ...item,
+      ...subItemcolumns,
+    };
+  });
+  return { res, columns, subitems };
 };
 
 export const fetchLeadDocs = async (leadId) => {
@@ -378,50 +430,12 @@ export const fetchLeadDocs = async (leadId) => {
         file_size
         file_extension
         created_at
+        url
       }
     }
   }`;
   const res = await monday.api(query);
   return res;
-};
-
-export const fetchLeadHeaderData = async (columnIds, board, leadId) => {
-  const {
-    sequence_step,
-    sequence_name,
-    stage,
-    creation_date,
-    last_touched,
-    source,
-    type,
-    next_followup,
-  } = columnIds[board];
-  const query = `query {
-    items(ids: [${leadId}]) {
-      id
-      name
-      group {
-        id
-      }
-      column_values(ids: [
-        "${sequence_step}",
-        "${sequence_name}",
-        "${stage}",
-        "${creation_date}",
-        "${last_touched}",
-        "${source}",
-        "${type}",
-        "${next_followup}",
-      ]) {
-        id
-        text
-      }
-    }
-  }`;
-  const res = await monday.api(query);
-  let columns = _.mapKeys(res.data.items[0].column_values, 'id');
-  columns = _.mapValues(columns, 'text');
-  return { res, columns };
 };
 
 export const fetchLeadUpdates = async (leadId) => {
@@ -431,6 +445,9 @@ export const fetchLeadUpdates = async (leadId) => {
     }
     items(ids:["${leadId}"]) {
       name
+      board {
+        id
+      }
       updates (limit: 500) {
         creator_id
         id
@@ -443,4 +460,25 @@ export const fetchLeadUpdates = async (leadId) => {
   }`;
   const res = await monday.api(query);
   return res;
+};
+export const fetchMarkAsImportant = async (leadId, column) => {
+  const query1 = `query {
+    items(ids:["${leadId}"]) {
+      column_values(ids: ["${column}"]) {
+        id
+        text
+      }
+    }
+  }`;
+  const res = await monday.api(query1);
+  const updateId = (res.data.items[0].column_values || [])[0]?.text;
+  if (!updateId) return '';
+  const query2 = `query {
+    updates(ids: [${updateId}]) {
+      id
+      text_body
+    }
+  }`;
+  const res2 = await monday.api(query2);
+  return (res2.data?.updates || [])[0];
 };

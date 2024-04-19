@@ -2,19 +2,36 @@ import { Card } from 'antd';
 import classNames from 'classnames';
 import { runningShoe } from 'app/images';
 import en from 'app/locales/en';
+import { fetchActionsNeededLeadsData } from 'app/apis/query';
+import { useEffect, useState } from 'react';
+import { env } from 'utils/constants';
 import Header from '../Header';
 import DataTable from '../DataTable';
 import styles from '../DasboardCards.module.scss';
-import { columns, data } from './data';
+import { columns } from './data';
+import { transformData } from './transform';
 
 function ActionsCard() {
+  const [list, setList] = useState([]);
+  const getApprovedData = async () => {
+    const items = await fetchActionsNeededLeadsData();
+    const transformed = transformData(items);
+    setList(transformed);
+  };
+  useEffect(() => {
+    getApprovedData();
+    const intervalId1 = setInterval(getApprovedData, (1000 * env.intervalTime));
+    return () => {
+      clearInterval(intervalId1);
+    };
+  }, []);
   return (
     <Card className={classNames(styles.cardContainer, styles.actionsCard)}>
-      <Header title={en.Cards.actionsNeeded.title} subTitle={en.Cards.actionsNeeded.subtitle} count="2" countColor="red" backgroundImg={runningShoe} />
+      <Header title={en.Cards.actionsNeeded.title} subTitle={en.Cards.actionsNeeded.subtitle} count={list.length} countColor="red" backgroundImg={runningShoe} />
       <div className={styles.tableContainer}>
         <DataTable
           columns={columns}
-          data={data}
+          data={list}
           highlightClass={styles.actionsHighlight}
           newTagClass={styles.red}
           board="leads"

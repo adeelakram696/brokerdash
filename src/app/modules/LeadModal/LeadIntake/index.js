@@ -1,5 +1,5 @@
 import {
-  Modal, Flex, Button,
+  Modal, Flex, Button, Form,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
 import InputField from 'app/components/Forms/InputField';
@@ -7,17 +7,37 @@ import SelectField from 'app/components/Forms/SelectField';
 import TextAreaField from 'app/components/Forms/TextAreaField';
 import { QuestionIcon } from 'app/images/icons';
 import TooltipWrap from 'app/components/TooltipWrap';
-import { existingDepts, importantToYou, loadPurpose } from './data';
+import { columnIds } from 'utils/constants';
+import { updateClientInformation } from 'app/apis/mutation';
+import { useState } from 'react';
+import { existingDepts, importantToYou, loanPurpose } from './data';
 import styles from './LeadIntake.module.scss';
 import { ExploreMindTooltip, GoalTooltip, PastNCurrentTooltip } from './tooltipsData';
 
-function LeadIntakeModal({ show, handleClose }) {
+function LeadIntakeModal({
+  show, handleClose, board, details, leadId, updateInfo,
+}) {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const handleUpdate = async (values) => {
+    setLoading(true);
+    await updateClientInformation(leadId, details.board.id, values);
+    await updateInfo();
+    setLoading(false);
+    handleClose();
+  };
   return (
     <Modal
       open={show}
       footer={(
         <Flex justify="flex-end">
-          <Button className={styles.footerSubmitCTA} type="primary" shape="round">
+          <Button
+            className={styles.footerSubmitCTA}
+            type="primary"
+            shape="round"
+            onClick={() => { form.submit(); }}
+            loading={loading}
+          >
             Update Intake
           </Button>
         </Flex>
@@ -33,75 +53,118 @@ function LeadIntakeModal({ show, handleClose }) {
         </Flex>
 )}
     >
-      <Flex vertical>
+      <Form
+        form={form}
+        onFinish={handleUpdate}
+      >
         <Flex vertical>
-          <Flex className={styles.subTitles} align="center">
-            Goals
-            <TooltipWrap
-              title={(
-                <GoalTooltip />
+          <Flex vertical>
+            <Flex className={styles.subTitles} align="center">
+              Goals
+              <TooltipWrap
+                title={(
+                  <GoalTooltip />
                 )}
-            >
-              <Flex className={styles.infoIcon}>
-                <QuestionIcon color="#B3B3B3" />
+              >
+                <Flex className={styles.infoIcon}>
+                  <QuestionIcon color="#B3B3B3" />
+                </Flex>
+              </TooltipWrap>
+            </Flex>
+            <Flex className={styles.inputRow}>
+              <Form.Item
+                noStyle
+                name={columnIds[board].goals}
+              >
+                <InputField placeholder="Notes" />
+              </Form.Item>
+            </Flex>
+          </Flex>
+          <Flex vertical>
+            <Flex className={styles.subTitles} align="center">
+              Explore Mindset
+              <TooltipWrap
+                title={(
+                  <ExploreMindTooltip />
+                )}
+              >
+                <Flex className={styles.infoIcon}><QuestionIcon color="#B3B3B3" /></Flex>
+              </TooltipWrap>
+            </Flex>
+            <Flex vertical>
+              <Flex flex={1} className={styles.inputRow} justify="space-between">
+                <Flex flex={0.6}>What purpose would your loan serve?</Flex>
+                <Flex flex={0.4}>
+                  <Form.Item
+                    noStyle
+                    name={columnIds[board].needs_money_for}
+                  >
+                    <SelectField options={loanPurpose} />
+                  </Form.Item>
+                </Flex>
               </Flex>
-            </TooltipWrap>
-          </Flex>
-          <Flex className={styles.inputRow}><InputField placeholder="Notes" /></Flex>
-        </Flex>
-        <Flex vertical>
-          <Flex className={styles.subTitles} align="center">
-            Explore Mindset
-            <TooltipWrap
-              title={(
-                <ExploreMindTooltip />
-                )}
-            >
-              <Flex className={styles.infoIcon}><QuestionIcon color="#B3B3B3" /></Flex>
-            </TooltipWrap>
+              <Flex flex={1} className={styles.inputRow} justify="space-between">
+                <Flex flex={0.6}>Which is most important to you?</Flex>
+                <Flex flex={0.4}>
+                  <Form.Item
+                    noStyle
+                    name={columnIds[board].most_important}
+                  >
+                    <SelectField options={importantToYou} />
+                  </Form.Item>
+                </Flex>
+              </Flex>
+              <Flex className={styles.inputRow}>
+                <Form.Item
+                  noStyle
+                  name={columnIds[board].explore_mindset}
+                >
+                  <InputField placeholder="Notes" />
+                </Form.Item>
+              </Flex>
+            </Flex>
           </Flex>
           <Flex vertical>
-            <Flex flex={1} className={styles.inputRow} justify="space-between">
-              <Flex flex={0.6}>What purpose would your loan serve?</Flex>
-              <Flex flex={0.4}><SelectField defaultValue="1" options={loadPurpose} /></Flex>
-            </Flex>
-            <Flex flex={1} className={styles.inputRow} justify="space-between">
-              <Flex flex={0.6}>Which is most important to you?</Flex>
-              <Flex flex={0.4}><SelectField defaultValue="1" options={importantToYou} /></Flex>
-            </Flex>
-            <Flex className={styles.inputRow}>
-              <InputField placeholder="Notes" />
-            </Flex>
-          </Flex>
-        </Flex>
-        <Flex vertical>
-          <Flex className={styles.subTitles} align="center">
-            Past and current
-            <TooltipWrap
-              title={(
-                <PastNCurrentTooltip />
+            <Flex className={styles.subTitles} align="center">
+              Past and current
+              <TooltipWrap
+                title={(
+                  <PastNCurrentTooltip />
                 )}
-            >
-              <Flex className={styles.infoIcon}><QuestionIcon color="#B3B3B3" /></Flex>
-            </TooltipWrap>
-          </Flex>
-          <Flex vertical>
-            <Flex flex={1} className={styles.inputRow} justify="space-between">
-              <Flex flex={0.6}>Do they have any existing debts</Flex>
-              <Flex flex={0.4}><SelectField defaultValue="Yes" options={existingDepts} /></Flex>
+              >
+                <Flex className={styles.infoIcon}><QuestionIcon color="#B3B3B3" /></Flex>
+              </TooltipWrap>
             </Flex>
-            <Flex className={styles.inputRow}>
-              <TextAreaField
-                placeholder="Lorem  ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor inciLorem"
-                autoSize={{
-                  minRows: 4,
-                  maxRows: 6,
-                }}
-              />
+            <Flex vertical>
+              <Flex flex={1} className={styles.inputRow} justify="space-between">
+                <Flex flex={0.6}>Do they have any existing debts</Flex>
+                <Flex flex={0.4}>
+                  <Form.Item
+                    noStyle
+                    name={columnIds[board].existing_debt}
+                  >
+                    <SelectField options={existingDepts} />
+                  </Form.Item>
+                </Flex>
+              </Flex>
+              <Flex className={styles.inputRow}>
+                <Form.Item
+                  noStyle
+                  name={columnIds[board].past_and_current_financial_products}
+                >
+                  <TextAreaField
+                    placeholder="Notes"
+                    autoSize={{
+                      minRows: 4,
+                      maxRows: 6,
+                    }}
+                  />
+                </Form.Item>
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
-      </Flex>
+      </Form>
     </Modal>
   );
 }

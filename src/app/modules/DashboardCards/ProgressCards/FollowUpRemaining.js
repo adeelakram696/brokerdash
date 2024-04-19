@@ -21,6 +21,9 @@ function FollowUpRemaining({ updateTotal }) {
       clearInterval(intervalId);
     };
   }, []);
+  const handleClick = () => {
+    window.open(env.views.followupToday, '_blank');
+  };
   return (
     <ProgressCard
       value={currentValue}
@@ -29,6 +32,7 @@ function FollowUpRemaining({ updateTotal }) {
       subTitle={en.Cards.progess.followup.subtitle}
       color="#429A65"
       icon={<FireIcon />}
+      onClick={handleClick}
     />
   );
 }

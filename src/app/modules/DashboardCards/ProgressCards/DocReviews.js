@@ -21,6 +21,9 @@ function DocReviews({ updateTotal }) {
       clearInterval(intervalId);
     };
   }, []);
+  const handleClick = () => {
+    window.open(env.views.docReview, '_blank');
+  };
   return (
     <ProgressCard
       value={currentValue}
@@ -29,6 +32,7 @@ function DocReviews({ updateTotal }) {
       subTitle={en.Cards.progess.docReview.subtitle}
       color="#358069"
       icon={<DocIcon />}
+      onClick={handleClick}
     />
   );
 }

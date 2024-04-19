@@ -5,23 +5,17 @@ import { FireFilledIcon } from 'app/images/icons';
 import { columnIds } from 'utils/constants';
 import { useEffect, useState } from 'react';
 import { updateStage } from 'app/apis/mutation';
-import { fetchLeadHeaderData } from 'app/apis/query';
 import styles from './LeadModal.module.scss';
 import SubRow from './SubRow';
 
-function ModalHeader({ leadId, board }) {
+function ModalHeader({ leadId, board, data }) {
   const [messageApi, contextHolder] = message.useMessage();
-  const [data, setData] = useState({});
   const [selectedStage, setSelectedStage] = useState('');
   const stages = drawer.get('stages');
-  const getData = async () => {
-    const { res, columns } = await fetchLeadHeaderData(columnIds, board, leadId);
-    setSelectedStage(res.data.items[0].group.id);
-    setData({ ...res.data.items[0], ...columns });
-  };
   useEffect(() => {
-    getData();
-  }, [leadId]);
+    if (!data.name) return;
+    setSelectedStage(data.group.id);
+  }, [data]);
   const handleChange = async (value) => {
     const res = await updateStage(leadId, value);
     if (res) messageApi.success('Successfully updated');
