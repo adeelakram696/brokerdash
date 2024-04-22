@@ -7,16 +7,20 @@ import SelectField from 'app/components/Forms/SelectField';
 import TextAreaField from 'app/components/Forms/TextAreaField';
 import { columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import { LeadContext } from 'utils/contexts';
 import styles from './FunderSubmissionForm.module.scss';
 import {
   achFrequency, commissionOn, productTypes, statusValues,
 } from '../TabsContent/SubmissionsTab/data';
 
 function FunderSubmissionForm({
-  show, handleClose, updateInfo, data,
+  show, handleClose, data,
 }) {
+  const {
+    getData,
+  } = useContext(LeadContext);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const setFieldsValues = () => {
@@ -41,7 +45,7 @@ function FunderSubmissionForm({
   const handleUpdate = async (values) => {
     setLoading(true);
     await updateClientInformation(data.id, data.board.id, values);
-    await updateInfo();
+    await getData();
     setLoading(false);
     handleClose();
   };

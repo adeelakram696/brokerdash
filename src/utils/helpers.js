@@ -1,6 +1,7 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
+import { env } from './constants';
 
 export const removeBoardHeader = () => {
   const header = document.getElementById('mf-header');
@@ -60,3 +61,7 @@ export function normalizeColumnValues(columnsValues) {
 }
 
 export const formatTimeIn = (seconds) => dayjs().startOf('day').add(seconds, 'second').format('mm:ss');
+
+export function createViewURL(viewId, boardId) {
+  return `${env.boardBaseURL}${boardId}/views${viewId}`;
+}

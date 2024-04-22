@@ -4,6 +4,7 @@ import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { columnIds, env } from 'utils/constants';
 import { fetchWaitingForOffer } from 'app/apis/query';
+import { createViewURL } from 'utils/helpers';
 
 function WaitingForOffer({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
@@ -22,7 +23,7 @@ function WaitingForOffer({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(env.views.waitingForOffer, '_blank');
+    window.open(createViewURL(env.views.waitingForOffer, env.boards.deals), '_target');
   };
   return (
     <ProgressCard

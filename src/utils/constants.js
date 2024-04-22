@@ -3,6 +3,7 @@ export const env = {
     coldProspecting: process.env.REACT_APP_COLD_PROSPECTING_BOARD_ID,
     deals: process.env.REACT_APP_DEALS_BOARD_ID,
     leads: process.env.REACT_APP_LEADS_BOARD_ID,
+    funders: process.env.REACT_APP_FUNDERS_BOARD_ID,
   },
   pages: {
     readyForSubmission: process.env.REACT_APP_READY_FOR_SUBMISSION_PAGE_ID,
@@ -13,14 +14,15 @@ export const env = {
     contractsSigned: process.env.REACT_APP_CONTRACTS_SIGNED_PAGE_ID,
   },
   views: {
-    pitcheNotClosedUrl: process.env.REACT_APP_PITCH_NOT_CLOSED_VIEW_URL,
-    contractSignedUrl: process.env.REACT_APP_CONTRACTS_SIGNED_VIEW_URL,
-    followupToday: process.env.REACT_APP_TODAYS_FOLLOW_UP_VIEW_URL,
-    coldProspecting: process.env.REACT_APP_COLD_PROSPECTING_VIEW_URL,
-    docReview: process.env.REACT_APP_DOC_REVIEW_VIEW_URL,
-    readyForSubmission: process.env.REACT_APP_READY_FOR_SUBMISSION_VIEW_URL,
-    waitingForOffer: process.env.REACT_APP_WAITING_FOR_OFFER_VIEW_URL,
+    pitcheNotClosedId: process.env.REACT_APP_PITCH_NOT_CLOSED_VIEW_ID,
+    contractSignedId: process.env.REACT_APP_CONTRACTS_SIGNED_VIEW_ID,
+    followupToday: process.env.REACT_APP_TODAYS_FOLLOW_UP_VIEW_ID,
+    coldProspecting: process.env.REACT_APP_COLD_PROSPECTING_VIEW_ID,
+    docReview: process.env.REACT_APP_DOC_REVIEW_VIEW_ID,
+    readyForSubmission: process.env.REACT_APP_READY_FOR_SUBMISSION_VIEW_ID,
+    waitingForOffer: process.env.REACT_APP_WAITING_FOR_OFFER_VIEW_ID,
   },
+  boardBaseURL: process.env.REACT_APP_BOARDS_BASE_URL,
   intervalTime: process.env.REACT_APP_REFETCH_TIME_SECONDS,
 };
 

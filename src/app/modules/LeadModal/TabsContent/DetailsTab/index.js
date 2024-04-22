@@ -1,7 +1,8 @@
 import { Flex } from 'antd';
 import en from 'app/locales/en';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { columnIds } from 'utils/constants';
+import { LeadContext } from 'utils/contexts';
 import ClientBaseInfo from './ClientBaseInfo';
 import InformationCard from './InformationCard';
 import parentStyles from '../../LeadModal.module.scss';
@@ -10,9 +11,10 @@ import AddPartner from './AddPartner';
 import QualificationMatrix from './QualificationMatrix';
 import PartnerInformationCard from './PartnerInformationCard';
 
-function DetailsTab({
-  leadId, board, details, getData,
-}) {
+function DetailsTab() {
+  const {
+    leadId, board, details, getData,
+  } = useContext(LeadContext);
   const [showPartner, setShowPartner] = useState(false);
   return (
     <Flex flex={1}>

@@ -1,11 +1,14 @@
 import { Flex, Dropdown } from 'antd';
 import { columnIds } from 'utils/constants';
 import { TelescopeIcon } from 'app/images/icons';
+import { LeadContext } from 'utils/contexts';
+import { useContext } from 'react';
 import styles from './ActionsRow.module.scss';
 
-function ResearchLinks({
-  details, board,
-}) {
+function ResearchLinks() {
+  const {
+    board, details,
+  } = useContext(LeadContext);
   const items = [
     {
       label: (

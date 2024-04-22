@@ -3,19 +3,23 @@ import drawer from 'drawerjs';
 import classNames from 'classnames';
 import { FireFilledIcon } from 'app/images/icons';
 import { columnIds } from 'utils/constants';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { updateStage } from 'app/apis/mutation';
+import { LeadContext } from 'utils/contexts';
 import styles from './LeadModal.module.scss';
 import SubRow from './SubRow';
 
-function ModalHeader({ leadId, board, data }) {
+function ModalHeader() {
   const [messageApi, contextHolder] = message.useMessage();
+  const {
+    leadId, board, details, groupId,
+  } = useContext(LeadContext);
   const [selectedStage, setSelectedStage] = useState('');
   const stages = drawer.get('stages');
   useEffect(() => {
-    if (!data.name) return;
-    setSelectedStage(data.group.id);
-  }, [data]);
+    if (!details.name) return;
+    setSelectedStage(groupId);
+  }, [details]);
   const handleChange = async (value) => {
     const res = await updateStage(leadId, value);
     if (res) messageApi.success('Successfully updated');
@@ -28,7 +32,7 @@ function ModalHeader({ leadId, board, data }) {
         <Flex>
           <Flex className={classNames(styles.logo, styles.marginRight)} align="center"><FireFilledIcon /></Flex>
           <Flex className={classNames(styles.title, styles.marginRight)} align="center">
-            {data.name}
+            {details.name}
           </Flex>
           <Flex className={classNames(styles.stageDropdown, styles.marginRight, styles.marginTopNeg)} align="center" vertical>
             <div className={styles.statusLabel}>Stage</div>
@@ -43,26 +47,26 @@ function ModalHeader({ leadId, board, data }) {
           </Flex>
           <Flex className={classNames(styles.status, styles.marginRight, styles.marginTopNeg)} align="center" vertical>
             <div className={styles.statusLabel}>Sequence Name</div>
-            <div className={styles.statusValue}>{data[columnIds[board].sequence_name]}</div>
+            <div className={styles.statusValue}>{details[columnIds[board].sequence_name]}</div>
           </Flex>
           <Flex className={classNames(styles.status, styles.marginRight, styles.marginTopNeg)} align="center" vertical>
             <div className={styles.statusLabel}>Current Step</div>
-            <div className={styles.statusValue}>{data[columnIds[board].sequence_step]}</div>
+            <div className={styles.statusValue}>{details[columnIds[board].sequence_step]}</div>
           </Flex>
         </Flex>
         <Flex justify="flex-start" flex={0.35}>
-          {data[columnIds[board].type] === 'Renewal' ? (
+          {details[columnIds[board].type] === 'Renewal' ? (
             <Flex className={styles.applicationState}>
-              {data[columnIds[board].type]}
+              {details[columnIds[board].type]}
             </Flex>
           ) : null}
         </Flex>
       </Flex>
       <SubRow
-        lastCreated={data[columnIds[board].creation_date]}
-        lastSpoke={data[columnIds[board].last_touched]}
-        nextFollowUp={data[columnIds[board].next_followup]}
-        source={data[columnIds[board].source]}
+        lastCreated={details[columnIds[board].creation_date]}
+        lastSpoke={details[columnIds[board].last_touched]}
+        nextFollowUp={details[columnIds[board].next_followup]}
+        source={details[columnIds[board].source]}
       />
     </>
   );

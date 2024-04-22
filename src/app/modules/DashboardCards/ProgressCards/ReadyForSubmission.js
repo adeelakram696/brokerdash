@@ -4,6 +4,7 @@ import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { columnIds, env } from 'utils/constants';
 import { fetchReadyForSubmissions } from 'app/apis/query';
+import { createViewURL } from 'utils/helpers';
 
 function ReadyForSubmission({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
@@ -22,7 +23,7 @@ function ReadyForSubmission({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(env.views.readyForSubmission, '_blank');
+    window.open(createViewURL(env.views.readyForSubmission, env.boards.deals), '_target');
   };
   return (
     <ProgressCard

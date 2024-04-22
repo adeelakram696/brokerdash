@@ -4,6 +4,7 @@ import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { env } from 'utils/constants';
 import { fetchFollowUps } from 'app/apis/query';
+import { createViewURL } from 'utils/helpers';
 
 function FollowUpRemaining({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
@@ -22,7 +23,7 @@ function FollowUpRemaining({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(env.views.followupToday, '_blank');
+    window.open(createViewURL(env.views.followupToday, env.boards.leads), '_target');
   };
   return (
     <ProgressCard

@@ -4,6 +4,7 @@ import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { env } from 'utils/constants';
 import { fetchColdProspectings } from 'app/apis/query';
+import { createViewURL } from 'utils/helpers';
 
 function ColdProspecting({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
@@ -22,7 +23,7 @@ function ColdProspecting({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(env.views.coldProspecting, '_blank');
+    window.open(createViewURL(env.views.coldProspecting, env.boards.coldProspecting), '_target');
   };
   return (
     <ProgressCard

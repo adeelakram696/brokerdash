@@ -438,6 +438,21 @@ export const fetchLeadDocs = async (leadId) => {
   return res;
 };
 
+export const fetchFunders = async (boardId) => {
+  const query = `query {
+    funders: boards(ids: ["${boardId}"]) {
+      items_page(limit: 500) {
+        items {
+          id
+          name
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  return res;
+};
+
 export const fetchLeadUpdates = async (leadId) => {
   const query = `query {
     users {

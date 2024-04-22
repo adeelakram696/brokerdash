@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Flex, DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { updateClientInformation } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import { CalenderIcon } from 'app/images/icons';
+import { LeadContext } from 'utils/contexts';
 import styles from './ActionsRow.module.scss';
 
-function UpdateFollowUp({
-  leadId, details, board, getData,
-}) {
+function UpdateFollowUp() {
+  const {
+    leadId, board, details, getData,
+  } = useContext(LeadContext);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [followUpDate, setFollowUpDate] = useState(dayjs());
 

@@ -7,28 +7,23 @@ import { DeleteIcon, DownloadIcon } from 'app/images/icons';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import FileIcon from 'app/components/FileIcon';
 import FileUploadDnD from 'app/components/FileUploadDnD';
-import { useEffect, useState } from 'react';
-import { fetchLeadDocs } from 'app/apis/query';
+import { useContext, useState } from 'react';
 import { addFilesToLead } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
+import { LeadContext } from 'utils/contexts';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
-function DocsTab({ leadId, board }) {
-  const [docs, setDocs] = useState({});
+function DocsTab() {
+  const {
+    leadId, board, docs, getDocs,
+  } = useContext(LeadContext);
   const [downloadDocs, setDownloadDocs] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
-  const getData = async () => {
-    const res = await fetchLeadDocs(leadId);
-    setDocs(res.data.docs[0]);
-  };
-  useEffect(() => {
-    getData();
-  }, [leadId]);
 
   const uploadFile = async (file) => {
     await addFilesToLead(leadId, columnIds[board].incoming_files, file);
-    await getData();
+    await getDocs();
   };
   const handleDownload = async () => {
     const fitlered = docs.assets.filter((doc) => selectedDocs.indexOf(doc.id) >= 0);

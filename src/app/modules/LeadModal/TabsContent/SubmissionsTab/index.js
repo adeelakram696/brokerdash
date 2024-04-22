@@ -1,14 +1,17 @@
 import {
   Flex, Divider,
 } from 'antd';
+import { useContext } from 'react';
+import { LeadContext } from 'utils/contexts';
 import SubmissionCard from '../Common/SubmissionCard';
 import QualificationMatrixCard from '../Common/QualificationMatrixCard';
 import FundingOffer from './FundingOffer';
 import styles from './SubmissionsTab.module.scss';
 
-function SubmissionsTab({
-  leadId, board, details, getData,
-}) {
+function SubmissionsTab() {
+  const {
+    details,
+  } = useContext(LeadContext);
   return (
     <Flex vertical>
       <Flex>
@@ -20,12 +23,7 @@ function SubmissionsTab({
         {details.subitems?.map((subItem) => (
           <FundingOffer
             key={subItem.id}
-            type="MCA"
             data={subItem}
-            board={board}
-            boardId={details.board.id}
-            leadId={leadId}
-            updateInfo={getData}
           />
         ))}
       </Flex>

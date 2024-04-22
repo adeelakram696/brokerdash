@@ -6,7 +6,7 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { useState } from 'react';
 import styles from './SubmissionForm.module.scss';
 import {
-  docs, funders, qualifications, stepData, steps,
+  qualifications, stepData, steps,
 } from './data';
 import SelectFunders from './SelectFundersForm';
 import SelectDocuments from './SelectDocuments';
@@ -49,7 +49,15 @@ function SubmissionForm({ show, handleClose }) {
   const handleNextStep = (nextStep) => {
     setStep(nextStep);
   };
-
+  const handleSubmit = () => {
+    console.log('submited');
+  };
+  const selectedValues = {
+    [steps.qualification]: selectedQualifications,
+    [steps.funders]: selectedFunders,
+    [steps.documents]: selectedDocs,
+  };
+  const isNextEnabled = selectedValues[step].length > 0;
   return (
     <Modal
       open={show}
@@ -61,7 +69,17 @@ function SubmissionForm({ show, handleClose }) {
                 Back
               </Button>
             ) : null}
-          <Button onClick={() => handleNextStep(stepData[step].nextStep)} className={styles.footerSubmitCTA} type="primary" shape="round">
+          <Button
+            onClick={
+              () => (stepData[step].nextStep
+                ? handleNextStep(stepData[step].nextStep)
+                : handleSubmit())
+            }
+            className={styles.footerSubmitCTA}
+            type="primary"
+            shape="round"
+            disabled={!isNextEnabled}
+          >
             {stepData[step].nextStep ? 'Next Step' : 'Submit'}
           </Button>
         </Flex>
@@ -87,14 +105,12 @@ function SubmissionForm({ show, handleClose }) {
         <SelectFunders
           selectedItems={selectedFunders}
           handleSelect={handleFunderSelect}
-          data={funders}
         />
       ) : null}
       {step === steps.documents ? (
         <SelectDocuments
           selectedItems={selectedDocs}
           handleSelect={handleDocSelect}
-          data={docs}
           showText={showText}
           handleShowText={setShowText}
           text={textNote}

@@ -10,7 +10,7 @@ import { columns } from './data';
 import FunderSubmissionForm from '../../FunderSubmissionForm';
 
 function DataRow({
-  data, board, updateInfo,
+  data,
 }) {
   const [showFunderForm, setShowFunderForm] = useState();
   const handleClose = () => {
@@ -55,8 +55,6 @@ function DataRow({
       <FunderSubmissionForm
         show={showFunderForm}
         handleClose={handleClose}
-        board={board}
-        updateInfo={updateInfo}
         data={data}
       />
     </Flex>

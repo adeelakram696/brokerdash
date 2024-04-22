@@ -8,6 +8,8 @@ import {
 } from 'app/images/icons';
 import { columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
+import { LeadContext } from 'utils/contexts';
+import { useContext } from 'react';
 import styles from './ActionsRow.module.scss';
 import UpdateFollowUp from './UpdateFollowUp';
 import ResearchLinks from './ResearchLinks';
@@ -26,15 +28,16 @@ function ActionBtn({ children = null }) {
     </Flex>
   );
 }
-function ActionRow({
-  leadId, board, importantMsg, details, getData, getMarkAsImportant,
-}) {
+function ActionRow() {
+  const {
+    leadId, board, boardId, importantMsg, getMarkAsImportant,
+  } = useContext(LeadContext);
   const handleMenuClick = async (e) => {
     if (e.key === 'remove') {
-      await updateClientInformation(leadId, details?.board?.id, {
+      await updateClientInformation(leadId, boardId, {
         [columnIds[board].mark_as_important]: '',
       });
-      await getMarkAsImportant();
+      getMarkAsImportant();
     }
   };
   const actions = [
@@ -49,24 +52,19 @@ function ActionRow({
     },
     {
       component: (
-        <SendSms leadId={leadId} boardId={details?.board?.id} board={board} />
+        <SendSms />
       ),
       text: 'SMS Client',
     },
     {
       component: (
-        <UpdateFollowUp
-          leadId={leadId}
-          details={details}
-          board={board}
-          getData={getData}
-        />
+        <UpdateFollowUp />
       ),
       text: 'Schedule Follow up',
     },
     {
       component: (
-        <ResearchLinks details={details} board={board} />
+        <ResearchLinks />
       ),
       text: 'Research Links',
     },

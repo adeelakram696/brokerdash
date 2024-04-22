@@ -13,7 +13,7 @@ import DataRow from './DataRow';
 import { productTypes } from './data';
 
 function FundingOffer({
-  data, board, updateInfo,
+  data,
 }) {
   const [isExpended, setIsExpended] = useState(false);
   const typeColor = productTypes.find(
@@ -30,8 +30,6 @@ function FundingOffer({
         <Flex vertical flex={1}>
           <DataRow
             data={data}
-            board={board}
-            updateInfo={updateInfo}
           />
           <Flex vertical>
             <Flex justify="flex-end">

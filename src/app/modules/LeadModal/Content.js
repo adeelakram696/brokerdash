@@ -6,45 +6,27 @@ import DocsTab from './TabsContent/DocsTab';
 import SubmissionsTab from './TabsContent/SubmissionsTab';
 import RenewalTab from './TabsContent/RenewalTab';
 
-function Content({
-  leadId, board, details, getData,
-}) {
+function Content() {
   const items = [
     {
       key: '1',
       label: 'Details',
-      children: <DetailsTab
-        leadId={leadId}
-        board={board}
-        details={details}
-        getData={getData}
-      />,
+      children: <DetailsTab />,
     },
     {
       key: '2',
       label: 'Documents',
-      children: <DocsTab
-        leadId={leadId}
-        board={board}
-      />,
+      children: <DocsTab />,
     },
     {
       key: '3',
       label: 'Submissions',
-      children: <SubmissionsTab
-        leadId={leadId}
-        board={board}
-        details={details}
-        getData={getData}
-      />,
+      children: <SubmissionsTab />,
     },
     {
       key: '4',
       label: 'Renewal',
-      children: <RenewalTab
-        leadId={leadId}
-        board={board}
-      />,
+      children: <RenewalTab />,
     },
   ];
   return (

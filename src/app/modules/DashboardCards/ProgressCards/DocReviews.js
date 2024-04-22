@@ -4,6 +4,7 @@ import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { columnIds, env } from 'utils/constants';
 import { fetchDocReviews } from 'app/apis/query';
+import { createViewURL } from 'utils/helpers';
 
 function DocReviews({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
@@ -22,7 +23,7 @@ function DocReviews({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(env.views.docReview, '_blank');
+    window.open(createViewURL(env.views.docReview, env.boards.leads), '_target');
   };
   return (
     <ProgressCard

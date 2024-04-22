@@ -4,23 +4,28 @@ import {
 } from 'antd';
 import { StarIcon } from 'app/images/icons/StarIcon';
 import classNames from 'classnames';
+import { LeadContext } from 'utils/contexts';
+import { useContext } from 'react';
 import styles from './SubmissionForm.module.scss';
 
-function SelectFunders({ selectedItems, handleSelect, data }) {
+function SelectFunders({ selectedItems, handleSelect }) {
+  const {
+    funders,
+  } = useContext(LeadContext);
   return (
     <Flex vertical>
       <Flex className={styles.listContainer} vertical>
-        {data.map(({
-          name, isStar, status, key,
+        {funders.map(({
+          name, isStar, status, id,
         }) => (
           <Flex
-            key={key}
+            key={id}
             className={classNames(
               styles.listItemRow,
-              { [styles.selectedItem]: selectedItems.includes(key) },
+              { [styles.selectedItem]: selectedItems.includes(id) },
             )}
             onClick={() => {
-              handleSelect(key);
+              handleSelect(id);
             }}
             justify="space-between"
           >

@@ -6,6 +6,7 @@ import TextWithCount from 'app/components/TextWithCount';
 import { env } from 'utils/constants';
 import { useEffect, useState } from 'react';
 import { fetchApprovalsList, fetchPitchedCount } from 'app/apis/query';
+import { createViewURL } from 'utils/helpers';
 import DataTable from '../DataTable';
 import Header from '../Header';
 import styles from '../DasboardCards.module.scss';
@@ -35,7 +36,7 @@ function ApprovalsCard() {
     };
   }, []);
   const handlePitchedClick = () => {
-    window.open(env.views.pitcheNotClosedUrl, '_target');
+    window.open(createViewURL(env.views.pitcheNotClosedId, env.boards.deals), '_target');
   };
   return (
     <Card className={classNames(styles.cardContainer, styles.approvalsCard)}>

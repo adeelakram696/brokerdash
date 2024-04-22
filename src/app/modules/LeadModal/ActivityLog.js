@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 import {
   Flex, Form, Skeleton, Button,
 } from 'antd';
@@ -14,13 +16,16 @@ import { createNewUpdate, updateMarkImportant } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { LeadContext } from 'utils/contexts';
 import styles from './LeadModal.module.scss';
 
-function ActivityLog({ leadId, board, markImportant }) {
+function ActivityLog() {
+  const {
+    leadId, board, getMarkAsImportant, boardId,
+  } = useContext(LeadContext);
   const [updates, setUpdates] = useState([]);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
-  const [boardId, setBoardId] = useState('');
   const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState('');
   const [disablePost, setDisablePost] = useState(true);
@@ -32,7 +37,6 @@ function ActivityLog({ leadId, board, markImportant }) {
     const res = await fetchLeadUpdates(leadId);
     setUpdates(res.data.items[0]?.updates);
     setUsers(res.data.users);
-    setBoardId(res.data.items[0]?.board.id);
     setLoading(false);
   };
   const createUpdate = async (text) => {
@@ -55,11 +59,10 @@ function ActivityLog({ leadId, board, markImportant }) {
   };
   const handleMarkImportant = async (id) => {
     await updateMarkImportant(leadId, boardId, id, columnIds[board].mark_as_important);
-    markImportant();
+    getMarkAsImportant();
   };
   const handleCommentChange = (value) => {
     const plain = refEditor.current.unprivilegedEditor.getText();
-    console.log(plain);
     setDisablePost(!plain.toString().trim());
     setComment(value);
   };

@@ -3,12 +3,16 @@ import {
 } from 'antd';
 import { SMSMobileIcon } from 'app/images/icons';
 import TextAreaField from 'app/components/Forms/TextAreaField';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { columnIds } from 'utils/constants';
 import { sendSmsToClient } from 'app/apis/mutation';
+import { LeadContext } from 'utils/contexts';
 import styles from './ActionsRow.module.scss';
 
-function SendSms({ board, leadId, boardId }) {
+function SendSms() {
+  const {
+    leadId, board, boardId,
+  } = useContext(LeadContext);
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
