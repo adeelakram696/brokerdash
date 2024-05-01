@@ -78,3 +78,29 @@ export const sendSmsToClient = async (leadId, boardId, smsBtncolumnId, textColum
   }`;
   await monday.api(sendMutation);
 };
+export const sendRequestContract = async (leadId, boardId, requestContractId) => {
+  const sendMutation = `mutation {
+    change_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${requestContractId}", value: "${JSON.stringify({ index: 0 }).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}") {
+      id
+    }
+  }`;
+  await monday.api(sendMutation);
+};
+export const sendSubmission = async (leadId, boardId, data, emailOfferBtnId) => {
+  const updateMutation = `mutation {
+    change_multiple_column_values(
+      item_id: ${leadId}
+      board_id: ${boardId}
+      column_values: "${JSON.stringify(data).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"
+    ) {
+    id    
+    }
+  }`;
+  await monday.api(updateMutation);
+  const sendMutation = `mutation {
+    change_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${emailOfferBtnId}", value: "${JSON.stringify({ index: 0 }).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}") {
+      id
+    }
+  }`;
+  await monday.api(sendMutation);
+};

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { env } from './constants';
+import { commissionOnValues } from 'app/modules/LeadModal/TabsContent/SubmissionsTab/data';
+import { columnIds, env } from './constants';
 
 export const removeBoardHeader = () => {
   const header = document.getElementById('mf-header');
@@ -64,4 +65,44 @@ export const formatTimeIn = (seconds) => dayjs().startOf('day').add(seconds, 'se
 
 export function createViewURL(viewId, boardId) {
   return `${env.boardBaseURL}${boardId}/views${viewId}`;
+}
+
+function getCommisionAmt({
+  paybackAmt, fundingAmt, commissionPerc, commisionCalcOn,
+}) {
+  let result = 0;
+  if (commisionCalcOn === commissionOnValues.onPayback) {
+    result = paybackAmt
+    * commissionPerc;
+  } else if (commisionCalcOn === commissionOnValues.onFundingAmount) {
+    result = fundingAmt
+    * commissionPerc;
+  }
+  return result;
+}
+
+export function getFormulaValues(values) {
+  const fundingAmt = Number(values[columnIds.subItem.funding_amount]);
+  const ProfessionalServFee = fundingAmt
+  * Number(values[columnIds.subItem.professional_fee_perc] / 100);
+  const funderFee = fundingAmt
+  * Number(values[columnIds.subItem.funder_fee_perc] / 100);
+  const netFundingAmt = fundingAmt
+  - ProfessionalServFee
+  - funderFee;
+  const paybackAmt = fundingAmt * Number(values[columnIds.subItem.factor_rate]);
+  const paybackPeriod = paybackAmt / Number(values[columnIds.subItem.ach_amount]);
+  return {
+    [columnIds.subItem.funder_fee]: funderFee,
+    [columnIds.subItem.net_funding_amt]: netFundingAmt,
+    [columnIds.subItem.payback_amount]: paybackAmt,
+    [columnIds.subItem.payback_period]: paybackPeriod?.toFixed(3),
+    [columnIds.subItem.comission_amt]: getCommisionAmt({
+      paybackAmt,
+      fundingAmt,
+      commissionPerc: Number(values[columnIds.subItem.commission_perc]) / 100,
+      commisionCalcOn: values[columnIds.subItem.commission_calc_on],
+    }),
+    [columnIds.subItem.professional_service_fee]: ProfessionalServFee,
+  };
 }

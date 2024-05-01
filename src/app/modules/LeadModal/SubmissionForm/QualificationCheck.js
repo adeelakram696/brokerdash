@@ -6,7 +6,7 @@ import { StarIcon } from 'app/images/icons/StarIcon';
 import classNames from 'classnames';
 import styles from './SubmissionForm.module.scss';
 
-function QualificationCheck({ selectedItems, handleSelect, data }) {
+function QualificationCheck({ data }) {
   return (
     <Flex vertical>
       <Flex className={styles.listContainer} vertical>
@@ -17,11 +17,7 @@ function QualificationCheck({ selectedItems, handleSelect, data }) {
             key={key}
             className={classNames(
               styles.listItemRow,
-              { [styles.selectedItem]: selectedItems.includes(key) },
             )}
-            onClick={() => {
-              handleSelect(key);
-            }}
             justify="space-between"
           >
             <Flex className={styles.listTitle}>

@@ -3,7 +3,10 @@ import {
   Modal, Flex, Button,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { columnIds } from 'utils/constants';
+import { LeadContext } from 'utils/contexts';
+import { sendSubmission } from 'app/apis/mutation';
 import styles from './SubmissionForm.module.scss';
 import {
   qualifications, stepData, steps,
@@ -13,21 +16,15 @@ import SelectDocuments from './SelectDocuments';
 import QualificationCheck from './QualificationCheck';
 
 function SubmissionForm({ show, handleClose }) {
-  const [selectedQualifications, setSelectedQualifications] = useState([]);
+  const {
+    leadId, boardId, board,
+  } = useContext(LeadContext);
+  const [loading, setLoading] = useState(false);
   const [selectedFunders, setSelectedFunders] = useState([]);
-  const [selectedDocs, setSelectedFDoucments] = useState([]);
+  const [selectedDocs, setSelectedDoucments] = useState([]);
   const [showText, setShowText] = useState(false);
   const [textNote, setTextNote] = useState('');
   const [step, setStep] = useState(steps.qualification);
-  const handleQualificationSelect = (key) => {
-    let updated = [];
-    if (selectedQualifications.includes(key)) {
-      updated = selectedQualifications.filter((item) => item !== key);
-    } else {
-      updated = [...selectedQualifications, key];
-    }
-    setSelectedQualifications(updated);
-  };
   const handleFunderSelect = (key) => {
     let updated = [];
     if (selectedFunders.includes(key)) {
@@ -44,20 +41,34 @@ function SubmissionForm({ show, handleClose }) {
     } else {
       updated = [...selectedDocs, key];
     }
-    setSelectedFDoucments(updated);
+    setSelectedDoucments(updated);
   };
   const handleNextStep = (nextStep) => {
     setStep(nextStep);
   };
-  const handleSubmit = () => {
-    console.log('submited');
+  const handleSubmit = async () => {
+    const linkedPulseIds = selectedFunders.map((id) => ({ linkedPulseId: Number(id) }));
+    const docs = selectedDocs.join(',');
+    const payload = {
+      [columnIds[board].funders_dropdown]: { linkedPulseIds },
+      [columnIds[board].submit_offers_docs]: docs,
+      [columnIds[board].additional_body_content]: textNote,
+    };
+    setLoading(true);
+    await sendSubmission(leadId, boardId, payload, [columnIds[board].submit_offers]);
+    setSelectedFunders([]);
+    setSelectedDoucments([]);
+    setTextNote('');
+    setStep(steps.qualification);
+    setLoading(false);
+    handleClose();
   };
   const selectedValues = {
-    [steps.qualification]: selectedQualifications,
+    [steps.qualification]: [1],
     [steps.funders]: selectedFunders,
     [steps.documents]: selectedDocs,
   };
-  const isNextEnabled = selectedValues[step].length > 0;
+  const isNextEnabled = selectedValues[step]?.length > 0;
   return (
     <Modal
       open={show}
@@ -79,6 +90,7 @@ function SubmissionForm({ show, handleClose }) {
             type="primary"
             shape="round"
             disabled={!isNextEnabled}
+            loading={loading}
           >
             {stepData[step].nextStep ? 'Next Step' : 'Submit'}
           </Button>
@@ -96,8 +108,6 @@ function SubmissionForm({ show, handleClose }) {
     >
       {step === steps.qualification ? (
         <QualificationCheck
-          selectedItems={selectedQualifications}
-          handleSelect={handleQualificationSelect}
           data={qualifications}
         />
       ) : null}

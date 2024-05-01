@@ -50,7 +50,7 @@ function DetailsTab() {
           leadId={leadId}
           updateInfo={getData}
         />
-        <QualificationMatrix data={details} />
+        <QualificationMatrix />
       </Flex>
     </Flex>
   );

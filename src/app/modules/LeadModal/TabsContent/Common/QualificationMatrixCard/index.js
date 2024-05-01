@@ -4,6 +4,8 @@ import {
 import { QuestionIcon, ThumbsUpIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import TooltipWrap from 'app/components/TooltipWrap';
+import QualificationMatrixForm from 'app/modules/LeadModal/QualificationMatrixForm';
+import { useState } from 'react';
 import styles from './style.module.scss';
 
 export function QualificationToolTip() {
@@ -16,10 +18,14 @@ export function QualificationToolTip() {
 }
 
 function QualificationMatrixCard() {
+  const [openForm, setOpenForm] = useState();
+  const onClose = () => {
+    setOpenForm(false);
+  };
   return (
     <Flex flex={0.6} className={styles.qualificationCard}>
       <Flex justify="center" align="center">
-        <Button className={styles.qulificationBtn} type="primary" shape="round" icon={<ThumbsUpIcon />}>
+        <Button onClick={() => { setOpenForm(true); }} className={styles.qulificationBtn} type="primary" shape="round" icon={<ThumbsUpIcon />}>
           {en.titles.qualificationMatrix}
         </Button>
       </Flex>
@@ -47,6 +53,7 @@ function QualificationMatrixCard() {
           </Flex>
         </Flex>
       </Flex>
+      <QualificationMatrixForm show={openForm} handleClose={onClose} />
     </Flex>
   );
 }

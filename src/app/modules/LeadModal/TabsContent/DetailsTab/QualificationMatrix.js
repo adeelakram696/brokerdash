@@ -9,7 +9,7 @@ import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 import QualificationMatrixForm from '../../QualificationMatrixForm';
 
-function QualificationMatrix({ data }) {
+function QualificationMatrix() {
   const [openForm, setOpenForm] = useState();
   const onClose = () => {
     setOpenForm(false);
@@ -62,7 +62,7 @@ function QualificationMatrix({ data }) {
           <Flex>0</Flex>
         </Flex>
       </Flex>
-      <QualificationMatrixForm show={openForm} handleClose={onClose} data={data} />
+      <QualificationMatrixForm show={openForm} handleClose={onClose} />
     </Card>
   );
 }

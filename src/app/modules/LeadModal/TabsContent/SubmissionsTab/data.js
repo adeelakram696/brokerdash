@@ -5,14 +5,23 @@ import StatusSelect from 'app/components/Forms/StatusSelect';
 import { DialCallIcon } from 'app/images/icons';
 import dayjs from 'dayjs';
 
+export const statuses = {
+  submitted: 'Submitted',
+  responseRecieved: 'Response Recieved',
+  selected: 'Selected',
+  approved: 'Approved',
+  killedAtFundingCall: 'Killed at Funding call',
+  declined: 'Declined',
+  new: 'New',
+};
 export const statusValues = [
-  { value: 'Submitted', label: 'Submitted' },
-  { value: 'Response Recieved', label: 'Response Recieved' },
-  { value: 'Selected', label: 'Selected' },
-  { value: 'Approved', label: 'Approved' },
-  { value: 'Killed at Funding call', label: 'Killed at Funding call' },
-  { value: 'Declined', label: 'Declined' },
-  { value: 'New', label: 'New' },
+  { value: statuses.submitted, label: statuses.submitted },
+  { value: statuses.responseRecieved, label: statuses.responseRecieved },
+  { value: statuses.selected, label: statuses.selected },
+  { value: statuses.approved, label: statuses.approved },
+  { value: statuses.killedAtFundingCall, label: statuses.killedAtFundingCall },
+  { value: statuses.declined, label: statuses.declined },
+  { value: statuses.new, label: statuses.new },
 ];
 
 export const productTypes = [
@@ -33,16 +42,27 @@ export const productTypes = [
   },
 ];
 
+export const commissionOnValues = {
+  selectOne: 'Select One',
+  onPayback: 'On Payback',
+  onFundingAmount: 'On Funding Amount',
+};
+export const achFrequencyValues = {
+  selectOne: 'Select One',
+  daily: 'Daily',
+  weekly: 'Weekly',
+  monthly: 'Monthly',
+};
 export const achFrequency = [
-  { value: 'Select One', label: 'Select One' },
-  { value: 'Daily', label: 'Daily' },
-  { value: 'Weekly', label: 'Weekly' },
-  { value: 'Monthly', label: 'Monthly' },
+  { value: achFrequencyValues.selectOne, label: achFrequencyValues.selectOne },
+  { value: achFrequencyValues.daily, label: achFrequencyValues.daily },
+  { value: achFrequencyValues.weekly, label: achFrequencyValues.weekly },
+  { value: achFrequencyValues.monthly, label: achFrequencyValues.monthly },
 ];
 export const commissionOn = [
-  { value: 'Select One', label: 'Select One' },
-  { value: 'On Payback', label: 'On Payback' },
-  { value: 'On Funding Amount', label: 'On Funding Amount' },
+  { value: commissionOnValues.selectOne, label: commissionOnValues.selectOne },
+  { value: commissionOnValues.onPayback, label: commissionOnValues.onPayback },
+  { value: commissionOnValues.onFundingAmount, label: commissionOnValues.onFundingAmount },
 ];
 
 export const columns = [

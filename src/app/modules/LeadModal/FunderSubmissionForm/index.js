@@ -10,6 +10,7 @@ import { updateClientInformation } from 'app/apis/mutation';
 import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { LeadContext } from 'utils/contexts';
+import { getFormulaValues } from 'utils/helpers';
 import styles from './FunderSubmissionForm.module.scss';
 import {
   achFrequency, commissionOn, productTypes, statusValues,
@@ -22,6 +23,7 @@ function FunderSubmissionForm({
     getData,
   } = useContext(LeadContext);
   const [form] = Form.useForm();
+  const [forumlas, setFormulas] = useState({});
   const [loading, setLoading] = useState(false);
   const setFieldsValues = () => {
     form.setFieldsValue({
@@ -38,9 +40,14 @@ function FunderSubmissionForm({
       [columnIds.subItem.notes]: data[columnIds.subItem.notes],
     });
   };
+  const handleChange = (_, values) => {
+    const calculatedValues = getFormulaValues(values);
+    setFormulas(calculatedValues);
+  };
   useEffect(() => {
     if (!data.name) return;
     setFieldsValues();
+    handleChange('', data);
   }, [data]);
   const handleUpdate = async (values) => {
     setLoading(true);
@@ -83,6 +90,7 @@ function FunderSubmissionForm({
       <Form
         form={form}
         onFinish={handleUpdate}
+        onValuesChange={handleChange}
         defaultValue={{
         }}
       >
@@ -148,13 +156,13 @@ function FunderSubmissionForm({
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4}>Funder Fee</Flex>
             <Flex flex={0.6}>
-              {data[columnIds.subItem.funder_fee]}
+              {forumlas[columnIds.subItem.funder_fee]}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4}>Net Funding Amt</Flex>
             <Flex flex={0.6}>
-              {data[columnIds.subItem.net_funding_amt]}
+              {forumlas[columnIds.subItem.net_funding_amt]}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="flex-start">
@@ -185,13 +193,13 @@ function FunderSubmissionForm({
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4}>Payback Period</Flex>
             <Flex flex={0.6}>
-              {data[columnIds.subItem.payback_period]}
+              {forumlas[columnIds.subItem.payback_period]}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4}>Payback Amount</Flex>
             <Flex flex={0.6}>
-              {data[columnIds.subItem.payback_amount]}
+              {forumlas[columnIds.subItem.payback_amount]}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="flex-start">
@@ -222,7 +230,7 @@ function FunderSubmissionForm({
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4}>Commission Amt</Flex>
             <Flex flex={0.6}>
-              {data[columnIds.subItem.comission_amt]}
+              {forumlas[columnIds.subItem.comission_amt]}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
@@ -239,7 +247,7 @@ function FunderSubmissionForm({
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4}>Professional Service Fee</Flex>
             <Flex flex={0.6}>
-              {data[columnIds.subItem.professional_service_fee]}
+              {forumlas[columnIds.subItem.professional_service_fee]}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="flex-start">

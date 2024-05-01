@@ -6,9 +6,12 @@ import {
 import classNames from 'classnames';
 
 function SelectField({ classnames, ...restProps }) {
+  const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
   return (
     <Select
       {...restProps}
+      showSearch
+      filterOption={filterOption}
       className={classNames(classnames, 'selectField')}
     />
   );

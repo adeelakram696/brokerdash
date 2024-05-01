@@ -8,16 +8,22 @@ export const bankActivityColumns = [
     title: 'Starting Bal',
     key: 'startingBal',
     align: 'center',
+    sumStartFrom: 1,
+    sumOfColumns: ['startingBal', 'totalCredit', 'totalDebit'],
   },
   {
     title: 'Total Credits',
     key: 'totalCredit',
     align: 'center',
+    totalCount: true,
+    totalPrefix: '$',
   },
   {
     title: 'Total Debits',
     key: 'totalDebit',
     align: 'center',
+    totalCount: true,
+    totalPrefix: '$',
   },
   {
     title: 'Dep Cnt',
@@ -51,21 +57,29 @@ export const activePositionsColumns = [
     title: 'Daily',
     key: 'daily',
     align: 'center',
+    totalCount: true,
+    totalPrefix: '$',
   },
   {
     title: 'Weekly',
     key: 'weekly',
     align: 'center',
+    totalCount: true,
+    totalPrefix: '$',
   },
   {
     title: 'Monthly',
     key: 'monthly',
     align: 'center',
+    totalCount: true,
+    totalPrefix: '$',
   },
   {
     title: 'Payoff',
     key: 'payoff',
     align: 'center',
+    totalCount: true,
+    totalPrefix: '$',
   },
 ];
 

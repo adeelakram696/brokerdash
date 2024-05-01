@@ -91,6 +91,7 @@ export const columnIds = {
     folder_id: 'text78',
     text_template: 'status3',
     funders_dropdown: 'connect_boards42',
+    submit_offers_docs: 'text9__1',
     submit_offers: 'button0',
     final_offer_entered: 'check8',
     request_contract: 'button2',
