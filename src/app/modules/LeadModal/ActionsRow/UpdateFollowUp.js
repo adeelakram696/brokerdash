@@ -42,7 +42,6 @@ function UpdateFollowUp() {
         }}
         open={showDatePicker}
         value={followUpDate}
-        minDate={dayjs()}
         onChange={handleFollowUpDateChange}
       />
     </>

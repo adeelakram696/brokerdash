@@ -64,7 +64,7 @@ export function normalizeColumnValues(columnsValues) {
 export const formatTimeIn = (seconds) => dayjs().startOf('day').add(seconds, 'second').format('mm:ss');
 
 export function createViewURL(viewId, boardId) {
-  return `${env.boardBaseURL}${boardId}/views${viewId}`;
+  return `${env.boardBaseURL}${boardId}/views/${viewId}`;
 }
 
 function getCommisionAmt({
@@ -105,4 +105,8 @@ export function getFormulaValues(values) {
     }),
     [columnIds.subItem.professional_service_fee]: ProfessionalServFee,
   };
+}
+
+export function getQueryParams() {
+  return Object.fromEntries(new URLSearchParams(window.location.search));
 }

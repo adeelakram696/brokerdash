@@ -1,7 +1,7 @@
 import Timer from 'app/components/Timer';
 import { formatTimeIn } from 'utils/helpers';
 
-export const columns = (onFinish, updateTimerForTopLead, topLeadId) => [
+export const columns = (onFinish) => [
   {
     title: 'Lead Name',
     dataIndex: 'name',
@@ -35,7 +35,6 @@ export const columns = (onFinish, updateTimerForTopLead, topLeadId) => [
           startSeconds={value}
           limit={300}
           onFinish={onFinish}
-          updateTime={topLeadId === item.id ? updateTimerForTopLead : undefined}
         />
       )
       : formatTimeIn(value)),

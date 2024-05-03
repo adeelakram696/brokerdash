@@ -71,7 +71,7 @@ export const columns = [
     flex: '0.2',
     key: 'updated_at',
     align: 'center',
-    render: (value) => dayjs(value).format('MM/DD/YY HH:mm A'),
+    render: (value) => dayjs(value).format('MM/DD/YY hh:mm A'),
   },
   {
     title: 'Status',

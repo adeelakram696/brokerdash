@@ -22,7 +22,7 @@ function ProgressCard({
 
   return (
     <Card className={styles.progressCard}>
-      <Flex align="center" justify="center" style={{ cursor: 'pointer' }} vertical onClick={onClick}>
+      <Flex align="center" justify="center" style={{ cursor: 'pointer' }} vertical onClick={value === 0 ? () => {} : onClick}>
         <div className={styles.topText}>
           {subTitle}
         </div>

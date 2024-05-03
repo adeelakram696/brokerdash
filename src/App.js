@@ -1,15 +1,18 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import { useEffect, useState } from 'react';
 import {
   Layout, theme, ConfigProvider, Spin,
 } from 'antd';
-import { removeBoardHeader } from 'utils/helpers';
+import { getQueryParams, removeBoardHeader } from 'utils/helpers';
 import { fetchGroups, fetchUserName } from 'app/apis/query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import Dashboard from './app/pages/dashboard';
 import './App.scss';
+import LeadModal from 'app/modules/LeadModal';
+import { env } from 'utils/constants';
+import Dashboard from './app/pages/dashboard';
 
 // Extend Day.js with duration and customParseFormat plugins
 dayjs.extend(duration);
@@ -22,13 +25,14 @@ function App() {
     token: { borderRadiusLG },
   } = theme.useToken();
   const [userName, setUserName] = useState();
+  const [stagesFetched, setStagesFetched] = useState();
 
   useEffect(() => {
     removeBoardHeader();
     fetchUserName().then((res) => setUserName(res));
-    fetchGroups();
+    fetchGroups().then((res) => setStagesFetched(res));
   }, []);
-
+  const { itemId, boardId } = getQueryParams();
   return (
     <ConfigProvider
       theme={{
@@ -48,7 +52,7 @@ function App() {
           padding: '0 8px 24px',
         }}
       >
-        {userName ? (
+        {userName && stagesFetched ? (
           <Content
             style={{
               padding: 8,
@@ -57,7 +61,15 @@ function App() {
               borderRadius: borderRadiusLG,
             }}
           >
-            <Dashboard />
+            {itemId ? (
+              <LeadModal
+                show
+                handleClose={() => {}}
+                leadId={itemId}
+                board={env.boards[boardId]}
+              />
+            )
+              : <Dashboard />}
           </Content>
         ) : <Spin spinning fullscreen />}
       </Layout>

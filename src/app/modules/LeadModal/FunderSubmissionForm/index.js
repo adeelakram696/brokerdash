@@ -82,7 +82,7 @@ function FunderSubmissionForm({
           <Flex style={{ fontSize: 15, fontWeight: '400' }}>
             Last updated on
             {' '}
-            {dayjs(data.updated_at).format('MM/DD/YY @ HH:mm A')}
+            {dayjs(data.updated_at).format('MM/DD/YY @ hh:mm A')}
           </Flex>
         </Flex>
 )}

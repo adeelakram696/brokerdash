@@ -13,14 +13,14 @@ import { transformData } from './transform';
 
 function ActionsCard() {
   const [list, setList] = useState([]);
-  const getApprovedData = async () => {
+  const getActionsData = async () => {
     const items = await fetchActionsNeededLeadsData();
     const transformed = transformData(items);
     setList(transformed);
   };
   useEffect(() => {
-    getApprovedData();
-    const intervalId1 = setInterval(getApprovedData, (1000 * env.intervalTime));
+    getActionsData();
+    const intervalId1 = setInterval(getActionsData, (1000 * env.intervalTime));
     return () => {
       clearInterval(intervalId1);
     };

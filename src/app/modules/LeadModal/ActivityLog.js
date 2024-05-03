@@ -134,7 +134,7 @@ function ActivityLog() {
               id={update.id}
               handleMarkImportant={handleMarkImportant}
               text={update.body}
-              time={dayjs(update.updated_at).format('MMM DD [@] HH:mm A')}
+              time={dayjs(update.updated_at).format('MMM DD [@] hh:mm A')}
               type={isUser ? 'Comment' : 'Activity'}
               typeIcon={isUser ? <CommentsIcon width="12" height="14" /> : <ActivityClockIcon width="12" height="14" />}
               isHide={filter && (filter !== type)}

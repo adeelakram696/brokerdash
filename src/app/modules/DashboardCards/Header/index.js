@@ -13,7 +13,8 @@ function Header({
           <h4 className={styles.title}>{title}</h4>
           {subTitle && <h6 className={styles.subtitle}>{subTitle}</h6>}
         </Flex>
-        {count && <div className={classnames(styles.totalcount, styles[countColor])}>{count}</div>}
+        {count
+          ? <div className={classnames(styles.totalcount, styles[countColor])}>{count}</div> : null}
       </Flex>
       <Flex flex={0.4} align="center" justify="flex-end">
         {rightComponent || null}

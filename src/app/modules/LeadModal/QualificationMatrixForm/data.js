@@ -1,7 +1,7 @@
 export const bankActivityColumns = [
   {
     title: 'Month',
-    key: 'month',
+    key: 'id',
     align: 'center',
   },
   {
@@ -44,7 +44,7 @@ export const bankActivityColumns = [
 export const activePositionsColumns = [
   {
     title: 'Funder Name',
-    key: 'name',
+    key: 'id',
     align: 'center',
     disabled: true,
   },
@@ -92,5 +92,22 @@ export const sampleRow = [
   },
   {
     id: 3,
+  },
+];
+export const sampleRowFunders = [
+  {
+    id: 1,
+  },
+  {
+    id: 2,
+  },
+  {
+    id: 3,
+  },
+  {
+    id: 4,
+  },
+  {
+    id: 5,
   },
 ];

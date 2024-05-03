@@ -11,7 +11,9 @@ import SelectField from 'app/components/Forms/SelectField';
 import InputField from 'app/components/Forms/InputField';
 import _ from 'lodash';
 import styles from './QualificationMatrixForm.module.scss';
-import { activePositionsColumns, bankActivityColumns, sampleRow } from './data';
+import {
+  activePositionsColumns, bankActivityColumns, sampleRow, sampleRowFunders,
+} from './data';
 import { businessTypes, fundersIntakeCalc, listOfStates } from './matrixData';
 
 function QualificationMatrixForm({ show, handleClose }) {
@@ -97,10 +99,10 @@ function QualificationMatrixForm({ show, handleClose }) {
           <Flex style={{ fontSize: 15, fontWeight: '400', color: '#1A4049' }}>
             Created:
             {' '}
-            {dayjs().format('MM/DD/YY @ HH:mm A')}
+            {dayjs().format('MM/DD/YY @ hh:mm A')}
             {' | '}
             Modified Last:
-            {dayjs().format('MM/DD/YY @ HH:mm A')}
+            {dayjs().format('MM/DD/YY @ hh:mm A')}
           </Flex>
         </Flex>
 )}
@@ -230,7 +232,7 @@ function QualificationMatrixForm({ show, handleClose }) {
           <Flex>
             <EditableTable
               columns={activePositionsColumns}
-              rows={details?.subitems}
+              rows={sampleRowFunders}
               totalCounts={matrixValues.totalActivePositionsCounts}
             />
           </Flex>

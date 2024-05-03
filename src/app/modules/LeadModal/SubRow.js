@@ -27,11 +27,11 @@ function SubRow({
         </Flex>
         <Flex>
           <Flex className={styles.subRowItem}>
-            <Flex className={styles.subHeadingLabel}>Last Spote to Client: </Flex>
+            <Flex className={styles.subHeadingLabel}>Last Spoke to Client: </Flex>
             <Flex className={styles.subHeadingValue}>{lastSpoke || '-'}</Flex>
           </Flex>
           <Flex className={styles.subRowItem}>
-            <Flex className={styles.subHeadingLabel}>Next Follow Up to Client: </Flex>
+            <Flex className={styles.subHeadingLabel}>Next Follow Up with Client: </Flex>
             <Flex className={styles.subHeadingValue}>{nextFollowUp || '-'}</Flex>
           </Flex>
         </Flex>

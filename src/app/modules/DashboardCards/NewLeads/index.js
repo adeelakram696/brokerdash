@@ -5,6 +5,7 @@ import GoalProgressBar from 'app/components/GoalProgressBar';
 import { columnIds, env } from 'utils/constants';
 import { useEffect, useState } from 'react';
 import { fetchNewLeadsData } from 'app/apis/query';
+import _ from 'lodash';
 import Header from '../Header';
 import DataTable from '../DataTable';
 import styles from '../DasboardCards.module.scss';
@@ -13,7 +14,6 @@ import { transformData } from './transform';
 
 function NewLeadsCard() {
   const [list, setList] = useState([]);
-  const [topLeadTimer, setTopLeadTimer] = useState(0);
   const getApprovedData = async () => {
     const items = await fetchNewLeadsData(columnIds);
     const transformed = transformData(items);
@@ -29,16 +29,17 @@ function NewLeadsCard() {
   const onFinishTimer = () => {
     getApprovedData();
   };
-  const updateTimerForTopLead = (value) => {
-    setTopLeadTimer(value);
-  };
-  const getNewItem = (list || [])[0] || {};
+  const averageTime = _.sumBy(list, (item) => (item.isNew ? 0 : item.reassingTime));
   return (
     <Card className={classNames(styles.cardContainer, styles.newLeadsCard)}>
-      <Header title={en.Cards.newLeads.title} count="5" rightComponent={<GoalProgressBar time={topLeadTimer || getNewItem?.reassingTime || 0} />} />
+      <Header
+        title={en.Cards.newLeads.title}
+        count={list.length}
+        rightComponent={<GoalProgressBar time={averageTime || 0} />}
+      />
       <div className={styles.tableContainer}>
         <DataTable
-          columns={columns(onFinishTimer, updateTimerForTopLead, getNewItem?.id)}
+          columns={columns(onFinishTimer)}
           data={list}
           highlightClass={styles.red}
           newTagClass={styles.white}

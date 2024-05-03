@@ -26,7 +26,7 @@ function DataTable({
           columns.map((column, index) => (
             <Flex
               className={classNames(styles.headerRow, styles.rowPadding)}
-              flex={index === 0 ? 1.2 : 0.75}
+              flex={index === 0 ? 1.3 : 0.75}
               key={column.key}
               justify={column.align}
             >

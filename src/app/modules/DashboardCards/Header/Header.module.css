@@ -1,7 +1,8 @@
 .totalcount {
-  font-size: 24px;
+  font-size: 18px;
+  font-weight: bold;
   margin-left: 13px;
-  border-radius: 100%;
+  border-radius: 10px;
   padding: 4px 15px;
   filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.03));
 }

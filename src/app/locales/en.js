@@ -26,7 +26,7 @@ const en = {
     },
     approvals: {
       title: 'Approvals',
-      rightTitle: 'Pitched, Un-Closed',
+      rightTitle: 'Pitched, Not-Closed',
     },
     contractsOut: {
       title: 'Contracts Out',
