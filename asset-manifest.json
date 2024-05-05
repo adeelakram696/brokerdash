@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/brokerdash/static/css/main.ece46a27.css",
-    "main.js": "/brokerdash/static/js/main.ea2b35ae.js",
+    "main.css": "/brokerdash/static/css/main.d4ec8720.css",
+    "main.js": "/brokerdash/static/js/main.3fac707e.js",
     "static/media/approvalTick.svg": "/brokerdash/static/media/approvalTick.053bb133bcb2cfa179fbb48e4d3b484d.svg",
     "static/media/runingShoe.svg": "/brokerdash/static/media/runingShoe.abddc61641fd401b32a0de46fc33d303.svg",
     "static/media/signature.svg": "/brokerdash/static/media/signature.b5b95111e363c8e72be3996f037c2f12.svg",
     "index.html": "/brokerdash/index.html",
-    "main.ece46a27.css.map": "/brokerdash/static/css/main.ece46a27.css.map",
-    "main.ea2b35ae.js.map": "/brokerdash/static/js/main.ea2b35ae.js.map"
+    "main.d4ec8720.css.map": "/brokerdash/static/css/main.d4ec8720.css.map",
+    "main.3fac707e.js.map": "/brokerdash/static/js/main.3fac707e.js.map"
   },
   "entrypoints": [
-    "static/css/main.ece46a27.css",
-    "static/js/main.ea2b35ae.js"
+    "static/css/main.d4ec8720.css",
+    "static/js/main.3fac707e.js"
   ]
 }
