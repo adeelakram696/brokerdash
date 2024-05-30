@@ -1,14 +1,14 @@
 .heading {
   font-size: 16px;
   font-weight: bold;
-  color: #1A4049;
+  color: #000;
   margin-bottom: 10px;
 }
 .fullWidth {
   width: 100%;
 }
 .sendRequestBtn {
-  background-color: #1A4049;
+  background-color: #000;
   font-size: 10px;
   font-weight: bold;
 }
@@ -19,12 +19,12 @@
 }
 .forwardtext {
   font-size: 11px;
-  color: #1A4049;
+  color: #000;
   margin: 0 5px;
 }
 .dealNumber {
   font-size: 11px;
-  color: #1A4049;
+  color: #000;
 }
 .sorting {
   font-size: 11px;
@@ -35,6 +35,7 @@
 }
 .documentItem {
   margin-top: 15px;
+  cursor: pointer;
 }
 .tickBox {
   margin-right: 10px;
@@ -49,6 +50,7 @@
   text-overflow: ellipsis;
   width: 300px;
   white-space: nowrap;
+  cursor: 'pointer';
 }
 .breadcrumbRow {
   margin-top: 10px;

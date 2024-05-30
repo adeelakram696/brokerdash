@@ -33,8 +33,12 @@ const en = {
       rightTitle: 'Contracts Signed',
     },
     progess: {
-      followup: {
-        title: 'Warm Follow-up Remaining',
+      followupLeads: {
+        title: 'Warm Leads Follow-up Remaining',
+        subtitle: "You're on fire! Just a few more sparks",
+      },
+      followupDeals: {
+        title: 'Deals Follow-up Remaining',
         subtitle: "You're on fire! Just a few more sparks",
       },
       coldProspecting: {

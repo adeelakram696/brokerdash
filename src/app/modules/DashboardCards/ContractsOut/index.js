@@ -36,7 +36,7 @@ function ContractsOutCard() {
     };
   }, []);
   const handleContractSignedClick = () => {
-    window.open(createViewURL(env.views.contractSignedId, env.boards.deals), '_target');
+    window.open(createViewURL(env.views.contractSignedId, env.boards.deals), '_blank');
   };
   return (
     <Card className={classNames(styles.cardContainer, styles.contractsCard)}>

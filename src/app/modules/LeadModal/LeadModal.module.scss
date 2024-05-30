@@ -75,6 +75,7 @@
   background-color: #E1EFF2;
   padding: 15px;
   border-radius: 15px;
+  min-height: 670px;
 }
 .activityBtnContainer {
   padding: 5px 10px;
@@ -97,11 +98,12 @@
 }
 .threadList {
   margin-top: 5px;
-  max-height: 650px;
+  max-height: 575px;
   overflow-y: auto;
 }
 .subRowItem {
   margin: 0 10px;
+  align-items: center;
 }
 .commentCTA {
   position: absolute;
@@ -113,4 +115,24 @@
   &:hover {
     background-color: #3e8154 !important;
   }
+}
+.readyForSubmission {
+  margin-top: 4px;
+  background-color: #52B172;
+  font-size: 12px;
+  font-weight: bold;
+  &:hover {
+    background-color: #3e8154 !important;
+  }
+}
+.stepsList {
+  position: absolute;
+  top: 33px;
+  left: 426px;
+}
+.steps {
+  color: #000;
+}
+.sourceSelect {
+  min-width: 100px;
 }

@@ -59,3 +59,16 @@
   max-height: 650px;
   overflow-y: auto;
 }
+.label {
+  font-size: 10px;
+  font-weight:300;
+  color: #000;
+  line-height: 22px;
+  width: 50%;
+}
+.value {
+  font-size: 11px;
+  font-weight: bold;
+  color: #000;
+  line-height: 22px;
+}

@@ -1,19 +1,19 @@
 import ProgressCard from 'app/components/ProgressCard';
-import { ClockIcon } from 'app/images/icons';
+import { FireIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
-import { columnIds, env } from 'utils/constants';
-import { fetchWaitingForOffer } from 'app/apis/query';
+import { env } from 'utils/constants';
+import { fetchLeadsFollowUps } from 'app/apis/query';
 import { createViewURL } from 'utils/helpers';
 
-function WaitingForOffer({ updateTotal }) {
+function LeadsFollowUpRemaining({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
   const [totalValue, setTotal] = useState({ value: 0 });
 
   const getData = async () => {
-    const value = await fetchWaitingForOffer(columnIds);
-    setCurrentValue(value);
-    updateTotal(value, 'waitingForOfferTotal', setTotal, 'witing');
+    const leadsItem = await fetchLeadsFollowUps();
+    setCurrentValue(leadsItem);
+    updateTotal(leadsItem, 'leadsfollowUpTotal', setTotal, 'leadsfollowUp');
   };
   useEffect(() => {
     getData();
@@ -23,19 +23,19 @@ function WaitingForOffer({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(createViewURL(env.views.waitingForOffer, env.boards.deals), '_blank');
+    window.open(createViewURL(env.views.followupLeadsToday, env.boards.leads), '_blank');
   };
   return (
     <ProgressCard
       value={currentValue}
       total={totalValue.value}
-      title={en.Cards.progess.waitingOffer.title}
-      subTitle={en.Cards.progess.waitingOffer.subtitle}
-      color="#5FD372"
-      icon={<ClockIcon />}
+      title={en.Cards.progess.followupLeads.title}
+      subTitle={en.Cards.progess.followupLeads.subtitle}
+      color="#429A65"
+      icon={<FireIcon />}
       onClick={handleClick}
     />
   );
 }
 
-export default WaitingForOffer;
+export default LeadsFollowUpRemaining;

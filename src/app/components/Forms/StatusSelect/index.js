@@ -10,9 +10,9 @@ function StatusSelect({ values, value = 'New', onChange }) {
   useEffect(() => {
     const selectedItem = values.find((v) => v.value === value);
     setSelected(selectedItem);
-  }, []);
+  }, [value]);
   const handleChange = (item, option) => {
-    setSelected(option);
+    // setSelected(option);
     if (onChange) { onChange(item, option); }
   };
   return (

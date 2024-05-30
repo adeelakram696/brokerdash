@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 export function DownloadIcon({
-  color = '#1A4049', width = '14', height = '13',
+  color = '#000', width = '14', height = '13',
 }) {
   return (
     <svg width={width} height={height} viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">

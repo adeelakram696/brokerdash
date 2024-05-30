@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 export function PlusCircleIcon({
-  color = '#1A4049', width = '13', height = '14',
+  color = '#000', width = '13', height = '14',
 }) {
   return (
     <svg width={width} height={height} viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">

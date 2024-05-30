@@ -23,7 +23,7 @@ function ReadyForSubmission({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(createViewURL(env.views.readyForSubmission, env.boards.deals), '_target');
+    window.open(createViewURL(env.views.readyForSubmission, env.boards.deals), '_blank');
   };
   return (
     <ProgressCard

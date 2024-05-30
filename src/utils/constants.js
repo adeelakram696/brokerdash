@@ -4,6 +4,8 @@ export const env = {
     deals: process.env.REACT_APP_DEALS_BOARD_ID,
     leads: process.env.REACT_APP_LEADS_BOARD_ID,
     funders: process.env.REACT_APP_FUNDERS_BOARD_ID,
+    clients: process.env.REACT_APP_CLIENTS_BOARD_ID,
+    clientAccounts: process.env.REACT_APP_CLIENT_ACCOUNTS_BOARD_ID,
     [process.env.REACT_APP_DEALS_BOARD_ID]: 'deals',
     [process.env.REACT_APP_LEADS_BOARD_ID]: 'leads',
   },
@@ -18,7 +20,8 @@ export const env = {
   views: {
     pitcheNotClosedId: process.env.REACT_APP_PITCH_NOT_CLOSED_VIEW_ID,
     contractSignedId: process.env.REACT_APP_CONTRACTS_SIGNED_VIEW_ID,
-    followupToday: process.env.REACT_APP_TODAYS_FOLLOW_UP_VIEW_ID,
+    followupLeadsToday: process.env.REACT_APP_TODAYS_FOLLOW_UP_LEADS_VIEW_ID,
+    followupDealsToday: process.env.REACT_APP_TODAYS_FOLLOW_UP_DEALS_VIEW_ID,
     coldProspecting: process.env.REACT_APP_COLD_PROSPECTING_VIEW_ID,
     docReview: process.env.REACT_APP_DOC_REVIEW_VIEW_ID,
     readyForSubmission: process.env.REACT_APP_READY_FOR_SUBMISSION_VIEW_ID,
@@ -28,10 +31,19 @@ export const env = {
   intervalTime: process.env.REACT_APP_REFETCH_TIME_SECONDS,
 };
 
+export const boardNames = {
+  clients: 'clients',
+  deals: 'deals',
+  leads: 'leads',
+  clientAccount: 'clientAccount',
+  funders: 'funders',
+  coldProspecting: 'coldProspecting',
+};
 export const columnIds = {
   deals: {
     next_followup: 'date_1',
     agent: 'deal_owner',
+    assginee: 'deal_owner',
     name: 'name',
     tasks: 'subitems',
     temperature: 'status2',
@@ -50,11 +62,11 @@ export const columnIds = {
     deal_value: 'deal_value',
     file_type: 'status8',
     monthly_revenue: 'status_1',
-    desired_funding_amount: 'text7',
+    requested_amount: 'text7',
     money_due_in: 'text6',
-    most_important_for: 'text9',
+    most_important: 'text9',
     needs_money_for: 'text57',
-    existing_debt_balance: 'text',
+    existing_debt: 'text',
     goals: 'long_text_18',
     past_and_current_financial_products: 'long_text2',
     explore_mindset: 'long_text_12',
@@ -96,6 +108,7 @@ export const columnIds = {
     submit_offers_docs: 'text9__1',
     submit_offers: 'button0',
     final_offer_entered: 'check8',
+    submit_contract_docs: 'text5__1',
     request_contract: 'button2',
     attach_bank_statements_to_submission: 'checkbox',
     attach_mtd__to_submission: 'checkbox7',
@@ -151,6 +164,16 @@ export const columnIds = {
     sequence_name: 'text63',
     sequence_step: 'text_1',
     mark_as_important: 'text__1',
+    qm_bank_activity: 'long_text__1',
+    qm_active_position: 'long_text4__1',
+    qm_suggested_funders: 'long_text_1__1',
+    last_lead_assigned: 'hour__1',
+    sequence_welcome_wo_docs_w_application: 'status50__1',
+    sequence_welcome_w_docs_w_application: 'color2__1',
+    sequence_welcome_wo_docs_wo_application: 'color8__1',
+    sequence_welcome_become_lead_w_file: 'color80__1',
+    sequence_welcome_become_lead_wo_file: 'color1__1',
+    sequence_manual_import: 'color11__1',
   },
   leads: {
     name: 'name',
@@ -160,6 +183,7 @@ export const columnIds = {
     email: 'lead_email',
     temperature: 'status6',
     sales_rep: 'dialer',
+    assginee: 'dialer',
     stage: 'lead_status',
     type: 'status5',
     outreach_status: 'status_1',
@@ -170,7 +194,7 @@ export const columnIds = {
     industry: 'industry',
     state_incorporated: 'text73',
     additional_phone: 'additional_phone',
-    monthly_revenue_dropdown: 'color',
+    monthly_revenue: 'color',
     dob: 'dob',
     social_security: 'text78',
     tax_id_ein: 'tax_id',
@@ -185,10 +209,10 @@ export const columnIds = {
     business_city: 'text5',
     business_state: 'text6',
     business_zip: 'text1',
-    home_street_address: 'text96',
-    home_city: 'city',
-    home_state: 'state',
-    home_zip: 'zip',
+    address: 'text96',
+    city: 'city',
+    state: 'state',
+    zip: 'zip',
     title: 'text',
     website: 'link',
     source: 'source5',
@@ -232,9 +256,9 @@ export const columnIds = {
     partner_state: 'text_2',
     partner_zip: 'text_3',
     partner_credit_score: 'text_4',
-    partner_ssn: 'text67',
+    partner_social_security: 'text67',
     partner_dob: 'text55',
-    partner_ownership_percentage: 'numbers43',
+    partner_ownership: 'numbers43',
     incoming_files: 'files1',
     new_leads: 'time_tracking0',
     attempted_to_contact: 'time_tracking065',
@@ -264,7 +288,7 @@ export const columnIds = {
     text_message: 'text35',
     send_sms: 'button0',
     rent_or_own: 'status2',
-    sequence_welcome__become_lead_w_file: 'status61',
+    sequence_welcome_become_lead_w_file: 'status61',
     sequence_welcome_become_lead_wo_file: 'status69',
     sequence_manual_import: 'status85',
     start_manual_import_sequence: 'button3',
@@ -286,6 +310,10 @@ export const columnIds = {
     action_required_files: 'status__1',
     action_required_emails: 'color__1',
     action_required_sms: 'color7__1',
+    qm_bank_activity: 'long_text__1',
+    qm_active_position: 'long_text5__1',
+    qm_suggested_funders: 'long_text_1__1',
+    last_lead_assigned: 'hour5__1',
   },
   subItem: {
     funding_accounts: 'connect_boards5',
@@ -313,6 +341,7 @@ export const columnIds = {
     create_psf_only: 'status_16',
     owner: 'person',
     dropbox_url: 'dropbox_url',
+    renewal: 'color__1',
   },
   coldProspecting: {
     name: 'name',
@@ -356,6 +385,56 @@ export const columnIds = {
     channel: 'status2',
     people: 'people__1',
   },
+  clients: {
+    name: 'name',
+    subitems: 'subitems',
+    account: 'contact_account',
+    industry: 'mirror8',
+    state_of_incorporation: 'mirror3',
+    additional_name: 'additional_name',
+    first_name: 'text',
+    last_name: 'text_1',
+    title: 'title5',
+    phone: 'phone_1',
+    additional_phone: 'additional_phone',
+    email: 'contact_email',
+    email_2: 'email',
+    company: 'text8',
+    deals: 'contact_deal',
+    address: 'address',
+    city: 'city',
+    state: 'state',
+    zip: 'zip',
+    country: 'country',
+    dob: 'dob',
+    social_security: 'dup__of_dob',
+    credit_score: 'text2',
+    ownership: 'text4',
+  },
+  clientAccount: {
+    name: 'name',
+    am: 'people',
+    all_contacts: 'account_contact',
+    deals: 'connect_boards__1',
+    time_in_business: 'text4',
+    business_start_date: 'business_start_date',
+    date: 'date',
+    years_in_bus: 'formula',
+    tax_id_ein: 'tax_id',
+    industry: 'industry6',
+    business_street_address: 'text94',
+    business_city: 'text90',
+    business_state: 'text1',
+    business_zip: 'text2',
+    website: 'link2',
+    dba: 'text6',
+    date_added: 'date_added',
+    entity_type: 'status',
+    state_incorporated: 'text5',
+    rent_or_own: 'status4',
+    source: 'text21',
+    company_name: 'text89',
+  },
 };
 export const actionsNeeded = [
   'Email',
@@ -364,6 +443,11 @@ export const actionsNeeded = [
   'Ans Received',
   'Approved',
 ];
+export const renewalTags = {
+  current: 'Current',
+  renewal: 'Renewal',
+  old: 'Old',
+};
 export const stages = {
   deals: [
     {
@@ -446,3 +530,236 @@ export const stages = {
     },
   ],
 };
+
+export const sequenceSteps = {
+  leads: {
+    sequence_additional_docs_needed: [
+      {
+        title: 'Step 1: Immediate',
+      },
+      {
+        title: 'Step 2: 1 day after',
+      },
+      {
+        title: 'Step 3: 2 days after',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_wo_docs_w_application: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Step 2 -  Next Morning',
+      },
+      {
+        title: 'Step 3 - 5 hours after next morning',
+      },
+      {
+        title: 'Step 4 - 3 days after',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_w_docs_w_application: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_wo_docs_wo_application: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Step 2 -  Next Morning',
+      },
+      {
+        title: 'Step 3 - 3 days later',
+      },
+      {
+        title: 'Step 4 - 5 days later',
+      },
+      {
+        title: 'Step 5 - 7 Days later',
+      },
+      {
+        title: 'Step 6 - 12 Days later',
+      },
+      {
+        title: 'Step 7 - 1st day of next month',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_become_lead_w_file: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_become_lead_wo_file: [
+      {
+        title: 'Step 1: Immediate',
+      },
+      {
+        title: 'Step 2: Next Morning',
+      },
+      {
+        title: 'Step 3: Two Days Later',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_manual_import: [
+      {
+        title: 'Step 1: Immediate',
+      },
+      {
+        title: 'Step 2: 14 days later',
+      },
+      {
+        title: 'Step 3: 30 days later',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_dq: [
+      {
+        title: 'Step 1: Immediate',
+      },
+      {
+        title: 'Step 2: 45 Days Later',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+  },
+  deals: {
+    sequence_additional_docs_needed: [
+      {
+        title: 'Step 1: Immediate',
+      },
+      {
+        title: 'Step 2: After 24 hours',
+      },
+      {
+        title: 'Step 3: After 48 hours',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_declined_dq: [
+      {
+        title: 'Step 1: Immediate',
+      },
+      {
+        title: 'Step 2: 45 days after',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_wo_docs_w_application: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Notify',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_w_docs_w_application: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Notify',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_wo_docs_wo_application: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Notify',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_become_lead_w_file: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Notify',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_welcome_become_lead_wo_file: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Notify',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+    sequence_manual_import: [
+      {
+        title: 'Step 1 -  Immediate',
+      },
+      {
+        title: 'Notify',
+      },
+      {
+        title: 'Completed',
+      },
+    ],
+  },
+};
+
+export const sources = [
+  {
+    value: 'Become',
+    label: 'Become',
+  },
+  {
+    value: 'metappc',
+    label: 'metappc',
+  },
+  {
+    value: 'Email',
+    label: 'Email',
+  },
+  {
+    value: 'meta',
+    label: 'meta',
+  },
+  {
+    value: 'Brochure',
+    label: 'Brochure',
+  },
+];

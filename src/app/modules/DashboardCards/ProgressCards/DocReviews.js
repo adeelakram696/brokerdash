@@ -23,7 +23,7 @@ function DocReviews({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(createViewURL(env.views.docReview, env.boards.leads), '_target');
+    window.open(createViewURL(env.views.docReview, env.boards.leads), '_blank');
   };
   return (
     <ProgressCard

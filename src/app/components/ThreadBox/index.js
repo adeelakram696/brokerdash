@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import styles from './ThreadBox.module.scss';
 
 function ThreadBox({
-  text, time, type, typeIcon, isHide, id, handleMarkImportant,
+  text, time, type, typeIcon, isHide, id, handleMarkImportant, creator,
 }) {
   const handleMenuClick = (e) => {
     if (e.key === 'mark') {
@@ -25,7 +25,13 @@ function ThreadBox({
       <Flex flex={1} align="center" justify="space-between">
         <Flex align="center">
           <Flex className={styles.threadIcon}>{typeIcon}</Flex>
-          <Flex className={styles.threadTypeTitle}>{type}</Flex>
+          <Flex className={styles.threadTypeTitle}>
+            {type}
+            {' '}
+            by
+            {' '}
+            {creator}
+          </Flex>
         </Flex>
         <Flex align="center" className={styles.activityThreadOptions}>
           <Flex style={{ marginRight: 10 }}>
@@ -45,7 +51,7 @@ function ThreadBox({
           </Dropdown>
         </Flex>
       </Flex>
-      <Flex wrap="wrap" className={styles.threadComment} dangerouslySetInnerHTML={{ __html: text }} />
+      <div wrap="wrap" className={styles.threadComment} dangerouslySetInnerHTML={{ __html: text }} />
     </Flex>
   );
 }

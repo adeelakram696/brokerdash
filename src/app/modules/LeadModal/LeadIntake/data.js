@@ -13,6 +13,13 @@ export const importantToYou = [
   { value: 'Speed of Capital', label: 'Speed of Capital' },
   { value: 'Cost of Capital', label: 'Cost of Capital' },
 ];
+export const monthlyRevenue = [
+  { value: '$20k-$49k', label: '$20k-$49k' },
+  { value: '$0k-$19k', label: '$0k-$19k' },
+  { value: '$50k-$80k', label: '$50k-$80k' },
+  { value: '$80k-$199k', label: '$80k-$199k' },
+  { value: '$200k', label: '$200k' },
+];
 export const existingDepts = [
   { value: 'Yes', label: 'Yes' },
   { value: 'No', label: 'No' },

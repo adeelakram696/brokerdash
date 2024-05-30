@@ -10,44 +10,60 @@ import {
 } from 'app/images/icons';
 import ThreadBox from 'app/components/ThreadBox';
 import dayjs from 'dayjs';
-import _ from 'lodash';
-import { fetchLeadUpdates } from 'app/apis/query';
-import { createNewUpdate, updateMarkImportant } from 'app/apis/mutation';
+import { createNewUpdate, updateSimpleColumnValue } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { LeadContext } from 'utils/contexts';
+import { splitActionFromUpdate } from 'utils/helpers';
+import { ExclamationCircleTwoTone, MessageTwoTone, UserOutlined } from '@ant-design/icons';
 import styles from './LeadModal.module.scss';
 
 function ActivityLog() {
   const {
     leadId, board, getMarkAsImportant, boardId,
+    getUpdates, updates, setUpdates,
   } = useContext(LeadContext);
-  const [updates, setUpdates] = useState([]);
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState('');
   const [disablePost, setDisablePost] = useState(true);
   const refEditor = useRef();
   const [form] = Form.useForm();
-
-  const getData = async () => {
-    setLoading(true);
-    const res = await fetchLeadUpdates(leadId);
-    setUpdates(res.data.items[0]?.updates);
-    setUsers(res.data.users);
-    setLoading(false);
+  const getActionIcon = (action) => {
+    switch (action) {
+      case 'System Action': return <ActivityClockIcon width="12" height="14" />;
+      case 'SMS': return <MessageTwoTone width="12" height="14" />;
+      case 'User Action': return <UserOutlined width="12" height="14" />;
+      case 'Error': return <ExclamationCircleTwoTone twoToneColor="#CC4141" width="12" height="14" />;
+      default: return <CommentsIcon width="12" height="14" />;
+    }
   };
   const createUpdate = async (text) => {
     setLoading(true);
-    const res = await createNewUpdate(leadId, text);
+    const parsedStr = text.replace(/(<a[^>]*?href=")([^"]*)(".*?>)/g, (match, p1, p2, p3) => {
+      if (!/^https?:\/\//i.test(p2)) {
+        return `${p1}http://${p2}${p3}`;
+      }
+      return match;
+    });
+    const parsed = parsedStr.replace(/"/g, "'");
+    const res = await createNewUpdate(leadId, parsed);
     form.resetFields();
-    setUpdates([res.data.create_update, ...updates]);
+    if (res.errors) {
+      setLoading(false);
+      return;
+    }
+    setUpdates([(res.data || []).create_update, ...updates]);
     setLoading(false);
   };
   useEffect(() => {
-    getData();
+    getUpdates();
+    const intervalId = setInterval(getUpdates, (1000 * 30));
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [leadId]);
 
   const handleFitlerUpdate = (key) => {
@@ -58,7 +74,7 @@ function ActivityLog() {
     setFilter(updatedKey);
   };
   const handleMarkImportant = async (id) => {
-    await updateMarkImportant(leadId, boardId, id, columnIds[board].mark_as_important);
+    await updateSimpleColumnValue(leadId, boardId, id, columnIds[board].mark_as_important);
     getMarkAsImportant();
   };
   const handleCommentChange = (value) => {
@@ -126,17 +142,18 @@ function ActivityLog() {
       <Flex className={styles.threadList} vertical>
         {loading ? <Skeleton title={false} /> : null}
         {updates?.map((update) => {
-          const isUser = _.findIndex(users, (o) => o.id === update.creator_id) >= 0;
-          const type = isUser ? 'comment' : 'activity';
+          const actions = splitActionFromUpdate((update || {}).body || '');
+          const type = actions.action ? 'activity' : 'comment';
           return (
             <ThreadBox
               key={update.id}
               id={update.id}
+              creator={update.creator.name}
               handleMarkImportant={handleMarkImportant}
-              text={update.body}
+              text={actions.text}
               time={dayjs(update.updated_at).format('MMM DD [@] hh:mm A')}
-              type={isUser ? 'Comment' : 'Activity'}
-              typeIcon={isUser ? <CommentsIcon width="12" height="14" /> : <ActivityClockIcon width="12" height="14" />}
+              type={actions.action || 'Comment'}
+              typeIcon={getActionIcon(actions.action)}
               isHide={filter && (filter !== type)}
             />
           );

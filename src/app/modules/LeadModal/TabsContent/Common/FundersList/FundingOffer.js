@@ -7,7 +7,7 @@ import {
 import { useState } from 'react';
 import InputField from 'app/components/Forms/InputField';
 import { columnIds } from 'utils/constants';
-import styles from './SubmissionsTab.module.scss';
+import styles from './FundersList.module.scss';
 import ExpendedData from './ExpendedData';
 import DataRow from './DataRow';
 import { productTypes } from './data';

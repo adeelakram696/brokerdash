@@ -31,7 +31,7 @@ function EditableTable({
               {columns.map((column) => {
                 const isAutoCount = (column.sumStartFrom && column.sumStartFrom <= rowIndex);
                 const isDisabled = column.disabled || isAutoCount;
-                const sum = isAutoCount ? (data[`${column.key}-${item.id}`]) : undefined;
+                const sum = data[`${column.key}-${item.id}`] || '';
                 return (
                   <Form.Item
                     key={`${column.key}-${item.id}`}
@@ -41,7 +41,7 @@ function EditableTable({
                     <Flex flex={1} className={styles.itemColumn} justify={column.align} align="center">
                       <InputField
                         value={sum}
-                        defaultValue={item[column.key]}
+                        defaultValue={data[column.key]}
                         readOnly={isDisabled}
                         noBorder
                       />

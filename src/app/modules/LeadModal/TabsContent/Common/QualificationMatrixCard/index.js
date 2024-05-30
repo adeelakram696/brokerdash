@@ -5,7 +5,9 @@ import { QuestionIcon, ThumbsUpIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import TooltipWrap from 'app/components/TooltipWrap';
 import QualificationMatrixForm from 'app/modules/LeadModal/QualificationMatrixForm';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { LeadContext } from 'utils/contexts';
+import { columnIds } from 'utils/constants';
 import styles from './style.module.scss';
 
 export function QualificationToolTip() {
@@ -18,10 +20,16 @@ export function QualificationToolTip() {
 }
 
 function QualificationMatrixCard() {
+  const {
+    details, board,
+  } = useContext(LeadContext);
   const [openForm, setOpenForm] = useState();
   const onClose = () => {
     setOpenForm(false);
   };
+  const suggestedFunders = details?.name
+    ? JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]')
+    : [];
   return (
     <Flex flex={0.6} className={styles.qualificationCard}>
       <Flex justify="center" align="center">
@@ -39,17 +47,12 @@ function QualificationMatrixCard() {
       <Flex vertical style={{ marginLeft: 10 }}>
         <Flex className={styles.heading3}>Suggested Funder to submit to</Flex>
         <Flex className={styles.qualificationList} justify="space-around">
-          <Flex vertical>
-            <Flex>Rapid Finance </Flex>
-            <Flex>Fora Financial</Flex>
-            <Flex>National Funding</Flex>
-            <Flex>Credibly</Flex>
-          </Flex>
-          <Flex vertical>
-            <Flex>Kabbage</Flex>
-            <Flex>OnDeck</Flex>
-            <Flex>BlueVine</Flex>
-            <Flex>BFS Capital</Flex>
+          <Flex flex={1} wrap="wrap" justify="flex-start">
+            {suggestedFunders.map((v) => (
+              <Flex style={{ width: '45%' }}>
+                {v}
+              </Flex>
+            ))}
           </Flex>
         </Flex>
       </Flex>

@@ -1,13 +1,46 @@
-import { Flex } from 'antd';
+import { DatePicker, Flex, Tooltip } from 'antd';
 import classNames from 'classnames';
+import { useContext, useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import { updateClientInformation } from 'app/apis/mutation';
+import { columnIds, sources } from 'utils/constants';
+import { LeadContext } from 'utils/contexts';
+import SelectField from 'app/components/Forms/SelectField';
 import styles from './LeadModal.module.scss';
 
 function SubRow({
   lastCreated,
   lastSpoke,
   source,
-  nextFollowUp,
 }) {
+  const {
+    leadId, board, details,
+  } = useContext(LeadContext);
+  const [followUpDate, setFollowUpDate] = useState();
+  const handleFollowUpDateChange = async (date, dateString) => {
+    await updateClientInformation(leadId, details?.board?.id, {
+      [columnIds[board].next_followup]: dateString,
+    });
+    setFollowUpDate(date);
+  };
+  const handleChangeSource = async (val) => {
+    await updateClientInformation(leadId, details?.board?.id, {
+      [columnIds[board].source]: val,
+    });
+  };
+  useEffect(() => {
+    if (!details.name || !details[columnIds[board].next_followup]) return;
+    setFollowUpDate(dayjs(details[columnIds[board].next_followup]));
+  }, [details]);
+  const datePicker = (
+    <Flex className={styles.subHeadingValue}>
+      <DatePicker
+        value={followUpDate}
+        onChange={handleFollowUpDateChange}
+        status={!followUpDate ? 'error' : 'success'}
+      />
+    </Flex>
+  );
   return (
     <Flex className={styles.subRow}>
       <Flex justify="space-between" flex={1}>
@@ -21,7 +54,12 @@ function SubRow({
             <Flex
               className={styles.subHeadingValue}
             >
-              {source || '-'}
+              <SelectField
+                classnames={styles.sourceSelect}
+                options={sources}
+                defaultValue={source}
+                onChange={handleChangeSource}
+              />
             </Flex>
           </Flex>
         </Flex>
@@ -32,7 +70,11 @@ function SubRow({
           </Flex>
           <Flex className={styles.subRowItem}>
             <Flex className={styles.subHeadingLabel}>Next Follow Up with Client: </Flex>
-            <Flex className={styles.subHeadingValue}>{nextFollowUp || '-'}</Flex>
+            {!followUpDate ? (
+              <Tooltip title="Select Followup Date" open={!followUpDate}>
+                {datePicker}
+              </Tooltip>
+            ) : datePicker}
           </Flex>
         </Flex>
       </Flex>

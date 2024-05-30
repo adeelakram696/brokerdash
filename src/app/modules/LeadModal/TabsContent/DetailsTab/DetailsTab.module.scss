@@ -1,7 +1,7 @@
 .heading {
   font-size: 16px;
   font-weight: bold;
-  color: #1A4049;
+  color: #000;
   margin-bottom: 10px;
 }
 .labelsContainer {
@@ -15,15 +15,18 @@
 }
 .label {
   font-size: 10px;
-  font-weight: 300;
-  color: #1A4049;
+  font-weight:300;
+  color: #000;
   line-height: 22px;
+  width: 50%;
 }
 .value {
   font-size: 11px;
   font-weight: bold;
-  color: #1A4049;
+  color: #000;
   line-height: 22px;
+  flex: 1;
+  margin: 1px 0;
 }
 .fullWidth {
   width: 100%;
@@ -33,13 +36,14 @@
 }
 .actionItems {
   background: #E1EFF2;
-  padding: 4px 8px;
+  padding: 1px 8px;
   position: absolute;
   border-end-start-radius: 20px;
   right: 0;
   border-start-start-radius: 20px;
   max-width: 146px;
   overflow-x: hidden;
+  overflow-wrap: anywhere;
 }
 .actionLabels {
   height: 37px;
@@ -85,4 +89,6 @@
 }
 .saveBtn {
   font-size: 10px;
+}
+.dataRow {
 }

@@ -55,4 +55,9 @@
   font-size: 15px;
   color: #135EA3;
   text-decoration: underline;
+  cursor: pointer;
+}
+.submittedItem {
+  cursor: default;
+  background-color: transparent;
 }

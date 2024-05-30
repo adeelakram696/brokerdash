@@ -1,9 +1,5 @@
 import { Flex, Dropdown } from 'antd';
 import {
-  DocumentRequestIcon,
-  EnvelopIcon,
-  FailedCallIcon,
-  PaperPlanIcon,
   ThreeDotsIcon,
 } from 'app/images/icons';
 import { columnIds } from 'utils/constants';
@@ -11,9 +7,9 @@ import { updateClientInformation } from 'app/apis/mutation';
 import { LeadContext } from 'utils/contexts';
 import { useContext } from 'react';
 import styles from './ActionsRow.module.scss';
-import UpdateFollowUp from './UpdateFollowUp';
 import ResearchLinks from './ResearchLinks';
 import SendSms from './SendSms';
+import SendEmail from './SendEmail';
 
 const items = [
   {
@@ -43,57 +39,18 @@ function ActionRow() {
   const actions = [
     {
       component: (
-        <Flex>
-          <Flex className={styles.actionIcon} align="center"><EnvelopIcon /></Flex>
-          <Flex className={styles.actionText} align="center">Email Client</Flex>
-        </Flex>
+        <SendEmail />
       ),
-      text: 'Email Client',
     },
     {
       component: (
         <SendSms />
       ),
-      text: 'SMS Client',
-    },
-    {
-      component: (
-        <UpdateFollowUp />
-      ),
-      text: 'Schedule Follow up',
     },
     {
       component: (
         <ResearchLinks />
       ),
-      text: 'Research Links',
-    },
-    {
-      component: (
-        <Flex>
-          <Flex className={styles.actionIcon} align="center"><DocumentRequestIcon /></Flex>
-          <Flex className={styles.actionText} align="center">Document Request</Flex>
-        </Flex>
-      ),
-      text: 'Document Request',
-    },
-    {
-      component: (
-        <Flex>
-          <Flex className={styles.actionIcon} align="center"><PaperPlanIcon width="13" height="11" color="#447989" /></Flex>
-          <Flex className={styles.actionText} align="center">Send Application</Flex>
-        </Flex>
-      ),
-      text: 'Send Application',
-    },
-    {
-      component: (
-        <Flex>
-          <Flex className={styles.actionIcon} align="center"><FailedCallIcon /></Flex>
-          <Flex className={styles.actionText} align="center">Tried to reach</Flex>
-        </Flex>
-      ),
-      text: 'Tried to reach',
     },
   ];
   return (

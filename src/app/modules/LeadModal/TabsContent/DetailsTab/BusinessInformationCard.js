@@ -2,41 +2,65 @@ import {
   Flex, Card, Divider, Form, Button,
 } from 'antd';
 import classNames from 'classnames';
-import { columnIds } from 'utils/constants';
+import { boardNames, columnIds, env } from 'utils/constants';
 import { useEffect, useState } from 'react';
-import { updateClientInformation } from 'app/apis/mutation';
+import { createClientInformation, updateClientInformation } from 'app/apis/mutation';
 import InputField from 'app/components/Forms/InputField';
+import SelectField from 'app/components/Forms/SelectField';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
+import { entityTypes } from './data';
 
 function BusinessInformationCard({
-  heading, details, board, leadId, updateInfo,
+  heading, details, board, updateInfo, businessAddPostFunc, leadId,
 }) {
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
-
+  const isClient = board === boardNames.clientAccount;
+  const data = isClient ? details.clientAccount : details;
   const setFieldsValues = () => {
-    form.setFieldsValue({
-      name: details.name,
-      [columnIds[board].business_street_address]: details[columnIds[board].business_street_address],
-      [columnIds[board].business_city]: details[columnIds[board].business_city],
-      [columnIds[board].business_state]: details[columnIds[board].business_state],
-      [columnIds[board].business_zip]: details[columnIds[board].business_zip],
-      [columnIds[board].dba]: details[columnIds[board].dba],
-      [columnIds[board].entity_type]: details[columnIds[board].entity_type],
-      [columnIds[board].tax_id_ein]: details[columnIds[board].tax_id_ein],
-    });
+    const fields = {
+      [columnIds[board].business_street_address]: data[columnIds[board].business_street_address],
+      [columnIds[board].business_city]: data[columnIds[board].business_city],
+      [columnIds[board].business_state]: data[columnIds[board].business_state],
+      [columnIds[board].business_zip]: data[columnIds[board].business_zip],
+      [columnIds[board].dba]: data[columnIds[board].dba],
+      [columnIds[board].entity_type]: data[columnIds[board].entity_type],
+      [columnIds[board].tax_id_ein]: data[columnIds[board].tax_id_ein],
+    };
+    if (isClient) {
+      fields.name = data.name;
+    } else {
+      fields[columnIds[board].company_name] = data[columnIds[board].company_name];
+    }
+    form.setFieldsValue(fields);
   };
 
   useEffect(() => {
-    if (!details.name) return;
+    if (!data.name) return;
     setFieldsValues();
-  }, [details]);
+  }, [data]);
 
   const handleUpdate = async (values) => {
+    const boardId = data?.board?.id;
+    const itemId = data.id;
+    const updatedJson = {
+      ...values,
+    };
     setLoading(true);
-    await updateClientInformation(leadId, details.board.id, values);
+    if (itemId) {
+      await updateClientInformation(itemId, boardId, updatedJson);
+    } else {
+      updatedJson[columnIds.clientAccount.deals] = { item_ids: [leadId] };
+      const BusinessName = values.name;
+      const resp = await createClientInformation(
+        BusinessName,
+        env.boards.clientAccounts,
+        updatedJson,
+      );
+      await businessAddPostFunc(resp.data?.create_item?.id);
+    }
     await updateInfo();
     setIsEdit(false);
     setLoading(false);
@@ -82,21 +106,15 @@ function BusinessInformationCard({
         </Flex>
         <Flex flex={1}>
           <Flex className={styles.information} flex={0.6}>
-            <Flex flex={1}>
-              <Flex vertical justify="space-evenly" className={styles.labelsContainer}>
+            <Flex vertical flex={1}>
+              <Flex>
                 <Flex className={styles.label}>Business Name</Flex>
-                <Flex className={styles.label}>Address</Flex>
-                <Flex className={styles.label}>City</Flex>
-                <Flex className={styles.label}>State</Flex>
-                <Flex className={styles.label}>Zip</Flex>
-              </Flex>
-              <Flex vertical justify="space-evenly" className={styles.valuesContainer}>
                 <Flex className={styles.value}>
                   {isEdit
                     ? (
                       <Form.Item
                         noStyle
-                        name="name"
+                        name={isClient ? 'name' : columnIds[board].company_name}
                         rules={[
                           {
                             required: true,
@@ -106,8 +124,11 @@ function BusinessInformationCard({
                         <InputField />
                       </Form.Item>
                     )
-                    : details.name}
+                    : (isClient ? data.name : data[columnIds[board].company_name]) || '-'}
                 </Flex>
+              </Flex>
+              <Flex>
+                <Flex className={styles.label}>Address</Flex>
                 <Flex className={styles.value}>
                   {isEdit
                     ? (
@@ -118,8 +139,11 @@ function BusinessInformationCard({
                         <InputField />
                       </Form.Item>
                     )
-                    : details[columnIds[board].business_street_address] || '-'}
+                    : data[columnIds[board].business_street_address] || '-'}
                 </Flex>
+              </Flex>
+              <Flex>
+                <Flex className={styles.label}>City</Flex>
                 <Flex className={styles.value}>
                   {isEdit
                     ? (
@@ -130,8 +154,11 @@ function BusinessInformationCard({
                         <InputField />
                       </Form.Item>
                     )
-                    : details[columnIds[board].business_city] || '-'}
+                    : data[columnIds[board].business_city] || '-'}
                 </Flex>
+              </Flex>
+              <Flex>
+                <Flex className={styles.label}>State</Flex>
                 <Flex className={styles.value}>
                   {isEdit
                     ? (
@@ -142,8 +169,11 @@ function BusinessInformationCard({
                         <InputField />
                       </Form.Item>
                     )
-                    : details[columnIds[board].business_state] || '-'}
+                    : data[columnIds[board].business_state] || '-'}
                 </Flex>
+              </Flex>
+              <Flex>
+                <Flex className={styles.label}>Zip</Flex>
                 <Flex className={styles.value}>
                   {isEdit
                     ? (
@@ -154,7 +184,7 @@ function BusinessInformationCard({
                         <InputField />
                       </Form.Item>
                     )
-                    : details[columnIds[board].business_zip] || '-'}
+                    : data[columnIds[board].business_zip] || '-'}
                 </Flex>
               </Flex>
             </Flex>
@@ -163,13 +193,9 @@ function BusinessInformationCard({
             <Divider type="vertical" style={{ height: '13vh' }} />
           </Flex>
           <Flex className={styles.information} flex={0.4} vertical>
-            <Flex>
-              <Flex vertical justify="space-evenly" className={styles.labelsContainer}>
+            <Flex vertical flex={1}>
+              <Flex>
                 <Flex className={styles.label}>DBA</Flex>
-                <Flex className={styles.label}>Entity Type</Flex>
-                <Flex className={styles.label}>Tax Id</Flex>
-              </Flex>
-              <Flex vertical justify="space-evenly" className={styles.valuesContainer}>
                 <Flex className={styles.value}>
                   {isEdit
                     ? (
@@ -180,8 +206,11 @@ function BusinessInformationCard({
                         <InputField />
                       </Form.Item>
                     )
-                    : details[columnIds[board].dba] || '-'}
+                    : data[columnIds[board].dba] || '-'}
                 </Flex>
+              </Flex>
+              <Flex>
+                <Flex className={styles.label}>Entity Type</Flex>
                 <Flex className={styles.value}>
                   {isEdit
                     ? (
@@ -189,24 +218,25 @@ function BusinessInformationCard({
                         noStyle
                         name={columnIds[board].entity_type}
                       >
+                        <SelectField options={entityTypes} />
+                      </Form.Item>
+                    )
+                    : data[columnIds[board].entity_type] || '-'}
+                </Flex>
+              </Flex>
+              <Flex>
+                <Flex className={styles.label}>Tax Id</Flex>
+                <Flex className={styles.value}>
+                  {isEdit
+                    ? (
+                      <Form.Item
+                        noStyle
+                        name={columnIds[board].tax_id_ein}
+                      >
                         <InputField />
                       </Form.Item>
                     )
-                    : details[columnIds[board].entity_type] || '-'}
-                </Flex>
-                <Flex className={styles.value} vertical>
-                  <Flex>
-                    {isEdit
-                      ? (
-                        <Form.Item
-                          noStyle
-                          name={columnIds[board].tax_id_ein}
-                        >
-                          <InputField />
-                        </Form.Item>
-                      )
-                      : details[columnIds[board].tax_id_ein] || '-'}
-                  </Flex>
+                    : data[columnIds[board].tax_id_ein] || '-'}
                 </Flex>
               </Flex>
             </Flex>

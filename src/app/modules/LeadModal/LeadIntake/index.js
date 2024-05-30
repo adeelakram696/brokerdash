@@ -19,12 +19,16 @@ function LeadIntakeModal({
 }) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const onClose = () => {
+    form.resetFields();
+    handleClose();
+  };
   const handleUpdate = async (values) => {
     setLoading(true);
     await updateClientInformation(leadId, details.board.id, values);
     await updateInfo();
     setLoading(false);
-    handleClose();
+    onClose();
   };
   return (
     <Modal
@@ -42,7 +46,7 @@ function LeadIntakeModal({
           </Button>
         </Flex>
 )}
-      onCancel={handleClose}
+      onCancel={onClose}
       className="leadIntake"
       style={{ top: 20 }}
       closeIcon={<CloseCircleFilled />}

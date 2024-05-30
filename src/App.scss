@@ -86,6 +86,7 @@ body {
 }
 .statusDropDown {
   height: 20px;
+  min-width: 150px;
   & .ant-select-selector {
     border-radius: 20px;
     border: none !important;
@@ -105,11 +106,11 @@ body {
       background: #92E4FF !important;
     }
     & .ant-select-selection-item {
-      color: #1A4049;
+      color: #000;
     }
     & .ant-select-arrow {
       & path {
-        fill: #1A4049;
+        fill: #000;
       }
     }
   }
@@ -118,11 +119,11 @@ body {
       background: #FFC530 !important;
     }
     & .ant-select-selection-item {
-      color: #1A4049;
+      color: #000;
     }
     & .ant-select-arrow {
       & path {
-        fill: #1A4049;
+        fill: #000;
       }
     }
   }
@@ -131,7 +132,7 @@ body {
       background: #92E4FF !important;
     }
   }
-  &.Response_Recieved {
+  &.Response_Received {
     & .ant-select-selector {
       background: #FFC530 !important;
     }
@@ -175,4 +176,21 @@ body {
 }
 .ql-toolbar {
   border-bottom: 0.5px solid #D6D6D6 !important;
+}
+.ql-container {
+  max-height: 150px;
+  overflow: auto;
+}
+.ant-steps-item-title{
+  color: black !important;
+}
+.ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after, .ant-steps .ant-steps-item-process>.ant-steps-item-container>.ant-steps-item-tail::after {
+  background-color: #1677ff !important;
+}
+.ant-steps.ant-steps-inline .ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon .ant-steps-icon-dot {
+  background-color: #1677ff;
+  border: 1px solid #1677ff;
+}
+.ant-steps .ant-steps-item-title {
+  font-size: 12px;
 }

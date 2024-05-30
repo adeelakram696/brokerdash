@@ -110,7 +110,7 @@ export const stepData = {
   },
   [steps.documents]: {
     title: 'Select documents to Submit',
-    subText: 'Select the file(2) below that you would like to submit',
+    subText: 'Select the file(s) below that you would like to submit',
     prevStep: steps.funders,
   },
 };

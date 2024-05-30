@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 export function BellIcon({
-  color = '#1A4049', width = '8', height = '10',
+  color = '#000', width = '8', height = '10',
 }) {
   return (
     <svg width={width} height={height} viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">

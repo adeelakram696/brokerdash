@@ -1666,7 +1666,7 @@ export const fundersIntakeCalc = (values) => funderQualificationMatrix.map((fund
   const funderCounts = {
     funder: funder.funder,
     minAnnualRevenue: Number(funder.minimumRevenueAnnual <= values.annualRevenue),
-    creditScoreSuitability: Number(funder.minimumCreditScore <= values.fico_score),
+    creditScoreSuitability: Number(funder.minimumCreditScore <= values.ficoScore),
     minimumMonthlyDeposits: Number(
       funder.minimumMonthlyDepositcount <= values.minMonthlyDepositCount,
     ),
@@ -1676,8 +1676,8 @@ export const fundersIntakeCalc = (values) => funderQualificationMatrix.map((fund
     negativeDaysLast90: 1 - Number(funder.negativeDays[1] <= values.negativeDaysLast90),
     maximumPositions: 1 - Number(funder.maxPosition <= values.numberOfPositions),
     firstPosition: Number(values.numberOfPositions === 0 ? funder.position1st === 'Yes' : true),
-    industryType: Number(!(funder.restrictedIndustries.indexOf(values.business_types) >= 0)),
-    state: Number(!funder.stateRestrictions.indexOf(values.business_state) >= 0),
+    industryType: Number(!(funder.restrictedIndustries.indexOf(values.industry) >= 0)),
+    state: Number(!funder.stateRestrictions.indexOf(values.state) >= 0),
     timeInBusiness: Number(funder.minimumTimeInBusinessMonths <= values.timeInBusiness),
     tier: funder.tier,
   };

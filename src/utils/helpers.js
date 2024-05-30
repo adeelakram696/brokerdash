@@ -1,7 +1,7 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { commissionOnValues } from 'app/modules/LeadModal/TabsContent/SubmissionsTab/data';
+import { commissionOnValues } from 'app/modules/LeadModal/TabsContent/Common/FundersList/data';
 import { columnIds, env } from './constants';
 
 export const removeBoardHeader = () => {
@@ -109,4 +109,46 @@ export function getFormulaValues(values) {
 
 export function getQueryParams() {
   return Object.fromEntries(new URLSearchParams(window.location.search));
+}
+
+export function splitActionFromUpdate(str) {
+  const regex = /^\[(.*?)\]\s*(.*)$/;
+  const match = str.match(regex);
+  if (match) {
+    const text = match[2].replace(/<br><br>/g, '');
+    return { action: match[1], text };
+  }
+  return { action: '', text: str };
+}
+
+export function extractUrl(str) {
+  const regex = /(https?:\/\/[^\s]+)/g;
+  const matches = str.match(regex);
+  return matches ? matches[0] : null;
+}
+export function extractLeastNumber(input) {
+  if (!input) return 0;
+  const numbers = input.match(/\d+/g);
+  return numbers ? parseInt(numbers[0], 10) : null;
+}
+
+export const getColumnValue = (obj, col) => {
+  const objCol = obj?.find((c) => c.id === col);
+  const objVal = JSON.parse(objCol.value);
+  return objVal;
+};
+
+export function isNineAMPassed() {
+  const now = dayjs();
+  const nineAMToday = dayjs().hour(9).minute(0).second(0);
+  return now.isAfter(nineAMToday);
+}
+export function convertSequenceNameToKey(name) {
+  const outputString = name
+    .replace(/[/:]/g, '') // Replace all slashes and colons with blank
+    .replace(/\s/g, '_') // Replace all spaces with underscores
+    .replace(/&/g, '') // Remove all ampersands
+    .replace(/__/g, '_') // Remove all ampersands
+    .toLowerCase(); // Convert the string to lowercase
+  return outputString;
 }

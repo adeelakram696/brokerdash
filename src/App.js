@@ -4,7 +4,7 @@ import {
   Layout, theme, ConfigProvider, Spin,
 } from 'antd';
 import { getQueryParams, removeBoardHeader } from 'utils/helpers';
-import { fetchGroups, fetchUserName } from 'app/apis/query';
+import { fetchGroups, fetchCurrentUser } from 'app/apis/query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
@@ -19,7 +19,6 @@ dayjs.extend(duration);
 dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
 const { Content } = Layout;
-
 function App() {
   const {
     token: { borderRadiusLG },
@@ -29,7 +28,7 @@ function App() {
 
   useEffect(() => {
     removeBoardHeader();
-    fetchUserName().then((res) => setUserName(res));
+    fetchCurrentUser().then((res) => setUserName(res));
     fetchGroups().then((res) => setStagesFetched(res));
   }, []);
   const { itemId, boardId } = getQueryParams();
@@ -65,6 +64,7 @@ function App() {
               <LeadModal
                 show
                 handleClose={() => {}}
+                closeIcon={false}
                 leadId={itemId}
                 board={env.boards[boardId]}
               />

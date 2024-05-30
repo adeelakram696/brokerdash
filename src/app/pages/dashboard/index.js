@@ -14,7 +14,8 @@ import styles from './Dashboard.module.css';
 
 function Dashboard() {
   const [cardsValues, setCardsValues] = useState({
-    followUp: { value: 0, total: { value: 0 } },
+    leadsfollowUp: { value: 0, total: { value: 0 } },
+    dealsfollowUp: { value: 0, total: { value: 0 } },
     cold: { value: 0, total: { value: 0 } },
     doc: { value: 0, total: { value: 0 } },
     ready: { value: 0, total: { value: 0 } },

@@ -5,7 +5,6 @@
   background: #FFF;
   box-shadow: 0px 0px 6.691px 0px rgba(0, 0, 0, 0.06);
   position: relative;
-  cursor: pointer;
 }
 .count {
   position: absolute;
@@ -15,4 +14,8 @@
   padding: 1px 7px;
   color: white;
   top: -7px;
+}
+
+.cursor {
+  cursor: pointer;
 }

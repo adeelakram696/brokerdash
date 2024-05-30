@@ -32,7 +32,7 @@ function SendSms() {
     <>
       <Flex onClick={() => { setShow(true); }}>
         <Flex className={styles.actionIcon} align="center"><SMSMobileIcon /></Flex>
-        <Flex className={styles.actionText} align="center">SMS Client</Flex>
+        <Flex className={styles.actionText} align="center">SMS</Flex>
       </Flex>
       <Modal
         open={show}

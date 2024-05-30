@@ -9,7 +9,7 @@ import styles from './ActionsRow.module.scss';
 
 function UpdateFollowUp() {
   const {
-    leadId, board, details, getData,
+    leadId, board, details,
   } = useContext(LeadContext);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [followUpDate, setFollowUpDate] = useState(dayjs());
@@ -19,7 +19,6 @@ function UpdateFollowUp() {
     await updateClientInformation(leadId, details?.board?.id, {
       [columnIds[board].next_followup]: dateString,
     });
-    getData();
     setFollowUpDate(date);
   };
   useEffect(() => {

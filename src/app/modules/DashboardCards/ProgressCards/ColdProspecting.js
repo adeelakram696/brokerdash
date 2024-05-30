@@ -23,7 +23,7 @@ function ColdProspecting({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(createViewURL(env.views.coldProspecting, env.boards.coldProspecting), '_target');
+    window.open(createViewURL(env.views.coldProspecting, env.boards.coldProspecting), '_blank');
   };
   return (
     <ProgressCard
@@ -31,7 +31,7 @@ function ColdProspecting({ updateTotal }) {
       total={totalValue.value}
       title={en.Cards.progess.coldProspecting.title}
       subTitle={en.Cards.progess.coldProspecting.subtitle}
-      color="#1A4049"
+      color="#000"
       icon={<SnowIcon />}
       onClick={handleClick}
     />

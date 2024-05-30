@@ -16,14 +16,16 @@ import parentStyles from '../../LeadModal.module.scss';
 
 function DocsTab() {
   const {
-    leadId, board, docs, getDocs,
+    leadId, board, docs, getDocs, setLoadingData,
   } = useContext(LeadContext);
   const [downloadDocs, setDownloadDocs] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
 
   const uploadFile = async (file) => {
+    setLoadingData(true);
     await addFilesToLead(leadId, columnIds[board].incoming_files, file);
     await getDocs();
+    setLoadingData(false);
   };
   const handleDownload = async () => {
     const fitlered = docs.assets.filter((doc) => selectedDocs.indexOf(doc.id) >= 0);
@@ -32,7 +34,9 @@ function DocsTab() {
       setDownloadDocs([]);
     }, 1000);
   };
-
+  const handleDocClick = async (url) => {
+    window.open(url, '_blank');
+  };
   return (
     <Flex flex={1}>
       <Flex className={parentStyles.columnLeft} flex={0.6} vertical>
@@ -97,7 +101,12 @@ function DocsTab() {
                     />
                   </Flex>
                   <Flex className={styles.fileIcon}><FileIcon extension={doc.file_extension.replace('.', '')} /></Flex>
-                  <Flex className={styles.docName}>{doc.name}</Flex>
+                  <Flex
+                    onClick={() => { handleDocClick(doc.url); }}
+                    className={styles.docName}
+                  >
+                    {doc.name}
+                  </Flex>
                 </Flex>
               ))
             }

@@ -13,6 +13,20 @@ export const columns = (onFinish) => [
     dataIndex: 'time',
     key: 'time',
     align: 'center',
+    render: (value, item) => (item.isNew
+      ? (
+        <Timer
+          startSeconds={value}
+          limit={300}
+        />
+      )
+      : formatTimeIn(value)),
+  },
+  {
+    title: 'Reassigned in',
+    dataIndex: 'reassingTime',
+    key: 'reassingTime',
+    align: 'center',
     render: (value, item) => (
       item.isNew ? (
         <Timer
@@ -23,21 +37,6 @@ export const columns = (onFinish) => [
         />
       ) : formatTimeIn(value)
     ),
-  },
-  {
-    title: 'Reassigned in',
-    dataIndex: 'reassingTime',
-    key: 'reassingTime',
-    align: 'center',
-    render: (value, item) => (item.isNew
-      ? (
-        <Timer
-          startSeconds={value}
-          limit={300}
-          onFinish={onFinish}
-        />
-      )
-      : formatTimeIn(value)),
   },
   {
     title: 'Stage',

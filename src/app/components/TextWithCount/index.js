@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import classNames from 'classnames';
 import styles from './TextWithCount.module.css';
 
 function TextWithCount({
@@ -11,7 +12,7 @@ function TextWithCount({
       onClick={onClick}
     >
       {text}
-      <span className={styles.count}>{count}</span>
+      <span className={classNames(styles.count, { [styles.cursor]: count > 0 })}>{count}</span>
     </div>
   );
 }

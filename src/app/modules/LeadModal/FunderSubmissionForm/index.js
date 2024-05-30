@@ -14,7 +14,7 @@ import { getFormulaValues } from 'utils/helpers';
 import styles from './FunderSubmissionForm.module.scss';
 import {
   achFrequency, commissionOn, productTypes, statusValues,
-} from '../TabsContent/SubmissionsTab/data';
+} from '../TabsContent/Common/FundersList/data';
 
 function FunderSubmissionForm({
   show, handleClose, data,
@@ -25,6 +25,7 @@ function FunderSubmissionForm({
   const [form] = Form.useForm();
   const [forumlas, setFormulas] = useState({});
   const [loading, setLoading] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
   const setFieldsValues = () => {
     form.setFieldsValue({
       [columnIds.subItem.status]: data[columnIds.subItem.status],
@@ -44,6 +45,12 @@ function FunderSubmissionForm({
     const calculatedValues = getFormulaValues(values);
     setFormulas(calculatedValues);
   };
+
+  const onClose = () => {
+    setFieldsValues();
+    handleClose();
+  };
+
   useEffect(() => {
     if (!data.name) return;
     setFieldsValues();
@@ -54,8 +61,24 @@ function FunderSubmissionForm({
     await updateClientInformation(data.id, data.board.id, values);
     await getData();
     setLoading(false);
-    handleClose();
+    onClose();
   };
+  const hideModal = () => {
+    setConfirmation(false);
+  };
+  const handleConfirm = () => {
+    const values = form.getFieldsValue();
+    handleUpdate(values);
+    setConfirmation(false);
+  };
+  const checkIfStatusUpdated = (values) => {
+    if (data[columnIds.subItem.status] !== values[columnIds.subItem.status]) {
+      setConfirmation(true);
+      return;
+    }
+    handleUpdate(values);
+  };
+  const status = form.getFieldValue(columnIds.subItem.status);
   return (
     <Modal
       open={show}
@@ -72,7 +95,7 @@ function FunderSubmissionForm({
           </Button>
         </Flex>
 )}
-      onCancel={handleClose}
+      onCancel={onClose}
       className="funderForm"
       style={{ top: 20 }}
       closeIcon={<CloseCircleFilled />}
@@ -89,7 +112,7 @@ function FunderSubmissionForm({
     >
       <Form
         form={form}
-        onFinish={handleUpdate}
+        onFinish={checkIfStatusUpdated}
         onValuesChange={handleChange}
         defaultValue={{
         }}
@@ -269,6 +292,22 @@ function FunderSubmissionForm({
           </Flex>
         </Flex>
       </Form>
+      <Modal
+        title="Confirmation of Status Change"
+        open={confirmation}
+        onOk={handleConfirm}
+        onCancel={hideModal}
+        okText="Confirm"
+        cancelText="Cancel"
+      >
+        <p>
+          Are you sure to change the status from
+          <b style={{ margin: '0 5px' }}>{data[columnIds.subItem.status]}</b>
+          {' '}
+          to
+          <b style={{ margin: '0 5px' }}>{status}</b>
+        </p>
+      </Modal>
     </Modal>
   );
 }

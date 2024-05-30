@@ -1,3 +1,4 @@
+import { columnIds, env } from 'utils/constants';
 import { uploadFileToMonday } from 'utils/helpers';
 import monday from 'utils/mondaySdk';
 
@@ -10,6 +11,20 @@ export const updateStage = async (id, group) => {
   const res = await monday.api(mutation);
   return res?.data?.move_item_to_group?.id || '';
 };
+export const updateStageToSubmission = async (id) => {
+  const mutation = `mutation {
+    change_simple_column_value(
+      item_id: ${id}
+      column_id: "${columnIds.leads.stage}"
+      board_id: ${env.boards.leads}
+      value: "Ready for Submission ->"
+    ) {
+      id
+    }
+  }`;
+  const res = await monday.api(mutation);
+  return res?.data?.change_simple_column_value?.id || '';
+};
 
 export const createNewUpdate = async (leadId, text) => {
   const mutation = `mutation {
@@ -19,6 +34,9 @@ export const createNewUpdate = async (leadId, text) => {
       updated_at
       text_body
       body
+      creator {
+        name
+      }
     }
   }`;
   const res = await monday.api(mutation);
@@ -38,8 +56,21 @@ export const updateClientInformation = async (leadId, boardId, updatedData) => {
   const res = await monday.api(mutation);
   return res;
 };
+export const createClientInformation = async (clientName, boardId, updatedData) => {
+  const mutation = `mutation {
+    create_item(
+      item_name: "${clientName}"
+      board_id: ${boardId}
+      column_values: "${JSON.stringify(updatedData).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"
+      ) {
+      id
+    }
+  }`;
+  const res = await monday.api(mutation);
+  return res;
+};
 
-export const updateMarkImportant = async (leadId, boardId, value, column) => {
+export const updateSimpleColumnValue = async (leadId, boardId, value, column) => {
   const mutation = `mutation {
     change_simple_column_value(
       item_id: ${leadId}

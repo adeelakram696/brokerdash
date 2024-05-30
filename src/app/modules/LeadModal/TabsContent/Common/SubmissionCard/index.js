@@ -26,7 +26,8 @@ function SubmissionCard() {
           New Submission
         </Button>
       </Flex>
-      <SubmissionForm show={isSubmissionFormOpen} handleClose={handleClose} />
+      {isSubmissionFormOpen
+        && <SubmissionForm show={isSubmissionFormOpen} handleClose={handleClose} />}
     </Flex>
   );
 }

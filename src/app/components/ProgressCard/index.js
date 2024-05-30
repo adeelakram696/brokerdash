@@ -15,14 +15,14 @@ function ProgressText({ value, total }) {
 }
 
 function ProgressCard({
-  value, total, title, subTitle, color, icon, onClick = () => {},
+  value, total, title, subTitle, color, icon, onClick = () => {}, description,
 }) {
   const remaining = total - value;
   const percent = (remaining * 100) / total;
 
   return (
     <Card className={styles.progressCard}>
-      <Flex align="center" justify="center" style={{ cursor: 'pointer' }} vertical onClick={value === 0 ? () => {} : onClick}>
+      <Flex align="center" justify="center" style={{ cursor: value === 0 ? '' : 'pointer' }} vertical onClick={value === 0 ? () => {} : onClick}>
         <div className={styles.topText}>
           {subTitle}
         </div>
@@ -39,6 +39,7 @@ function ProgressCard({
           />
         </div>
         <div className={styles.titleText}>{title}</div>
+        <div>{description}</div>
       </Flex>
     </Card>
   );

@@ -1,12 +1,13 @@
 /* eslint-disable react/no-array-index-key */
+import { useContext, useEffect, useState } from 'react';
 import {
   Modal, Flex, Button,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
-import { useContext, useState } from 'react';
 import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import { sendSubmission } from 'app/apis/mutation';
+import { getColumnValue } from 'utils/helpers';
 import styles from './SubmissionForm.module.scss';
 import {
   qualifications, stepData, steps,
@@ -15,16 +16,24 @@ import SelectFunders from './SelectFundersForm';
 import SelectDocuments from './SelectDocuments';
 import QualificationCheck from './QualificationCheck';
 
-function SubmissionForm({ show, handleClose }) {
+function SubmissionForm({ show, handleClose, type = 'funder' }) {
   const {
-    leadId, boardId, board,
+    leadId, boardId, board, details,
   } = useContext(LeadContext);
+  const isContract = type === 'contract';
   const [loading, setLoading] = useState(false);
+  const [submittedFunders, setSubmittedFunders] = useState([]);
   const [selectedFunders, setSelectedFunders] = useState([]);
   const [selectedDocs, setSelectedDoucments] = useState([]);
   const [showText, setShowText] = useState(false);
   const [textNote, setTextNote] = useState('');
-  const [step, setStep] = useState(steps.qualification);
+  const [step, setStep] = useState(isContract ? steps.documents : steps.qualification);
+  useEffect(() => {
+    const preSelected = getColumnValue(details?.column_values, columnIds.deals.funders_dropdown);
+    const ids = preSelected?.linkedPulseIds.map((v) => v.linkedPulseId.toString());
+    setSelectedFunders(ids || []);
+    setSubmittedFunders(ids || []);
+  }, []);
   const handleFunderSelect = (key) => {
     let updated = [];
     if (selectedFunders.includes(key)) {
@@ -49,17 +58,25 @@ function SubmissionForm({ show, handleClose }) {
   const handleSubmit = async () => {
     const linkedPulseIds = selectedFunders.map((id) => ({ linkedPulseId: Number(id) }));
     const docs = selectedDocs.join(',');
-    const payload = {
+    let cta = [columnIds[board].submit_offers];
+    let payload = {
       [columnIds[board].funders_dropdown]: { linkedPulseIds },
       [columnIds[board].submit_offers_docs]: docs,
       [columnIds[board].additional_body_content]: textNote,
     };
+    if (isContract) {
+      payload = {
+        [columnIds[board].submit_contract_docs]: docs,
+        [columnIds[board].additional_request_contract_message]: textNote,
+      };
+      cta = [columnIds[board].request_contract];
+    }
     setLoading(true);
-    await sendSubmission(leadId, boardId, payload, [columnIds[board].submit_offers]);
+    await sendSubmission(leadId, boardId, payload, cta);
     setSelectedFunders([]);
     setSelectedDoucments([]);
     setTextNote('');
-    setStep(steps.qualification);
+    setStep(isContract ? steps.documents : steps.qualification);
     setLoading(false);
     handleClose();
   };
@@ -74,7 +91,7 @@ function SubmissionForm({ show, handleClose }) {
       open={show}
       footer={(
         <Flex justify="flex-end">
-          {stepData[step].prevStep
+          {stepData[step].prevStep && !isContract
             ? (
               <Button onClick={() => { setStep(stepData[step].prevStep); }} className={styles.footerBackBtn} shape="round">
                 Back
@@ -92,7 +109,7 @@ function SubmissionForm({ show, handleClose }) {
             disabled={!isNextEnabled}
             loading={loading}
           >
-            {stepData[step].nextStep ? 'Next Step' : 'Submit'}
+            {stepData[step].nextStep ? 'Next Step' : `${isContract ? 'Send Contract' : 'Submit'}`}
           </Button>
         </Flex>
 )}
@@ -114,6 +131,7 @@ function SubmissionForm({ show, handleClose }) {
       {step === steps.funders ? (
         <SelectFunders
           selectedItems={selectedFunders}
+          submittedItems={submittedFunders}
           handleSelect={handleFunderSelect}
         />
       ) : null}
@@ -125,6 +143,7 @@ function SubmissionForm({ show, handleClose }) {
           handleShowText={setShowText}
           text={textNote}
           handleTextChange={setTextNote}
+          isContract={isContract}
         />
       ) : null}
     </Modal>

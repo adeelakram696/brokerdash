@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 
 export const statuses = {
   submitted: 'Submitted',
-  responseRecieved: 'Response Recieved',
+  responseRecieved: 'Response Received',
   selected: 'Selected',
   approved: 'Approved',
   killedAtFundingCall: 'Killed at Funding call',
@@ -78,7 +78,9 @@ export const columns = [
     flex: '0.15',
     key: 'status',
     align: 'center',
-    render: (value) => (<StatusSelect values={statusValues} value={value} />),
+    render: (value, onChange) => (
+      <StatusSelect values={statusValues} value={value} onChange={onChange} />
+    ),
   },
   {
     title: 'Funder',

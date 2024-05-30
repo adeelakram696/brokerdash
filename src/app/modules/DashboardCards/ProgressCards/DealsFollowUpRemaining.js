@@ -3,17 +3,17 @@ import { FireIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { env } from 'utils/constants';
-import { fetchFollowUps } from 'app/apis/query';
+import { fetchDealsFollowUps } from 'app/apis/query';
 import { createViewURL } from 'utils/helpers';
 
-function FollowUpRemaining({ updateTotal }) {
+function DealsFollowUpRemaining({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
   const [totalValue, setTotal] = useState({ value: 0 });
 
   const getData = async () => {
-    const value = await fetchFollowUps();
-    setCurrentValue(value);
-    updateTotal(value, 'followUpTotal', setTotal, 'followUp');
+    const leadsItem = await fetchDealsFollowUps();
+    setCurrentValue(leadsItem);
+    updateTotal(leadsItem, 'dealsfollowUpTotal', setTotal, 'dealsfollowUp');
   };
   useEffect(() => {
     getData();
@@ -23,14 +23,14 @@ function FollowUpRemaining({ updateTotal }) {
     };
   }, []);
   const handleClick = () => {
-    window.open(createViewURL(env.views.followupToday, env.boards.leads), '_target');
+    window.open(createViewURL(env.views.followupDealsToday, env.boards.deals), '_blank');
   };
   return (
     <ProgressCard
       value={currentValue}
       total={totalValue.value}
-      title={en.Cards.progess.followup.title}
-      subTitle={en.Cards.progess.followup.subtitle}
+      title={en.Cards.progess.followupDeals.title}
+      subTitle={en.Cards.progess.followupDeals.subtitle}
       color="#429A65"
       icon={<FireIcon />}
       onClick={handleClick}
@@ -38,4 +38,4 @@ function FollowUpRemaining({ updateTotal }) {
   );
 }
 
-export default FollowUpRemaining;
+export default DealsFollowUpRemaining;
