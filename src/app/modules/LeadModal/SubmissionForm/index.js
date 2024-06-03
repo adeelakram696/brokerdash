@@ -30,7 +30,7 @@ function SubmissionForm({ show, handleClose, type = 'funder' }) {
   const [step, setStep] = useState(isContract ? steps.documents : steps.qualification);
   useEffect(() => {
     const preSelected = getColumnValue(details?.column_values, columnIds.deals.funders_dropdown);
-    const ids = preSelected?.linkedPulseIds.map((v) => v.linkedPulseId.toString());
+    const ids = preSelected?.linkedPulseIds?.map((v) => v.linkedPulseId.toString());
     setSelectedFunders(ids || []);
     setSubmittedFunders(ids || []);
   }, []);

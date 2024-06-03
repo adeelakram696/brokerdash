@@ -6,6 +6,8 @@ export const env = {
     funders: process.env.REACT_APP_FUNDERS_BOARD_ID,
     clients: process.env.REACT_APP_CLIENTS_BOARD_ID,
     clientAccounts: process.env.REACT_APP_CLIENT_ACCOUNTS_BOARD_ID,
+    employees: process.env.REACT_APP_EMPLOYEES_BOARD,
+    salesActivities: process.env.REACT_APP_SALES_ACTIVITIES_BOARD,
     [process.env.REACT_APP_DEALS_BOARD_ID]: 'deals',
     [process.env.REACT_APP_LEADS_BOARD_ID]: 'leads',
   },
@@ -29,6 +31,8 @@ export const env = {
   },
   boardBaseURL: process.env.REACT_APP_BOARDS_BASE_URL,
   intervalTime: process.env.REACT_APP_REFETCH_TIME_SECONDS,
+  performanceRefetchTime: process.env.REACT_APP_PERFORMANCE_REFETCH_TIME_SECONDS,
+  leaderEmployeeItemId: process.env.REACT_APP_LEADERBOARD_EMPLOYEES_ITEM_ID,
 };
 
 export const boardNames = {

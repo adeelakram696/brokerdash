@@ -4,6 +4,7 @@ import {
 import StatusSelect from 'app/components/Forms/StatusSelect';
 import { DialCallIcon } from 'app/images/icons';
 import dayjs from 'dayjs';
+import { numberWithCommas } from 'utils/helpers';
 
 export const statuses = {
   submitted: 'Submitted',
@@ -105,7 +106,7 @@ export const columns = [
     render: (data) => (
       <Flex>
         {'$ '}
-        {data || 0}
+        {data ? numberWithCommas(data) : 0}
       </Flex>
     ),
   },
@@ -120,11 +121,17 @@ export const columns = [
     flex: '0.1',
     key: 'numbers07',
     align: 'center',
+    render: (data) => (
+      <Flex>
+        {'$ '}
+        {data ? numberWithCommas(data) : 0}
+      </Flex>
+    ),
   },
   {
     title: 'ACH Frequency',
     flex: '0.1',
-    key: 'ach_frequency',
+    key: 'status_1',
     align: 'center',
   },
 ];

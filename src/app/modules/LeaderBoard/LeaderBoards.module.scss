@@ -1,0 +1,52 @@
+.table{
+  background-color: white;
+  border: 0.5px solid rgb(209, 208, 208);
+  padding: 10px;
+  border-radius: 15px;
+  margin: 10px;
+}
+.headerRow {
+  padding: 10px 5px;
+  border-bottom: 0.5px solid rgb(209, 208, 208);
+}
+.headerColumnTitle {
+  font-size: 18px;
+  font-weight: bold;
+}
+.dataColumnTitle {
+  font-size: 16px;
+  border-right: 0.5px solid rgb(209, 208, 208);
+}
+.headerColumnTitle, .dataColumnTitle {
+  width: 300px;
+}
+.headerColumnPerson {
+  padding: 6px 10px;
+  width: 80px;
+}
+.dataColumnPerson {
+  width: 80px;
+  height: 30px;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-right: 0.5px solid rgb(209, 208, 208);
+}
+.dataRow {
+  padding: 0px 5px;
+}
+.filterbar {
+  background-color: white;
+  border: 0.5px solid rgb(209, 208, 208);
+  padding: 10px;
+  border-radius: 15px;
+  margin: 10px;
+}
+.usersList{
+  min-width: 250px;
+}
+.filterField {
+  margin: 0 10px;
+}
+.alternateColor {
+  background-color: rgba(201, 201, 201, 0.3);
+}

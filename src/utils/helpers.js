@@ -54,7 +54,10 @@ export function downloadFiles(docs) {
   }
   return downloadLinks;
 }
-
+export function numberWithCommas(x) {
+  if (!x) return x;
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 export function normalizeColumnValues(columnsValues) {
   let columns = _.mapKeys(columnsValues, 'id');
   columns = _.mapValues(columns, 'text');
@@ -78,7 +81,7 @@ function getCommisionAmt({
     result = fundingAmt
     * commissionPerc;
   }
-  return result;
+  return numberWithCommas(result);
 }
 
 export function getFormulaValues(values) {
@@ -93,9 +96,9 @@ export function getFormulaValues(values) {
   const paybackAmt = fundingAmt * Number(values[columnIds.subItem.factor_rate]);
   const paybackPeriod = paybackAmt / Number(values[columnIds.subItem.ach_amount]);
   return {
-    [columnIds.subItem.funder_fee]: funderFee,
-    [columnIds.subItem.net_funding_amt]: netFundingAmt,
-    [columnIds.subItem.payback_amount]: paybackAmt,
+    [columnIds.subItem.funder_fee]: numberWithCommas(funderFee),
+    [columnIds.subItem.net_funding_amt]: numberWithCommas(netFundingAmt),
+    [columnIds.subItem.payback_amount]: numberWithCommas(paybackAmt),
     [columnIds.subItem.payback_period]: paybackPeriod?.toFixed(3),
     [columnIds.subItem.comission_amt]: getCommisionAmt({
       paybackAmt,
@@ -107,8 +110,8 @@ export function getFormulaValues(values) {
   };
 }
 
-export function getQueryParams() {
-  return Object.fromEntries(new URLSearchParams(window.location.search));
+export function getQueryParams(location) {
+  return Object.fromEntries(new URLSearchParams(location.search));
 }
 
 export function splitActionFromUpdate(str) {
@@ -134,7 +137,7 @@ export function extractLeastNumber(input) {
 
 export const getColumnValue = (obj, col) => {
   const objCol = obj?.find((c) => c.id === col);
-  const objVal = JSON.parse(objCol.value);
+  const objVal = JSON.parse(objCol.value || '{}');
   return objVal;
 };
 

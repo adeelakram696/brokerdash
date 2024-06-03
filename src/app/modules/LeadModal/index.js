@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   Modal, Flex, Spin, message,
 } from 'antd';
@@ -29,6 +30,7 @@ function LeadModal({
   let unsubscribe;
   let unsubscribe1;
   let timeoutId;
+  const location = useLocation();
   const [details, setDetails] = useState({});
   const [funders, setFunders] = useState({});
   const [updates, setUpdates] = useState([]);
@@ -105,7 +107,7 @@ function LeadModal({
     if (isValidated) {
       const res = await updateStageToSubmission(leadId);
       if (res) messageApi.success('Successfully updated');
-      const { itemId, boardId } = getQueryParams();
+      const { itemId, boardId } = getQueryParams(location);
       if (itemId && boardId) {
         unsubscribe = monday.listen('events', redirectToDeals);
       }

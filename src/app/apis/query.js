@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import drawer from 'drawerjs';
+import _ from 'lodash';
 import { columnIds, env } from 'utils/constants';
-import { normalizeColumnValues } from 'utils/helpers';
+import { getColumnValue, normalizeColumnValues } from 'utils/helpers';
 import monday from 'utils/mondaySdk';
 
 export const fetchUser = () => drawer.get('user');
@@ -647,4 +648,112 @@ export const fetchBoardValuesForSelect = async (boardId) => {
     (item) => ({ value: item.id, label: item.name }),
   );
   return values;
+};
+
+/* ---- LEADERS BOARD --------- */
+
+export const fetchLeadersBoardEmployees = async () => {
+  const query = `query {
+    items(ids: [${env.leaderEmployeeItemId}]) {
+      column_values(ids: ["person"]){
+        value
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  const resValue = JSON.parse(res.data.items[0].column_values[0].value);
+  const personIds = resValue.personsAndTeams.map((persons) => persons.id);
+  const usersQuery = `query {
+    teams(ids: [1070128]) {
+      users(ids: [${personIds}]) {
+        id
+        name
+        photo_thumb
+      }
+    }
+  }`;
+  const usersResp = await monday.api(usersQuery);
+  const usersList = usersResp.data.teams[0].users;
+  return usersList;
+};
+export const fetchAllUsers = async () => {
+  const usersQuery = `query {
+    teams(ids: [1070128]) {
+      users {
+        id
+        name
+        photo_thumb
+      }
+    }
+  }`;
+  const usersResp = await monday.api(usersQuery);
+  const usersList = usersResp.data.teams[0].users;
+  return usersList;
+};
+
+export const fetchBoardColumnStrings = async (boardId, columnId) => {
+  const query = `query {
+    boards(ids: [${boardId}]) {
+      columns(ids: ["${columnId}"]) {
+        settings_str
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  const column = JSON.parse(res.data.boards[0].columns[0].settings_str);
+  return Object.values(column.labels);
+};
+
+export const fetchSaleActivities = async (cursor, dates) => {
+  const dateArray = dates.map((date) => `"${date.format('YYYY-MM-DD')}"`);
+  const query = `query {
+    boards(ids: [${env.boards.salesActivities}]) {
+      items_page(
+      ${!cursor ? `query_params: {
+        rules: [
+          { column_id: "date__1", compare_value:[${dateArray}], operator:between}
+       ]
+       }` : ''}
+        limit: 500
+        ${cursor ? `cursor: "${cursor}"` : ''}
+      ) {
+        cursor
+        items {
+          name
+          column_values(ids: ["person", "status", "date4", "date__1"]) {
+            id
+            text
+            value
+          }
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  return res;
+};
+
+export const getTotalActivities = async (dates) => {
+  let res = null;
+  let itemsList = [];
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchSaleActivities(res ? res.data.boards[0].items_page.cursor : null, dates);
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  const activities = itemsList.reduce((prev, curr) => {
+    const type = curr?.column_values?.find((col) => col.id === 'status');
+    const owner = getColumnValue(curr.column_values || [], 'person');
+    const obj = prev;
+    if (_.isEmpty(owner)) return obj;
+    if (!obj[type.text]) {
+      obj[type.text] = { [owner.personsAndTeams[0].id]: 1 };
+    } else if (!obj[type.text][owner.personsAndTeams[0].id]) {
+      obj[type.text] = { ...obj[type.text], [owner.personsAndTeams[0].id]: 1 };
+    } else {
+      obj[type.text][owner.personsAndTeams[0].id] += 1;
+    }
+    return obj;
+  }, {});
+  return activities;
 };

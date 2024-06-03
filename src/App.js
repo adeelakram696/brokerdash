@@ -3,15 +3,20 @@ import { useEffect, useState } from 'react';
 import {
   Layout, theme, ConfigProvider, Spin,
 } from 'antd';
-import { getQueryParams, removeBoardHeader } from 'utils/helpers';
-import { fetchGroups, fetchCurrentUser } from 'app/apis/query';
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
+import { removeBoardHeader } from 'utils/helpers';
+import { fetchCurrentUser, fetchGroups } from 'app/apis/query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './App.scss';
-import LeadModal from 'app/modules/LeadModal';
-import { env } from 'utils/constants';
+import LeaderBoard from 'app/pages/LeaderBoard';
+import LeadView from 'app/pages/LeadView';
 import Dashboard from './app/pages/dashboard';
 
 // Extend Day.js with duration and customParseFormat plugins
@@ -28,10 +33,9 @@ function App() {
 
   useEffect(() => {
     removeBoardHeader();
-    fetchCurrentUser().then((res) => setUserName(res));
     fetchGroups().then((res) => setStagesFetched(res));
+    fetchCurrentUser().then((res) => setUserName(res));
   }, []);
-  const { itemId, boardId } = getQueryParams();
   return (
     <ConfigProvider
       theme={{
@@ -49,28 +53,35 @@ function App() {
       <Layout
         style={{
           padding: '0 8px 24px',
+          height: '100vh',
         }}
       >
         {userName && stagesFetched ? (
-          <Content
-            style={{
-              padding: 8,
-              margin: 0,
-              minHeight: 280,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            {itemId ? (
-              <LeadModal
-                show
-                handleClose={() => {}}
-                closeIcon={false}
-                leadId={itemId}
-                board={env.boards[boardId]}
-              />
-            )
-              : <Dashboard />}
-          </Content>
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Content
+                  style={{
+                    padding: 8,
+                    margin: 0,
+                    minHeight: 280,
+                    borderRadius: borderRadiusLG,
+                  }}
+                >
+                  <Dashboard />
+                </Content>
+              </Route>
+              <Route exact path="/lead-view">
+                <LeadView />
+              </Route>
+              <Route exact path="/leader-board">
+                <LeaderBoard />
+              </Route>
+              <Route exact path="/leader-board-filter">
+                <LeaderBoard withFilter />
+              </Route>
+            </Switch>
+          </Router>
         ) : <Spin spinning fullscreen />}
       </Layout>
     </ConfigProvider>
