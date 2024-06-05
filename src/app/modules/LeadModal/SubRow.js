@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { updateClientInformation } from 'app/apis/mutation';
-import { columnIds, sources } from 'utils/constants';
+import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import SelectField from 'app/components/Forms/SelectField';
 import styles from './LeadModal.module.scss';
@@ -14,7 +14,7 @@ function SubRow({
   source,
 }) {
   const {
-    leadId, board, details,
+    leadId, board, details, channels,
   } = useContext(LeadContext);
   const [followUpDate, setFollowUpDate] = useState();
   const handleFollowUpDateChange = async (date, dateString) => {
@@ -25,7 +25,7 @@ function SubRow({
   };
   const handleChangeSource = async (val) => {
     await updateClientInformation(leadId, details?.board?.id, {
-      [columnIds[board].source]: val,
+      [columnIds[board].channel]: val,
     });
   };
   useEffect(() => {
@@ -41,6 +41,7 @@ function SubRow({
       />
     </Flex>
   );
+  const sources = channels.map((c) => ({ value: c, label: c }));
   return (
     <Flex className={styles.subRow}>
       <Flex justify="space-between" flex={1}>

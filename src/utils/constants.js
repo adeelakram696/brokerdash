@@ -178,6 +178,8 @@ export const columnIds = {
     sequence_welcome_become_lead_w_file: 'color80__1',
     sequence_welcome_become_lead_wo_file: 'color1__1',
     sequence_manual_import: 'color11__1',
+    last_rep_assigned_date: 'date_1__1',
+    dq_reason: 'dropdown4__1',
   },
   leads: {
     name: 'name',
@@ -301,7 +303,7 @@ export const columnIds = {
     additional_docs_sequence_date: 'date82',
     channel: 'status30',
     dq_date: 'date7',
-    dq_reason: 'text22',
+    dq_reason: 'dropdown__1',
     sequence_dq: 'status03',
     formula: 'formula62',
     time_from_lead_creation_to_action_taken: 'time_tracking8',
@@ -766,4 +768,34 @@ export const sources = [
     value: 'Brochure',
     label: 'Brochure',
   },
+];
+
+export const legendColors = [
+  '#FF6384', // Red
+  '#36A2EB', // Blue
+  '#FFCE56', // Yellow
+  '#4BC0C0', // Teal
+  '#9966FF', // Purple
+  '#FF9F40', // Orange
+  '#E7E9ED', // Light Gray
+  '#7BDCB5', // Green
+];
+
+export const actionTypesList = [
+  'New Leads Spoken To',
+  'New Clients Disqualified at first call',
+  'Follow up Call with Dialer',
+  'Follow up clients spoken to',
+  'Docs Collected',
+  'Docs Submitted Internally',
+  'Offers Received Back',
+  'Offer pitched to client',
+  'Offer Merchant Accepted',
+  'Contract out',
+  'Contract signed',
+  'Rejected at funding call',
+  'Fully funded',
+  'Funded Deal Value',
+  'Gross Commission',
+  'Contract lost (signed w/competitor)',
 ];

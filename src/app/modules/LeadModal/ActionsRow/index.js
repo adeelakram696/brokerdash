@@ -9,7 +9,8 @@ import { useContext } from 'react';
 import styles from './ActionsRow.module.scss';
 import ResearchLinks from './ResearchLinks';
 import SendSms from './SendSms';
-import SendEmail from './SendEmail';
+import Disqualified from './Disqualified';
+// import SendEmail from './SendEmail';
 
 const items = [
   {
@@ -37,11 +38,11 @@ function ActionRow() {
     }
   };
   const actions = [
-    {
-      component: (
-        <SendEmail />
-      ),
-    },
+    // {
+    //   component: (
+    //     <SendEmail />
+    //   ),
+    // },
     {
       component: (
         <SendSms />
@@ -50,6 +51,11 @@ function ActionRow() {
     {
       component: (
         <ResearchLinks />
+      ),
+    },
+    {
+      component: (
+        <Disqualified />
       ),
     },
   ];

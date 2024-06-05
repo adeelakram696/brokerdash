@@ -1,5 +1,6 @@
 import {
   Modal, Flex, Button, Divider, Form,
+  DatePicker,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -73,7 +74,7 @@ function QualificationMatrixForm({ show, handleClose }) {
     matrixData.numberOfPositions = sampleRowFunders.filter((i) => values[`funderId-${i.id}`]).length;
     const industry = details[columnIds[board].industry];
     const state = details[columnIds[board].state_incorporated];
-    const timeInBusiness = dayjs().diff(details[columnIds[board].business_start_date], 'month');
+    const timeInBusiness = dayjs().diff(values.business_start_date, 'month');
     const ficoScore = extractLeastNumber(details[columnIds[board].credit_score]);
     const fundersData = fundersIntakeCalc({
       ficoScore, industry, state, timeInBusiness, ...matrixData,
@@ -91,6 +92,7 @@ function QualificationMatrixForm({ show, handleClose }) {
       ...bankActivity,
       ...activePosition,
       fundersPriority: suggestedFunders,
+      business_start_date: dayjs(bankActivity.business_start_date),
     };
     handleUpdate({}, combined);
     form.setFieldsValue(combined);
@@ -134,8 +136,9 @@ function QualificationMatrixForm({ show, handleClose }) {
   useEffect(() => {
     setDefaultValues();
   }, [details.name]);
-  const businessTimeMonth = dayjs().diff(details[columnIds[board].business_start_date], 'month');
-  const businessTimeYear = dayjs().diff(details[columnIds[board].business_start_date], 'year');
+
+  const businessTimeMonth = matrixValues.business_start_date ? dayjs().diff(matrixValues.business_start_date, 'month') : 0;
+  const businessTimeYear = matrixValues.business_start_date ? dayjs().diff(matrixValues.business_start_date, 'year') : 0;
   const getLastModified = () => {
     const entry = (
       (details || {}
@@ -197,10 +200,15 @@ function QualificationMatrixForm({ show, handleClose }) {
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4} className={styles.label}>Date Business Established</Flex>
             <Flex flex={0.6} className={styles.value}>
-              {details[columnIds[board].business_start_date] ? dayjs(details[columnIds[board].business_start_date]).format('MM/DD/YYYY') : ''}
-              {businessTimeMonth > 0 ? ` - ${businessTimeMonth} month(s)` : ''}
+              <Form.Item
+                noStyle
+                name="business_start_date"
+              >
+                <DatePicker format="MM/DD/YYYY" />
+              </Form.Item>
+              {businessTimeMonth > 0 ? ` ${businessTimeMonth} month(s)` : ''}
               {' '}
-              {businessTimeYear > 0 ? ` - ${businessTimeYear} year(s)` : ''}
+              {businessTimeYear > 0 ? ` , ${businessTimeYear} year(s)` : ''}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">

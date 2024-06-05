@@ -14,6 +14,8 @@ function DataTable({
   newTagClass,
   hoverClass,
   board,
+  disableClick,
+  disableNewTag,
   callBackOnOpen = () => {},
 }) {
   const [isModalOpen, setIsModalOpen] = useState();
@@ -46,7 +48,7 @@ function DataTable({
       <Flex justify="space-between" className={styles.itemContainer} vertical>
         {
           data.map((item, i) => (
-            <Flex key={`${item.key}-${i}`} onClick={() => { handleRowClick(item.key); }} className={classNames(styles.itemRow, styles.rowPadding, hoverClass, { [highlightClass]: item.isNew })} align="center">
+            <Flex key={`${item.key}-${i}`} onClick={disableClick ? () => {} : () => { handleRowClick(item.key); }} className={classNames(styles.itemRow, styles.rowPadding, hoverClass, { [highlightClass]: item.isNew })} align="center">
               {columns.map((column, cindex) => (
                 <Flex className={styles.itemColumn} flex={cindex === 0 ? 1 : 0.6} key={column.key} justify={column.align} align="center">
                   {cindex === 0 ? <span className={styles.phoneIcon}><PhoneIcon color={item.isNew ? '#FFF' : undefined} /></span> : null}
@@ -54,7 +56,7 @@ function DataTable({
                     ? column?.render(item[column.dataIndex], item)
                     : item[column.dataIndex]?.substring(0, column.maxLength || 20)}
                   {item[column.dataIndex].length > 30 ? '...' : ''}
-                  {cindex === 0 && item.isNew ? <Flex justify="center" align="center" className={classNames(styles.newTag, newTagClass)}>{en.Cards.new}</Flex> : null}
+                  {cindex === 0 && item.isNew && !disableNewTag ? <Flex justify="center" align="center" className={classNames(styles.newTag, newTagClass)}>{en.Cards.new}</Flex> : null}
                 </Flex>
               ))}
             </Flex>

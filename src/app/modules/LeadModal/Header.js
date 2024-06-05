@@ -143,7 +143,7 @@ function ModalHeader() {
         lastCreated={details[columnIds[board].creation_date]}
         lastSpoke={details[columnIds[board].last_touched]}
         nextFollowUp={details[columnIds[board].next_followup]}
-        source={details[columnIds[board].source]}
+        source={details[columnIds[board].channel]}
       />
     </>
   );

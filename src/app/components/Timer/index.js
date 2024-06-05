@@ -1,9 +1,9 @@
-import { formatTimeIn } from 'utils/helpers';
+import { formatTimeIn, getAvgTimeColor } from 'utils/helpers';
 
 const { useState, useEffect } = require('react');
 
 function Timer({
-  startSeconds, isReverse, limit, onFinish = () => {}, updateTime = () => {},
+  startSeconds, isReverse, limit, goalTime, onFinish = () => {}, updateTime = () => {},
 }) {
   const [remainingSeconds, setRemainingSeconds] = useState();
   useEffect(() => {
@@ -21,9 +21,9 @@ function Timer({
   }, [remainingSeconds]);
 
   return (
-    <>
+    <span style={goalTime ? { color: getAvgTimeColor(remainingSeconds, goalTime) } : {}}>
       {formatTimeIn(remainingSeconds)}
-    </>
+    </span>
   );
 }
 

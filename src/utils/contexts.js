@@ -14,3 +14,10 @@ export const LeadContext = createContext({
   boardId: '',
   groupId: '',
 });
+export const MatrixContext = createContext({
+  list: [],
+  channels: [],
+  goalTime: 60,
+  getChannels: () => {},
+  getNewLeadsData: () => {},
+});

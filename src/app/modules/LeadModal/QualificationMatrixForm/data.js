@@ -120,6 +120,7 @@ export const sampleRowFunders = [
 ];
 
 export const bankActivityKeys = [
+  'business_start_date',
   'days-1',
   'days-2',
   'days-3',

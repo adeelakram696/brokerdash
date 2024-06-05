@@ -4,6 +4,7 @@ import {
   Modal, Flex, Spin, message,
 } from 'antd';
 import {
+  fetchBoardColumnStrings,
   fetchFunders,
   fetchLeadClientDetails,
   fetchLeadDocs,
@@ -34,8 +35,10 @@ function LeadModal({
   const [details, setDetails] = useState({});
   const [funders, setFunders] = useState({});
   const [updates, setUpdates] = useState([]);
+  const [currentTab, setCurrentTab] = useState([]);
   const [docs, setDocs] = useState({});
   const [board, setBoard] = useState('');
+  const [channels, setChannels] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
   const [importantMsg, setImportantMsg] = useState();
   const [messageApi, contextHolder] = message.useMessage();
@@ -62,6 +65,10 @@ function LeadModal({
     setUpdates(res.data.items[0]?.updates);
     // setUsers(res.data.users);
   };
+  const getChannels = async () => {
+    const res = await fetchBoardColumnStrings(details?.board?.id, columnIds[board].channel);
+    setChannels(res);
+  };
   const refetchAllData = async () => {
     setLoadingData(true);
     await getData();
@@ -76,6 +83,7 @@ function LeadModal({
       if (timeoutId) clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         getData();
+        getDocs();
       }, 1000 * 3);
     }
   };
@@ -123,6 +131,7 @@ function LeadModal({
   useEffect(() => {
     if (!board) return;
     getMarkAsImportant();
+    getChannels();
   }, [board]);
   useEffect(() => () => {
     if (!unsubscribe) return;
@@ -155,23 +164,26 @@ function LeadModal({
           funders,
           docs,
           importantMsg,
-          getData,
-          getDocs,
-          getFunders,
-          getMarkAsImportant,
           leadId,
           board,
           boardId: details?.board?.id,
           groupId: details?.group?.id,
-          onClose,
           loadingData,
-          getUpdates,
           updates,
+          messageApi,
+          currentTab,
+          channels,
+          getData,
+          getDocs,
+          getFunders,
+          getMarkAsImportant,
+          onClose,
+          getUpdates,
           setUpdates,
           refetchAllData,
           handleReadyForSubmission,
-          messageApi,
           setLoadingData,
+          setCurrentTab,
         }}
       >
         <Spin tip="Loading..." spinning={!details.id || loadingData}>

@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
+    "@ant-design/plots": "^2.2.2",
+    "@antv/util": "^3.3.7",
     "antd": "^5.15.4",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",

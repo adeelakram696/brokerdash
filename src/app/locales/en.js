@@ -13,7 +13,7 @@ const en = {
     documents: 'Documents',
   },
   documents: {
-    sendRequestCTA: 'Send Doc Request',
+    sendRequestCTA: 'Upload Document',
   },
   Cards: {
     new: 'new',

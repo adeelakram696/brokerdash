@@ -1,6 +1,5 @@
 import {
   Flex, Card, Form, Button,
-  DatePicker,
 } from 'antd';
 import en from 'app/locales/en';
 import classNames from 'classnames';
@@ -9,7 +8,6 @@ import { updateClientInformation } from 'app/apis/mutation';
 import { useEffect, useState } from 'react';
 import InputField from 'app/components/Forms/InputField';
 import SelectField from 'app/components/Forms/SelectField';
-import dayjs from 'dayjs';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 import {
@@ -40,8 +38,7 @@ function ClientBaseInfo({
       valueData[columnIds[board].state_incorporated] = details[columnIds[board].state_incorporated];
       valueData[columnIds[board].requested_amount] = details[columnIds[board].requested_amount];
       valueData[columnIds[board].business_start_date] = details[columnIds[board]
-        .business_start_date] ? dayjs(details[columnIds[board]
-          .business_start_date], 'YYYY-MM-DD') : '';
+        .business_start_date];
     }
     if (isDeal) {
       valueData[columnIds.clients.credit_score] = details.client[columnIds.clients.credit_score];
@@ -52,8 +49,7 @@ function ClientBaseInfo({
         .clientAccount.state_incorporated];
       valueData[columnIds.clientAccount
         .business_start_date] = details.clientAccount[columnIds.clientAccount
-        .business_start_date] ? dayjs(details.clientAccount[columnIds.clientAccount
-          .business_start_date], 'YYYY-MM-DD') : '';
+        .business_start_date];
     }
     form.setFieldsValue(valueData);
   };
@@ -63,7 +59,6 @@ function ClientBaseInfo({
   }, [details]);
   const handleUpdate = async (values) => {
     setLoading(true);
-    const estDate = dayjs(values[columnIds[board].business_start_date]).format('YYYY-MM-DD');
     const clientPayload = {};
     const accountsPayload = {};
     const payload = {
@@ -79,7 +74,7 @@ function ClientBaseInfo({
       payload[columnIds[board].credit_score] = values[columnIds[board].credit_score];
       payload[columnIds[board].industry] = values[columnIds[board].industry];
       payload[columnIds[board].state_incorporated] = values[columnIds[board].state_incorporated];
-      payload[columnIds[board].business_start_date] = estDate;
+      payload[columnIds[board].business_start_date] = values[columnIds[board].business_start_date];
     }
     if (isDeal) {
       clientPayload[columnIds.clients.credit_score] = values[columnIds.clients.credit_score];
@@ -87,7 +82,8 @@ function ClientBaseInfo({
       accountsPayload[columnIds.clientAccount
         .state_incorporated] = values[columnIds.clientAccount
         .state_incorporated];
-      accountsPayload[columnIds.clientAccount.business_start_date] = estDate;
+      accountsPayload[
+        columnIds.clientAccount.business_start_date] = values[columnIds[board].business_start_date];
     }
     await updateClientInformation(
       leadId,
@@ -117,7 +113,6 @@ function ClientBaseInfo({
   const estDate = (isDeal ? (details.clientAccount[columnIds.clientAccount
     .business_start_date] || null) : (details[columnIds[board]
     .business_start_date] || null));
-  const formatedEstDate = estDate ? dayjs(estDate, 'YYYY-DD-MM').format('MM-DD-YYYY') : '-';
   return (
     <Card
       loading={loading}
@@ -231,11 +226,6 @@ function ClientBaseInfo({
                     <Form.Item
                       noStyle
                       name={columnIds[board].money_due_in}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
                     >
                       <InputField />
                     </Form.Item>
@@ -291,11 +281,6 @@ function ClientBaseInfo({
                     <Form.Item
                       noStyle
                       name={columnIds[board].existing_debt}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
                     >
                       <SelectField options={existingDepts} />
                     </Form.Item>
@@ -366,10 +351,10 @@ function ClientBaseInfo({
                         },
                       ]}
                     >
-                      <DatePicker maxDate={dayjs()} format="MM-DD-YYYY" />
+                      <InputField />
                     </Form.Item>
                   )
-                  : formatedEstDate}
+                  : estDate}
               </Flex>
             </Flex>
           </Flex>

@@ -17,6 +17,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './App.scss';
 import LeaderBoard from 'app/pages/LeaderBoard';
 import LeadView from 'app/pages/LeadView';
+import DailyMatrics from 'app/pages/DailyMatrics';
 import Dashboard from './app/pages/dashboard';
 
 // Extend Day.js with duration and customParseFormat plugins
@@ -53,7 +54,6 @@ function App() {
       <Layout
         style={{
           padding: '0 8px 24px',
-          height: '100vh',
         }}
       >
         {userName && stagesFetched ? (
@@ -79,6 +79,9 @@ function App() {
               </Route>
               <Route exact path="/leader-board-filter">
                 <LeaderBoard withFilter />
+              </Route>
+              <Route exact path="/daily-matrics">
+                <DailyMatrics />
               </Route>
             </Switch>
           </Router>

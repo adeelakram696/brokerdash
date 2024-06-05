@@ -34,7 +34,7 @@ function FundingOffer({
           <Flex vertical>
             <Flex justify="flex-end">
               <Flex className={styles.notesLabel} align="center">Notes</Flex>
-              <Flex flex={0.95}><InputField placeholder="Notes" value={data.notes} classnames={styles.notesInput} /></Flex>
+              <Flex flex={0.95}><InputField placeholder="Notes" value={data.notes} classnames={styles.notesInput} readOnly /></Flex>
               <Flex
                 style={{ marginLeft: 10 }}
                 onClick={() => { setIsExpended(!isExpended); }}

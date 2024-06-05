@@ -155,3 +155,28 @@ export function convertSequenceNameToKey(name) {
     .toLowerCase(); // Convert the string to lowercase
   return outputString;
 }
+
+export function getAvgTimeColor(avgTime, goalTime) {
+  if (avgTime > goalTime) return 'red';
+  if (avgTime + 15 >= goalTime) return 'orange';
+  return 'green';
+}
+export function customSort(array, customOrder) {
+  const orderMap = new Map();
+
+  // Create a map of custom order
+  customOrder.forEach((item, index) => {
+    orderMap.set(item, index);
+  });
+
+  // Sort the array based on the custom order
+  return array.sort((a, b) => {
+    const indexA = orderMap.has(a) ? orderMap.get(a) : customOrder.length;
+    const indexB = orderMap.has(b) ? orderMap.get(b) : customOrder.length;
+    return indexA - indexB;
+  });
+}
+export function toSentenceCase(str) {
+  if (!str) return str; // Return the string if it's empty or null
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}

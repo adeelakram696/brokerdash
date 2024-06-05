@@ -7,11 +7,12 @@ import {
   fetchLeadersBoardEmployees, fetchBoardColumnStrings, getTotalActivities, fetchAllUsers,
 } from 'app/apis/query';
 import { useEffect, useRef, useState } from 'react';
-import { env } from 'utils/constants';
+import { actionTypesList, env } from 'utils/constants';
 import monday from 'utils/mondaySdk';
 import SelectField from 'app/components/Forms/SelectField';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
+import { customSort, toSentenceCase } from 'utils/helpers';
 import styles from './LeaderBoards.module.scss';
 
 const { RangePicker } = DatePicker;
@@ -29,7 +30,14 @@ function LeaderBoardModule({ withFilter }) {
   const [saleActivities, setSalesActivities] = useState([]);
   const getActionTypes = async () => {
     const res = await fetchBoardColumnStrings(env.boards.salesActivities, 'status');
-    setActionTypes(res);
+    const actions = res.reduce((prev, curr) => {
+      // eslint-disable-next-line no-param-reassign
+      prev[curr.toLowerCase()] = curr.toLowerCase();
+      return prev;
+    }, {});
+    const lowercaseActionsList = actionTypesList.map((t) => t.toLowerCase());
+    const sortedList = customSort(Object.keys(actions), lowercaseActionsList);
+    setActionTypes(sortedList);
   };
   const getEmployeeList = async () => {
     const res = await fetchLeadersBoardEmployees();
@@ -147,7 +155,7 @@ function LeaderBoardModule({ withFilter }) {
         </Flex>
         {actionTypes.map((actions, index) => (
           <Flex className={classNames(styles.dataRow, { [styles.alternateColor]: index % 2 })}>
-            <Flex className={styles.dataColumnTitle} align="center">{actions}</Flex>
+            <Flex className={styles.dataColumnTitle} align="center">{toSentenceCase(actions)}</Flex>
             {employees.map((emp) => (
               <Flex className={styles.dataColumnPerson} justify="center" align="center">
                 {(saleActivities[actions] || {})[emp.id] || ' '}

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Flex, Card, Button, Checkbox,
 } from 'antd';
@@ -7,25 +8,33 @@ import { DeleteIcon, DownloadIcon } from 'app/images/icons';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import FileIcon from 'app/components/FileIcon';
 import FileUploadDnD from 'app/components/FileUploadDnD';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { addFilesToLead } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
+import monday from 'utils/mondaySdk';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
 function DocsTab() {
   const {
-    leadId, board, docs, getDocs, setLoadingData,
+    leadId, board, docs, getDocs, setLoadingData, boardId,
+    currentTab,
   } = useContext(LeadContext);
+  let intervalId;
   const [downloadDocs, setDownloadDocs] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
 
-  const uploadFile = async (file) => {
-    setLoadingData(true);
-    await addFilesToLead(leadId, columnIds[board].incoming_files, file);
-    await getDocs();
-    setLoadingData(false);
+  const uploadFile = async () => {
+    await monday.execute('triggerFilesUpload', {
+      boardId,
+      itemId: leadId,
+      columnId: columnIds[board].incoming_files,
+    });
+    // setLoadingData(true);
+    // await addFilesToLead(leadId, columnIds[board].incoming_files, file);
+    // await getDocs();
+    // setLoadingData(false);
   };
   const handleDownload = async () => {
     const fitlered = docs.assets.filter((doc) => selectedDocs.indexOf(doc.id) >= 0);
@@ -37,9 +46,17 @@ function DocsTab() {
   const handleDocClick = async (url) => {
     window.open(url, '_blank');
   };
+  useEffect(() => {
+    if (currentTab !== 'docs') return clearInterval(intervalId);
+    getDocs();
+    intervalId = setInterval(getDocs, (1000 * 10));
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [leadId, currentTab]);
   return (
     <Flex flex={1}>
-      <Flex className={parentStyles.columnLeft} flex={0.6} vertical>
+      <Flex className={parentStyles.columnLeft} flex={1} vertical>
         <Card className={classNames(
           parentStyles.cardContainer,
           styles.fullWidth,
@@ -49,7 +66,12 @@ function DocsTab() {
             <Flex className={styles.heading} flex={0.6}>{en.titles.documents}</Flex>
             <Flex justify="flex-end" align="center" flex={0.4}>
               <Flex>
-                <Button className={styles.sendRequestBtn} type="primary" shape="round">
+                <Button
+                  className={styles.sendRequestBtn}
+                  type="primary"
+                  shape="round"
+                  onClick={uploadFile}
+                >
                   {en.documents.sendRequestCTA}
                 </Button>
               </Flex>
@@ -113,7 +135,7 @@ function DocsTab() {
           </Flex>
         </Card>
       </Flex>
-      <Flex
+      {/* <Flex
         className={classNames(parentStyles.columnRight, styles.uploadContainer)}
         flex={0.4}
         vertical
@@ -125,10 +147,17 @@ function DocsTab() {
         )}
         >
           <Flex justify="center">
-            <FileUploadDnD uploadFile={uploadFile} />
+            <Button
+              className={styles.readyForSubmission}
+              type="primary"
+              shape="round"
+              onClick={uploadFile}
+            >
+              Upload Document
+            </Button>
           </Flex>
         </Card>
-      </Flex>
+      </Flex> */}
       <Flex style={{ display: 'none' }}>
         {
           // eslint-disable-next-line jsx-a11y/iframe-has-title

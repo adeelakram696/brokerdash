@@ -1,0 +1,48 @@
+
+
+.card {
+ margin: 10px;
+ width: 600px;
+}
+.tableContainer {
+  height: 200px;
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #EFEFEF; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #BDBDBD; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #BDBDBD; 
+  }
+}
+.avgQueTitle {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.avgTitle {
+  font-size: 16px;;
+}
+.avgTime {
+  font-size: 40px;
+}
+.red {
+  color: rgb(233, 59, 59);
+}
+.orange {
+  color: rgb(231, 195, 51);
+}
+.green {
+  color: rgb(39, 192, 39);
+}

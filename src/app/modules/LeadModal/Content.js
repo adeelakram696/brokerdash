@@ -15,7 +15,7 @@ import RenewalTab from './TabsContent/RenewalTab';
 
 function Content() {
   const {
-    leadId, board, handleReadyForSubmission, details,
+    leadId, board, handleReadyForSubmission, details, setCurrentTab,
   } = useContext(LeadContext);
   const handlePitched = async (checked) => {
     const dataJson = { [columnIds[board].pitched]: { checked } };
@@ -24,25 +24,25 @@ function Content() {
   const readySubmissionBtn = {};
   const items = [
     {
-      key: '1',
+      key: 'details',
       label: 'Details',
       children: <DetailsTab />,
     },
     {
-      key: '2',
+      key: 'docs',
       label: 'Documents',
       children: <DocsTab />,
     },
   ];
   if (board === 'deals') {
     items.push({
-      key: '3',
+      key: 'submission',
       label: 'Submissions',
       children: <SubmissionsTab />,
     });
     if (details[columnIds[board].type] === 'Renewal') {
       items.push({
-        key: '4',
+        key: 'renewal',
         label: 'Renewal',
         children: <RenewalTab />,
       });
@@ -78,9 +78,10 @@ function Content() {
       <Tabs
         size="small"
         rootClassName={styles.tabs}
-        defaultActiveKey="1"
+        defaultActiveKey="details"
         items={items}
         tabBarExtraContent={readySubmissionBtn}
+        onChange={setCurrentTab}
       />
     </Flex>
   );
