@@ -13,7 +13,6 @@ function Disqualified() {
     board, details, leadId, getData,
   } = useContext(LeadContext);
   const [reason, setReason] = useState('');
-  // eslint-disable-next-line no-unused-vars
   const [showLoading, setLoading] = useState(false);
   const hideModal = () => {
     setReason('');

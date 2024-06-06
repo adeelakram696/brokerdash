@@ -6,7 +6,7 @@ import { updateClientInformation } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import SelectField from 'app/components/Forms/SelectField';
-import styles from './LeadModal.module.scss';
+import styles from '../LeadModal.module.scss';
 
 function SubRow({
   lastCreated,

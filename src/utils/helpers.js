@@ -98,7 +98,7 @@ export function getFormulaValues(values) {
   return {
     [columnIds.subItem.funder_fee]: numberWithCommas(funderFee),
     [columnIds.subItem.net_funding_amt]: numberWithCommas(netFundingAmt),
-    [columnIds.subItem.payback_amount]: numberWithCommas(paybackAmt),
+    [columnIds.subItem.payback_amount]: numberWithCommas(paybackAmt.toFixed(2)),
     [columnIds.subItem.payback_period]: paybackPeriod?.toFixed(3),
     [columnIds.subItem.comission_amt]: getCommisionAmt({
       paybackAmt,

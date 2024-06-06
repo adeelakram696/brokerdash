@@ -2,9 +2,11 @@ import {
   Flex,
 } from 'antd';
 import { MatrixContext } from 'utils/contexts';
-import { useEffect, useState } from 'react';
-import { getAllNewLeadsPages, getAllSubmittedDeals } from 'app/apis/query';
-import { env } from 'utils/constants';
+import { useEffect, useRef, useState } from 'react';
+import { fetchMetricsGoals, getAllNewLeadsPages, getAllSubmittedDeals } from 'app/apis/query';
+import { columnIds, env } from 'utils/constants';
+import dayjs from 'dayjs';
+import monday from 'utils/mondaySdk';
 import NewLeads from './NewLeads';
 import NewDealsSubmitted from './NewDealsSubmitted';
 import LeadsWithOfferToPitch from './LeadsWithOfferToPitch';
@@ -15,54 +17,70 @@ import FundedDeals from './FundedDeals';
 import FundedDealsAmount from './FundedDealsAmount';
 
 function DailyMatricsModule() {
-  const goalTime = 60;
-  const dealGoal = 30;
-  const pitchedGoal = 80;
+  let unsubscribe;
+  const [goals, setGoals] = useState({});
   const [newLeads, setNewLeads] = useState([]);
   const [submittedDeals, setSubmittedDeals] = useState([]);
-  // const [channels, setChannels] = useState([]);
-  const getNewLeadsData = async () => {
-    const items = await getAllNewLeadsPages();
+  const [dateRange, setDateRange] = useState([dayjs(), dayjs()]);
+  const dateR = useRef();
+  const getNewLeadsData = async (dates) => {
+    const items = await getAllNewLeadsPages(dates);
     const transformed = transformData(items);
     setNewLeads(transformed);
   };
-  const getSubmittedDeals = async () => {
-    const items = await getAllSubmittedDeals();
+  const getSubmittedDeals = async (dates) => {
+    const items = await getAllSubmittedDeals(dates);
     setSubmittedDeals(items);
   };
-  // const getChannels = async () => {
-  //   const res = await fetchBoardColumnStrings(env.boards.leads, columnIds.leads.channel);
-  //   setChannels(res);
-  // };
-  // useEffect(() => {
-  //   getChannels();
-  // }, []);
+  const getGoals = async () => {
+    const resp = await fetchMetricsGoals();
+    setGoals(resp);
+  };
   useEffect(() => {
-    getNewLeadsData();
-    const intervalId1 = setInterval(getNewLeadsData, (1000 * env.intervalTime));
+    getGoals();
+    unsubscribe = monday.listen('events', getGoals);
+    return () => {
+      if (!unsubscribe) return;
+      unsubscribe();
+    };
+  }, []);
+  useEffect(() => {
+    dateR.current = [dayjs(), dayjs()];
+    getNewLeadsData(dateRange);
+    const intervalId1 = setInterval(() => {
+      getNewLeadsData(dateR.current);
+    }, (1000 * env.performanceRefetchTime));
     return () => {
       clearInterval(intervalId1);
     };
   }, []);
   useEffect(() => {
-    getSubmittedDeals();
-    const intervalId = setInterval(getSubmittedDeals, (1000 * env.intervalTime));
+    getSubmittedDeals(dateRange);
+    const intervalId = setInterval(() => {
+      getSubmittedDeals(dateR.current);
+    }, (1000 * env.performanceRefetchTime));
     return () => {
       clearInterval(intervalId);
     };
   }, []);
+  const handleChangeDates = (val) => {
+    setDateRange(val);
+    getNewLeadsData(val);
+    getSubmittedDeals(val);
+    dateR.current = val;
+  };
   return (
     <MatrixContext.Provider
       value={{
-        goalTime,
-        dealGoal,
-        pitchedGoal,
+        goalTime: +goals[columnIds.metrics.leadGoal],
+        dealGoal: +goals[columnIds.metrics.leadSubmissionGoal],
+        pitchedGoal: +goals[columnIds.metrics.dealPitchGoal],
         newLeads,
-        // channels,
         submittedDeals,
-        // getChannels,
+        dateRange,
         getNewLeadsData,
         getSubmittedDeals,
+        handleChangeDates,
       }}
     >
       <Flex justify="center" align="center" vertical>

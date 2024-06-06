@@ -8,6 +8,7 @@ export const env = {
     clientAccounts: process.env.REACT_APP_CLIENT_ACCOUNTS_BOARD_ID,
     employees: process.env.REACT_APP_EMPLOYEES_BOARD,
     salesActivities: process.env.REACT_APP_SALES_ACTIVITIES_BOARD,
+    metrics: process.env.REACT_APP_METRICS_BOARD,
     [process.env.REACT_APP_DEALS_BOARD_ID]: 'deals',
     [process.env.REACT_APP_LEADS_BOARD_ID]: 'leads',
   },
@@ -28,11 +29,13 @@ export const env = {
     docReview: process.env.REACT_APP_DOC_REVIEW_VIEW_ID,
     readyForSubmission: process.env.REACT_APP_READY_FOR_SUBMISSION_VIEW_ID,
     waitingForOffer: process.env.REACT_APP_WAITING_FOR_OFFER_VIEW_ID,
+    newLeadsToday: process.env.REACT_APP_NEW_LEADS_TODAY_VIEW_ID,
   },
   boardBaseURL: process.env.REACT_APP_BOARDS_BASE_URL,
   intervalTime: process.env.REACT_APP_REFETCH_TIME_SECONDS,
   performanceRefetchTime: process.env.REACT_APP_PERFORMANCE_REFETCH_TIME_SECONDS,
   leaderEmployeeItemId: process.env.REACT_APP_LEADERBOARD_EMPLOYEES_ITEM_ID,
+  metricsGoalItemId: process.env.REACT_APP_METRICS_GOALS_ITEM_ID,
 };
 
 export const boardNames = {
@@ -180,6 +183,7 @@ export const columnIds = {
     sequence_manual_import: 'color11__1',
     last_rep_assigned_date: 'date_1__1',
     dq_reason: 'dropdown4__1',
+    lead_creation_date: 'date_17__1',
   },
   leads: {
     name: 'name',
@@ -440,6 +444,11 @@ export const columnIds = {
     rent_or_own: 'status4',
     source: 'text21',
     company_name: 'text89',
+  },
+  metrics: {
+    leadGoal: 'text__1',
+    leadSubmissionGoal: 'text3__1',
+    dealPitchGoal: 'text9__1',
   },
 };
 export const actionsNeeded = [

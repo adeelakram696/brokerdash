@@ -43,8 +43,13 @@ function DocsTab() {
       setDownloadDocs([]);
     }, 1000);
   };
-  const handleDocClick = async (url) => {
-    window.open(url, '_blank');
+  const handleDocClick = async (id) => {
+    monday.execute('openFilesDialog', {
+      boardId,
+      itemId: leadId,
+      columnId: columnIds[board].incoming_files,
+      assetId: id,
+    });
   };
   useEffect(() => {
     if (currentTab !== 'docs') return clearInterval(intervalId);
@@ -83,13 +88,13 @@ function DocsTab() {
                   <DownloadIcon />
                 </Flex>
               ) : null}
-              {selectedDocs.length >= 1 ? (
+              {/* {selectedDocs.length >= 1 ? (
                 <Flex
                   style={{ cursor: 'pointer', margin: '0 5px' }}
                 >
                   <DeleteIcon />
                 </Flex>
-              ) : null}
+              ) : null} */}
             </Flex>
           </Flex>
           <Flex justify="space-between" className={styles.breadcrumbRow}>
@@ -124,7 +129,7 @@ function DocsTab() {
                   </Flex>
                   <Flex className={styles.fileIcon}><FileIcon extension={doc.file_extension.replace('.', '')} /></Flex>
                   <Flex
-                    onClick={() => { handleDocClick(doc.url); }}
+                    onClick={() => { handleDocClick(doc.id); }}
                     className={styles.docName}
                   >
                     {doc.name}

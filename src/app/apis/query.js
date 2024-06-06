@@ -761,88 +761,104 @@ export const getTotalActivities = async (dates) => {
 
 /* ---- Daily Matrics --------- */
 
-export const fetchAllNewLeadsData = async (cursor) => {
+export const fetchAllNewLeadsData = async (cursor, dates) => {
+  const dateArray = dates.map((date) => `"${date.format('YYYY-MM-DD')}"`);
   const query = `query {
-    leads: items_page_by_column_values(
-      limit: 500
-      ${cursor ? `cursor: "${cursor}"` : ''}
-      board_id: ${env.boards.leads}
-      ${!cursor ? `columns: [
-        {
-          column_id: "${columnIds.leads.last_rep_assigned_date}",
-          column_values: "${dayjs().format('YYYY-MM-DD')}"
-        }
-      ]` : ''}
-    ) {
-      cursor
-      items {
-        name
-        id
-        column_values(ids: ["${columnIds.leads.stage}","${columnIds.leads.last_lead_assigned}", "${columnIds.leads.new_lead_or_touched}", "${columnIds.leads.channel}", "${columnIds.leads.sales_rep}","${columnIds.leads.creation_date}","${columnIds.leads.minutes_5}"]) {
+    boards(ids: [${env.boards.leads}]) {
+      items_page(
+      ${!cursor ? `query_params: {
+        rules: [
+          { column_id: "${columnIds.leads.creation_date}", compare_value:[${dateArray}], operator:between}
+       ]
+       }` : ''}
+        limit: 500
+        ${cursor ? `cursor: "${cursor}"` : ''}
+      ) {
+        cursor
+        items {
+          name
           id
-          text
-          value
-        }
-      }
-    }
-  }`;
-  const res = await monday.api(query);
-  return res.data.leads;
-};
-
-export const getAllNewLeadsPages = async () => {
-  let res = null;
-  let itemsList = [];
-  do {
-    // eslint-disable-next-line no-await-in-loop
-    res = await fetchAllNewLeadsData(res ? res.cursor : null);
-    itemsList = [...itemsList, ...res.items];
-  } while (res.cursor);
-  return itemsList;
-};
-export const fetchAllSubmittedDeals = async (cursor) => {
-  const query = `query {
-    deals: items_page_by_column_values(
-      limit: 500
-      ${cursor ? `cursor: "${cursor}"` : ''}
-      board_id: ${env.boards.deals}
-      ${!cursor ? `columns: [
-        {
-          column_id: "${columnIds.deals.creation_date}",
-          column_values: "${dayjs().format('YYYY-MM-DD')}"
-        }
-      ]` : ''}
-    ) {
-      cursor
-      items {
-        name
-        id
-        column_values(ids: ["${columnIds.deals.stage}", "${columnIds.deals.channel}","${columnIds.deals.pitched}"]) {
-          id
-          text
-          value
-        }
-        subitems{
-          id
-          column_values (ids: ["${columnIds.subItem.status}", "${columnIds.subItem.funding_amount}"]){
+          column_values(ids: ["${columnIds.leads.stage}","${columnIds.leads.last_lead_assigned}", "${columnIds.leads.new_lead_or_touched}", "${columnIds.leads.channel}", "${columnIds.leads.sales_rep}","${columnIds.leads.creation_date}","${columnIds.leads.minutes_5}", "${columnIds.leads.last_rep_assigned_date}"]) {
             id
             text
+            value
           }
         }
       }
     }
   }`;
   const res = await monday.api(query);
-  return res.data.deals;
+  return res.data.boards[0].items_page;
 };
 
-export const getAllSubmittedDeals = async () => {
+export const getAllNewLeadsPages = async (dates) => {
   let res = null;
   let itemsList = [];
   do {
     // eslint-disable-next-line no-await-in-loop
-    res = await fetchAllSubmittedDeals(res ? res.cursor : null);
+    res = await fetchAllNewLeadsData(res ? res.cursor : null, dates);
     itemsList = [...itemsList, ...res.items];
   } while (res.cursor);
   return itemsList;
+};
+export const fetchAllSubmittedDeals = async (cursor, dates) => {
+  const dateArray = dates.map((date) => `"${date.format('YYYY-MM-DD')}"`);
+  const query = `query {
+    boards(ids: [${env.boards.deals}]) {
+      items_page(
+      ${!cursor ? `query_params: {
+        rules: [
+          { column_id: "${columnIds.deals.lead_creation_date}", compare_value:[${dateArray}], operator:between}
+       ]
+       }` : ''}
+        limit: 500
+        ${cursor ? `cursor: "${cursor}"` : ''}
+      ) {
+        cursor
+        items {
+          name
+          id
+          column_values(ids: ["${columnIds.deals.stage}", "${columnIds.deals.channel}","${columnIds.deals.pitched}", "${columnIds.deals.last_rep_assigned_date}"]) {
+            id
+            text
+            value
+          }
+          subitems{
+            id
+            column_values (ids: ["${columnIds.subItem.status}", "${columnIds.subItem.funding_amount}"]){
+              id
+              text
+            }
+          }
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  return res.data.boards[0].items_page;
+};
+
+export const getAllSubmittedDeals = async (dates) => {
+  let res = null;
+  let itemsList = [];
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchAllSubmittedDeals(res ? res.cursor : null, dates);
+    itemsList = [...itemsList, ...res.items];
+  } while (res.cursor);
+  return itemsList;
+};
+
+export const fetchMetricsGoals = async () => {
+  const query = `query {
+    items(ids: [${env.metricsGoalItemId}]) {
+      column_values{
+        id
+        text
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  const columns = normalizeColumnValues(res.data.items[0].column_values);
+  return columns;
 };

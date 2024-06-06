@@ -8,7 +8,7 @@ import EditableTable from 'app/components/EditableTable';
 import { useContext, useEffect, useState } from 'react';
 import { LeadContext } from 'utils/contexts';
 import _ from 'lodash';
-import { columnIds } from 'utils/constants';
+import { boardNames, columnIds } from 'utils/constants';
 import { updateSimpleColumnValue } from 'app/apis/mutation';
 import { extractLeastNumber } from 'utils/helpers';
 import styles from './QualificationMatrixForm.module.scss';
@@ -25,6 +25,7 @@ function QualificationMatrixForm({ show, handleClose }) {
   } = useContext(LeadContext);
   const [matrixValues, setMatrixValues] = useState({});
   const [loading, setLoading] = useState(false);
+  const isDeal = board === boardNames.deals;
 
   const getColumnSum = (columnKey, rows, data) => rows.reduce((prev, current) => prev + Number(data[`${columnKey}-${current.id}`] || 0), 0);
 
@@ -72,10 +73,18 @@ function QualificationMatrixForm({ show, handleClose }) {
     matrixData.negativeDaysLast30 = getColumnSum('days', [...sampleRow].slice(1, 3), matrixData);
     matrixData.negativeDaysLast90 = getColumnSum('days', sampleRow, matrixData);
     matrixData.numberOfPositions = sampleRowFunders.filter((i) => values[`funderId-${i.id}`]).length;
-    const industry = details[columnIds[board].industry];
-    const state = details[columnIds[board].state_incorporated];
+    const industry = isDeal
+      ? details.clientAccount[columnIds.clientAccount.industry]
+      : details[columnIds[board].industry];
+    const state = isDeal
+      ? details.clientAccount[columnIds
+        .clientAccount.state_incorporated]
+      : details[columnIds[board].state_incorporated];
+    const creditScore = isDeal
+      ? details.client[columnIds.clients.credit_score]
+      : details[columnIds[board].credit_score];
     const timeInBusiness = dayjs().diff(values.business_start_date, 'month');
-    const ficoScore = extractLeastNumber(details[columnIds[board].credit_score]);
+    const ficoScore = extractLeastNumber(creditScore);
     const fundersData = fundersIntakeCalc({
       ficoScore, industry, state, timeInBusiness, ...matrixData,
     });
@@ -147,6 +156,16 @@ function QualificationMatrixForm({ show, handleClose }) {
     const lastModified = JSON.parse(entry?.value || '{}')?.changed_at || '';
     return lastModified ? dayjs(lastModified).format('MM/DD/YY @ hh:mm A') : '-';
   };
+  const industry = isDeal
+    ? details.clientAccount[columnIds.clientAccount.industry]
+    : details[columnIds[board].industry];
+  const state = isDeal
+    ? details.clientAccount[columnIds
+      .clientAccount.state_incorporated]
+    : details[columnIds[board].state_incorporated];
+  const creditScore = isDeal
+    ? details.client[columnIds.clients.credit_score]
+    : details[columnIds[board].credit_score];
   return (
     <Modal
       open={show}
@@ -188,13 +207,13 @@ function QualificationMatrixForm({ show, handleClose }) {
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4} className={styles.label}>Type of Business</Flex>
             <Flex flex={0.6} className={styles.value}>
-              {details[columnIds[board].industry]}
+              {industry}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4} className={styles.label}>State Of Business</Flex>
             <Flex flex={0.6} className={styles.value}>
-              {details[columnIds[board].state_incorporated]}
+              {state}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
@@ -214,7 +233,7 @@ function QualificationMatrixForm({ show, handleClose }) {
           <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4} className={styles.label}>Fico Score</Flex>
             <Flex flex={0.6} className={styles.value}>
-              {extractLeastNumber(details[columnIds[board].credit_score])}
+              {extractLeastNumber(creditScore)}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="flex-start">

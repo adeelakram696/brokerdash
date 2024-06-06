@@ -17,7 +17,7 @@ export const LeadContext = createContext({
 export const MatrixContext = createContext({
   list: [],
   channels: [],
-  goalTime: 60,
+  goals: {},
   getChannels: () => {},
   getNewLeadsData: () => {},
 });
