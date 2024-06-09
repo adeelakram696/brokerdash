@@ -12,7 +12,7 @@ import { columns } from './data';
 
 function NewLeadsQueue() {
   const {
-    newLeads, goalTime, getNewLeadsData,
+    newLeads, goalTime, getNewLeadsData, dateRange,
   } = useContext(MatrixContext);
   const onlyNewLeads = newLeads.filter((l) => l.isNew && !l.isAllPassedTimer);
   const onlyTouched = newLeads.filter((l) => l.isAllPassedTimer || l.isTouched);
@@ -23,7 +23,7 @@ function NewLeadsQueue() {
   }, 0);
   const averageTime = sumTime / onlyTouched.length;
   const onFinishTimer = () => {
-    getNewLeadsData();
+    getNewLeadsData(dateRange);
   };
   return (
     <Card className={styles.card} title="Current Untouched Leads in Que">

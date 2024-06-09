@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import { useEffect, useState } from 'react';
+import {
+  useEffect, useState, Suspense, lazy,
+} from 'react';
 import {
   Layout, theme, ConfigProvider, Spin,
 } from 'antd';
@@ -13,15 +15,18 @@ import { fetchCurrentUser, fetchGroups } from 'app/apis/query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './App.scss';
-import LeaderBoard from 'app/pages/LeaderBoard';
-import LeadView from 'app/pages/LeadView';
-import DailyMatrics from 'app/pages/DailyMatrics';
-import Dashboard from './app/pages/dashboard';
+
+const Dashboard = lazy(() => import('./app/pages/dashboard'));
+const LeadView = lazy(() => import('app/pages/LeadView'));
+const LeaderBoard = lazy(() => import('app/pages/LeaderBoard'));
+const DailyMatrics = lazy(() => import('app/pages/DailyMatrics'));
 
 // Extend Day.js with duration and customParseFormat plugins
 dayjs.extend(duration);
+dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
 const { Content } = Layout;
@@ -60,28 +65,38 @@ function App() {
           <Router>
             <Switch>
               <Route exact path="/">
-                <Content
-                  style={{
-                    padding: 8,
-                    margin: 0,
-                    minHeight: 280,
-                    borderRadius: borderRadiusLG,
-                  }}
-                >
-                  <Dashboard />
-                </Content>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Content
+                    style={{
+                      padding: 8,
+                      margin: 0,
+                      minHeight: 280,
+                      borderRadius: borderRadiusLG,
+                    }}
+                  >
+                    <Dashboard />
+                  </Content>
+                </Suspense>
               </Route>
               <Route exact path="/lead-view">
-                <LeadView />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <LeadView />
+                </Suspense>
               </Route>
               <Route exact path="/leader-board">
-                <LeaderBoard />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <LeaderBoard />
+                </Suspense>
               </Route>
               <Route exact path="/leader-board-filter">
-                <LeaderBoard withFilter />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <LeaderBoard withFilter />
+                </Suspense>
               </Route>
               <Route exact path="/daily-matrics">
-                <DailyMatrics />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <DailyMatrics />
+                </Suspense>
               </Route>
             </Switch>
           </Router>

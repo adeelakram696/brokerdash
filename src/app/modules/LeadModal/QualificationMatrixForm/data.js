@@ -121,6 +121,7 @@ export const sampleRowFunders = [
 
 export const bankActivityKeys = [
   'business_start_date',
+  'past_settled_defaults',
   'days-1',
   'days-2',
   'days-3',

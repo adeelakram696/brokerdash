@@ -59,6 +59,7 @@ export const funderQualificationMatrix = [
   },
   {
     funder: 'BITTY',
+    pastSettledDefaults: true,
     minimumRevenueAnnual: 60000,
     minimumRevenueMonthly() { return this.minimumRevenueAnnual / 12; },
     minimumCreditScore: 550,
@@ -370,6 +371,7 @@ export const funderQualificationMatrix = [
     maxPosition: 3,
     position1st: 'Yes',
     stateRestrictions: [
+      'CA',
     ],
     insuffientFundsNSF: [
       0,
@@ -723,6 +725,7 @@ export const funderQualificationMatrix = [
   },
   {
     funder: 'Lendini',
+    pastSettledDefaults: true,
     paperType: 'B-D',
     minimumRevenueAnnual: 60000,
     minimumRevenueMonthly() { return this.minimumRevenueAnnual / 12; },
@@ -919,6 +922,7 @@ export const funderQualificationMatrix = [
   },
   {
     funder: 'QFS',
+    pastSettledDefaults: true,
     paperType: 'Reverse',
     minimumRevenueAnnual: 360000,
     minimumRevenueMonthly() { return this.minimumRevenueAnnual / 12; },
@@ -1015,6 +1019,7 @@ export const funderQualificationMatrix = [
   },
   {
     funder: 'Silverline',
+    pastSettledDefaults: true,
     paperType: 'C-D',
     minimumRevenueAnnual: 300000,
     minimumRevenueMonthly() { return this.minimumRevenueAnnual / 12; },
@@ -1226,6 +1231,7 @@ export const funderQualificationMatrix = [
   },
   {
     funder: 'Uptown Fund',
+    pastSettledDefaults: true,
     paperType: 'C-D',
     minimumRevenueAnnual: 540000,
     minimumRevenueMonthly() { return this.minimumRevenueAnnual / 12; },
@@ -1355,6 +1361,7 @@ export const funderQualificationMatrix = [
   },
   {
     funder: 'WeFund',
+    pastSettledDefaults: true,
     paperType: 'A-D',
     minimumRevenueAnnual: 360000,
     minimumRevenueMonthly() { return this.minimumRevenueAnnual / 12; },
@@ -1662,26 +1669,31 @@ export const businessTypes = [
     businessType: 'All Other',
   },
 ];
-export const fundersIntakeCalc = (values) => funderQualificationMatrix.map((funder) => {
-  const funderCounts = {
-    funder: funder.funder,
-    minAnnualRevenue: Number(funder.minimumRevenueAnnual <= values.annualRevenue),
-    creditScoreSuitability: Number(funder.minimumCreditScore <= values.ficoScore),
-    minimumMonthlyDeposits: Number(
-      funder.minimumMonthlyDepositcount <= values.minMonthlyDepositCount,
-    ),
-    nSFLast30Days: 1 - Number(funder.insuffientFundsNSF[0] <= values.nSFLast30Days),
-    nSFLast90Days: 1 - Number(funder.insuffientFundsNSF[1] <= values.nSFLast90Days),
-    negativeDaysLast30: 1 - Number(funder.negativeDays[0] <= values.negativeDaysLast30),
-    negativeDaysLast90: 1 - Number(funder.negativeDays[1] <= values.negativeDaysLast90),
-    maximumPositions: 1 - Number(funder.maxPosition <= values.numberOfPositions),
-    firstPosition: Number(values.numberOfPositions === 0 ? funder.position1st === 'Yes' : true),
-    industryType: Number(!(funder.restrictedIndustries.indexOf(values.industry) >= 0)),
-    state: Number(!funder.stateRestrictions.indexOf(values.state) >= 0),
-    timeInBusiness: Number(funder.minimumTimeInBusinessMonths <= values.timeInBusiness),
-    tier: funder.tier,
-  };
-  const trueCount = Object.values(funderCounts).filter((v) => v === 1).length;
-  funderCounts.ranking = trueCount - Number(funder.tier === 1);
-  return funderCounts;
-}).filter((data) => data.ranking === 12);
+export const fundersIntakeCalc = (values) => {
+  const filtered = values.isPastSetttled
+    ? funderQualificationMatrix.filter((funder) => funder.pastSettledDefaults)
+    : funderQualificationMatrix;
+  return filtered.map((funder) => {
+    const funderCounts = {
+      funder: funder.funder,
+      minAnnualRevenue: Number(funder.minimumRevenueAnnual <= values.annualRevenue),
+      creditScoreSuitability: Number(funder.minimumCreditScore <= values.ficoScore),
+      minimumMonthlyDeposits: Number(
+        funder.minimumMonthlyDepositcount <= values.minMonthlyDepositCount,
+      ),
+      nSFLast30Days: 1 - Number(funder.insuffientFundsNSF[0] <= values.nSFLast30Days),
+      nSFLast90Days: 1 - Number(funder.insuffientFundsNSF[1] <= values.nSFLast90Days),
+      negativeDaysLast30: 1 - Number(funder.negativeDays[0] <= values.negativeDaysLast30),
+      negativeDaysLast90: 1 - Number(funder.negativeDays[1] <= values.negativeDaysLast90),
+      maximumPositions: 1 - Number(funder.maxPosition <= values.numberOfPositions),
+      firstPosition: Number(values.numberOfPositions === 0 ? funder.position1st === 'Yes' : true),
+      industryType: Number(!(funder.restrictedIndustries.indexOf(values.industry) >= 0)),
+      state: Number(!funder.stateRestrictions.indexOf(values.state) >= 0),
+      timeInBusiness: Number(funder.minimumTimeInBusinessMonths <= values.timeInBusiness),
+      tier: funder.tier,
+    };
+    const trueCount = Object.values(funderCounts).filter((v) => v === 1).length;
+    funderCounts.ranking = trueCount - Number(funder.tier === 1);
+    return funderCounts;
+  }).filter((data) => data.ranking === 12);
+};

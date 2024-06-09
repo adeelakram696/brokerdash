@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { boardNames, columnIds } from 'utils/constants';
 import { updateSimpleColumnValue } from 'app/apis/mutation';
 import { extractLeastNumber } from 'utils/helpers';
+import SelectField from 'app/components/Forms/SelectField';
 import styles from './QualificationMatrixForm.module.scss';
 import {
   activePositionKeys,
@@ -41,6 +42,7 @@ function QualificationMatrixForm({ show, handleClose }) {
     }, 0);
     const totalCredits = getColumnSum('totalCredit', sampleRow, values);
     const monthCashFlow = Math.round(totalCredits / monthsCount);
+    const isPastSetttled = values.past_settled_defaults === 'Yes';
     const totalBankActivityCounts = bankActivityColumns.reduce((prev, current) => {
       if (!current.totalCount) return prev;
       const val = { [current.key]: _.sumBy(sampleRow, (r) => (values[`${current.key}-${r.id}`] ? +values[`${current.key}-${r.id}`] : 0)) };
@@ -86,7 +88,7 @@ function QualificationMatrixForm({ show, handleClose }) {
     const timeInBusiness = dayjs().diff(values.business_start_date, 'month');
     const ficoScore = extractLeastNumber(creditScore);
     const fundersData = fundersIntakeCalc({
-      ficoScore, industry, state, timeInBusiness, ...matrixData,
+      ficoScore, industry, state, timeInBusiness, ...matrixData, isPastSetttled,
     });
     const sortedData = _.sortBy(fundersData, ['tier'], ['asc']);
     matrixData.fundersPriority = sortedData.slice(0, 7).map((i) => i.funder);
@@ -234,6 +236,23 @@ function QualificationMatrixForm({ show, handleClose }) {
             <Flex flex={0.4} className={styles.label}>Fico Score</Flex>
             <Flex flex={0.6} className={styles.value}>
               {extractLeastNumber(creditScore)}
+            </Flex>
+          </Flex>
+          <Flex flex={1} className={styles.inputRow} justify="space-between">
+            <Flex flex={0.4} className={styles.label}>Past Settled Defaults</Flex>
+            <Flex flex={0.6} className={styles.value}>
+              <Form.Item
+                noStyle
+                name="past_settled_defaults"
+              >
+                <SelectField
+                  defaultValue="no"
+                  options={[
+                    { value: 'no', label: 'NO' },
+                    { value: 'yes', label: 'Yes' },
+                  ]}
+                />
+              </Form.Item>
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="flex-start">

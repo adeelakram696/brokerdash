@@ -44,7 +44,7 @@ export function transformData(data) {
       isAllPassed,
       isAllPassedTimer,
       isTouched,
-      reassingTime: isNew ? 300 - time : time,
+      reassingTime: time <= 300 ? 300 - time : 0,
       time,
       queueTime: columns[columnIds.leads.time_in_the_que],
       channel: columns[columnIds.leads.channel],

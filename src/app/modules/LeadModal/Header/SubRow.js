@@ -1,11 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { DatePicker, Flex, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { updateClientInformation } from 'app/apis/mutation';
+import { updateClientInformation, updateSimpleColumnValue } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import SelectField from 'app/components/Forms/SelectField';
+import { getColumnValue } from 'utils/helpers';
 import styles from '../LeadModal.module.scss';
 
 function SubRow({
@@ -17,9 +19,9 @@ function SubRow({
     leadId, board, details, channels,
   } = useContext(LeadContext);
   const [followUpDate, setFollowUpDate] = useState();
-  const handleFollowUpDateChange = async (date, dateString) => {
+  const handleFollowUpDateChange = async (date) => {
     await updateClientInformation(leadId, details?.board?.id, {
-      [columnIds[board].next_followup]: dateString,
+      [columnIds[board].next_followup]: date?.utc().format('YYYY-MM-DD HH:mm:ss'),
     });
     setFollowUpDate(date);
   };
@@ -30,7 +32,9 @@ function SubRow({
   };
   useEffect(() => {
     if (!details.name || !details[columnIds[board].next_followup]) return;
-    setFollowUpDate(dayjs(details[columnIds[board].next_followup]));
+    const value = getColumnValue(details.column_values, columnIds[board].next_followup);
+    const timeFormated = dayjs.utc(`${value.date} ${value.time}`).format();
+    setFollowUpDate(dayjs(timeFormated));
   }, [details]);
   const datePicker = (
     <Flex className={styles.subHeadingValue}>
@@ -38,6 +42,7 @@ function SubRow({
         value={followUpDate}
         onChange={handleFollowUpDateChange}
         status={!followUpDate ? 'error' : 'success'}
+        showTime={{ format: 'HH:mm A', use12Hours: true }}
       />
     </Flex>
   );

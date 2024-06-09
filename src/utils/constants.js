@@ -324,6 +324,7 @@ export const columnIds = {
     qm_active_position: 'long_text5__1',
     qm_suggested_funders: 'long_text_1__1',
     last_lead_assigned: 'hour5__1',
+    phone_burner: 'status54__1',
   },
   subItem: {
     funding_accounts: 'connect_boards5',

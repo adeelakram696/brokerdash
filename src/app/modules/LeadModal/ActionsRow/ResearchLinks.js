@@ -1,5 +1,5 @@
 import { Flex, Dropdown } from 'antd';
-import { columnIds } from 'utils/constants';
+import { boardNames, columnIds } from 'utils/constants';
 import { TelescopeIcon } from 'app/images/icons';
 import { LeadContext } from 'utils/contexts';
 import { useContext } from 'react';
@@ -9,6 +9,8 @@ function ResearchLinks() {
   const {
     board, details,
   } = useContext(LeadContext);
+  const isDeal = board === boardNames.deals;
+  const data = isDeal ? details.client : details;
   const items = [
     {
       label: (
@@ -24,7 +26,7 @@ function ResearchLinks() {
     {
       label: (
         <a
-          href={`https://www.google.com/search?q=secretary+of+state+%E2%80%9C${details[columnIds[board].home_state]?.replace(/ /g, '+')}%E2%80%9D`}
+          href={`https://www.google.com/search?q=secretary+of+state+%E2%80%9C${data[columnIds[board].state]?.replace(/ /g, '+')}%E2%80%9D`}
           target="_blank"
           rel="noreferrer"
         >

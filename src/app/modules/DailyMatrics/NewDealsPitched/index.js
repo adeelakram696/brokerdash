@@ -13,14 +13,14 @@ function NewDealsPitched() {
   const [dealsChannel, setDealsChannel] = useState({});
   const dealsPitched = submittedDeals.filter((deal) => {
     const columns = normalizeColumnValues(deal.column_values);
-    console.log(columns[columnIds.deals.pitched]);
     return columns[columnIds.deals.pitched] === 'v';
   });
   useEffect(() => {
-    if (!(submittedDeals)) return;
-    const formatedList = submittedDeals?.reduce((prev, curr) => {
+    if (!(dealsPitched)) return;
+    const formatedList = dealsPitched?.reduce((prev, curr) => {
       const obj = prev;
-      const channel = curr.channel === null ? 'None' : curr.channel;
+      const cols = normalizeColumnValues(curr.column_values);
+      const channel = cols[columnIds.deals.channel] === null ? 'None' : cols[columnIds.deals.channel];
       if (obj[channel]) {
         obj[channel] += 1;
       } else {
