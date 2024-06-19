@@ -1,24 +1,22 @@
-/* eslint-disable no-unused-vars */
 import {
   Flex, Card, Button, Checkbox,
 } from 'antd';
 import en from 'app/locales/en';
 import classNames from 'classnames';
-import { DeleteIcon, DownloadIcon } from 'app/images/icons';
+import { DownloadIcon } from 'app/images/icons';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import FileIcon from 'app/components/FileIcon';
-import FileUploadDnD from 'app/components/FileUploadDnD';
 import { useContext, useEffect, useState } from 'react';
-import { addFilesToLead } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import monday from 'utils/mondaySdk';
+import { formatBytes } from 'utils/helpers';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
 function DocsTab() {
   const {
-    leadId, board, docs, getDocs, setLoadingData, boardId,
+    leadId, board, docs, getDocs, boardId,
     currentTab,
   } = useContext(LeadContext);
   let intervalId;
@@ -31,10 +29,6 @@ function DocsTab() {
       itemId: leadId,
       columnId: columnIds[board].incoming_files,
     });
-    // setLoadingData(true);
-    // await addFilesToLead(leadId, columnIds[board].incoming_files, file);
-    // await getDocs();
-    // setLoadingData(false);
   };
   const handleDownload = async () => {
     const fitlered = docs.assets.filter((doc) => selectedDocs.indexOf(doc.id) >= 0);
@@ -88,13 +82,6 @@ function DocsTab() {
                   <DownloadIcon />
                 </Flex>
               ) : null}
-              {/* {selectedDocs.length >= 1 ? (
-                <Flex
-                  style={{ cursor: 'pointer', margin: '0 5px' }}
-                >
-                  <DeleteIcon />
-                </Flex>
-              ) : null} */}
             </Flex>
           </Flex>
           <Flex justify="space-between" className={styles.breadcrumbRow}>
@@ -133,6 +120,10 @@ function DocsTab() {
                     className={styles.docName}
                   >
                     {doc.name}
+                    {' '}
+                    <span className={styles.fileSize}>
+                      {formatBytes(doc.file_size)}
+                    </span>
                   </Flex>
                 </Flex>
               ))
@@ -140,29 +131,6 @@ function DocsTab() {
           </Flex>
         </Card>
       </Flex>
-      {/* <Flex
-        className={classNames(parentStyles.columnRight, styles.uploadContainer)}
-        flex={0.4}
-        vertical
-      >
-        <Card className={classNames(
-          parentStyles.cardContainer,
-          styles.fullWidth,
-          styles.uploadCard,
-        )}
-        >
-          <Flex justify="center">
-            <Button
-              className={styles.readyForSubmission}
-              type="primary"
-              shape="round"
-              onClick={uploadFile}
-            >
-              Upload Document
-            </Button>
-          </Flex>
-        </Card>
-      </Flex> */}
       <Flex style={{ display: 'none' }}>
         {
           // eslint-disable-next-line jsx-a11y/iframe-has-title

@@ -1,0 +1,80 @@
+.table{
+  background-color: white;
+  border: 0.5px solid rgb(209, 208, 208);
+  padding: 10px;
+  border-radius: 15px;
+  margin: 5px;
+}
+.headerRow {
+  padding: 10px 5px;
+  border-bottom: 0.5px solid rgb(209, 208, 208);
+}
+.headerColumnTitle {
+  font-size: 16px;
+}
+.dataColumnTitle {
+  font-size: 16px;
+  border-right: 0.5px solid rgb(209, 208, 208);
+}
+.headerColumnTitle, .dataColumnTitle {
+  width: 150px;
+}
+.headerColumnPerson {
+  padding: 6px 10px;
+}
+.dataColumnPerson {
+  height: 50px;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-right: 0.5px solid rgb(209, 208, 208);
+}
+.dataRow {
+  padding: 0px 5px;
+}
+.filterbar {
+  background-color: white;
+  border: 0.5px solid rgb(209, 208, 208);
+  padding: 10px;
+  border-radius: 15px;
+  margin: 10px;
+}
+.usersList{
+  min-width: 250px;
+}
+.filterField {
+  margin: 0 10px;
+}
+.alternateColor {
+  background-color: rgba(201, 201, 201, 0.3);
+}
+.rightTableData {
+  margin-top: 20px;
+}
+.rowStatusTitleText {
+  font-size: 14px;
+}
+.rowStatusDurationText {
+  font-size: 12px;
+  font-weight: bold;
+}
+.rowSpace {
+  padding: 5px;
+}
+.tableTitle {
+  font-size: 16px;
+  font-weight: bold;
+}
+.tableTitleDate {
+  font-size: 12px;
+  font-weight: normal;
+  padding: 3px 10px;
+}
+.logo {
+  background-color: #1a4049;
+  border-end-end-radius: 15px;
+  border-end-start-radius: 15px;
+}
+.extraHeading {
+  padding: 0 5px;
+  font-size: 10px;
+}

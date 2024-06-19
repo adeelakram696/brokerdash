@@ -17,17 +17,18 @@ import 'react-quill/dist/quill.snow.css';
 import { LeadContext } from 'utils/contexts';
 import { splitActionFromUpdate } from 'utils/helpers';
 import { ExclamationCircleTwoTone, MessageTwoTone, UserOutlined } from '@ant-design/icons';
+import SelectField from 'app/components/Forms/SelectField';
 import styles from './LeadModal.module.scss';
 
 function ActivityLog() {
   const {
-    leadId, board, getMarkAsImportant, boardId,
+    leadId, board, getMarkAsImportant, boardId, users,
     getUpdates, updates, setUpdates,
   } = useContext(LeadContext);
-  // const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState('');
+  const [tagUsers, setTagUsers] = useState([]);
   const [disablePost, setDisablePost] = useState(true);
   const refEditor = useRef();
   const [form] = Form.useForm();
@@ -42,7 +43,11 @@ function ActivityLog() {
   };
   const createUpdate = async (text) => {
     setLoading(true);
-    const parsedStr = text.replace(/(<a[^>]*?href=")([^"]*)(".*?>)/g, (match, p1, p2, p3) => {
+    const selectedUsers = users.filter((u) => tagUsers.includes(u.id));
+    console.log(selectedUsers);
+    const tagging = selectedUsers.map((u) => `<a class="user_mention_editor router" href="${u.url}" data-mention-type="User" data-mention-id="${u.id}" target="_blank" rel="noopener noreferrer">@${u.name}</a>`);
+    const updatedText = `<p>${tagging.join(' ')} ${text}</p>`;
+    const parsedStr = updatedText.replace(/(<a[^>]*?href=")([^"]*)(".*?>)/g, (match, p1, p2, p3) => {
       if (!/^https?:\/\//i.test(p2)) {
         return `${p1}http://${p2}${p3}`;
       }
@@ -51,6 +56,7 @@ function ActivityLog() {
     const parsed = parsedStr.replace(/"/g, "'");
     const res = await createNewUpdate(leadId, parsed);
     form.resetFields();
+    setTagUsers([]);
     if (res.errors) {
       setLoading(false);
       return;
@@ -91,7 +97,16 @@ function ActivityLog() {
           style={{ width: '100%' }}
           disabled={loading}
         >
-          <Flex justify="flex-end">
+          <Flex justify="flex-end" className={styles.updateRightComp}>
+            <SelectField
+              classnames={styles.updatesUsersList}
+              options={users.map((u) => ({ label: u.name, value: u.id }))}
+              placeholder="Select Users to Tag"
+              mode="multiple"
+              maxTagCount={1}
+              value={tagUsers}
+              onChange={setTagUsers}
+            />
             <Button
               className={styles.commentCTA}
               type="primary"
@@ -151,7 +166,7 @@ function ActivityLog() {
               creator={update.creator.name}
               handleMarkImportant={handleMarkImportant}
               text={actions.text}
-              time={dayjs(update.updated_at).format('MMM DD [@] hh:mm A')}
+              time={dayjs(update.created_at).format('MMM DD [@] hh:mm A')}
               type={actions.action || 'Comment'}
               typeIcon={getActionIcon(actions.action)}
               isHide={filter && (filter !== type)}

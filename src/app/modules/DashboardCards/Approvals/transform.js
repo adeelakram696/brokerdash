@@ -10,8 +10,8 @@ export function transformData(data) {
     return {
       key: list.id,
       name: list.name,
-      funder: submittedData.name,
-      maxApproved: submittedData.column_values.find((col) => col.id === 'numbers0').text,
+      funder: submittedData.name || '-',
+      maxApproved: submittedData.column_values.find((col) => col.id === 'numbers0').text || '-',
       time: dayjs(time).fromNow(),
     };
   });

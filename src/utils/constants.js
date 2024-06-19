@@ -9,6 +9,7 @@ export const env = {
     employees: process.env.REACT_APP_EMPLOYEES_BOARD,
     salesActivities: process.env.REACT_APP_SALES_ACTIVITIES_BOARD,
     metrics: process.env.REACT_APP_METRICS_BOARD,
+    teamLeaderBoard: process.env.REACT_APP_TEAM_LEADERBOARD_BOARD,
     [process.env.REACT_APP_DEALS_BOARD_ID]: 'deals',
     [process.env.REACT_APP_LEADS_BOARD_ID]: 'leads',
   },
@@ -36,6 +37,7 @@ export const env = {
   performanceRefetchTime: process.env.REACT_APP_PERFORMANCE_REFETCH_TIME_SECONDS,
   leaderEmployeeItemId: process.env.REACT_APP_LEADERBOARD_EMPLOYEES_ITEM_ID,
   metricsGoalItemId: process.env.REACT_APP_METRICS_GOALS_ITEM_ID,
+  teamLeaderBoardGoalItemId: process.env.REACT_APP_TEAM_LEADERBOARD_GOALS_ITEM_ID,
 };
 
 export const boardNames = {
@@ -450,6 +452,36 @@ export const columnIds = {
     leadGoal: 'text__1',
     leadSubmissionGoal: 'text3__1',
     dealPitchGoal: 'text9__1',
+  },
+  teamLeaderBaord: {
+    person: 'person',
+    newLeadSpokenTo: 'numbers__1',
+    followUpCalls: 'numbers3__1',
+    submissions: 'numbers6__1',
+    approvals: 'numbers5__1',
+    dealsFunded: 'numbers59__1',
+    totalFunded: 'numbers34__1',
+  },
+  funders: {
+    paper_type: 'paper_type_3',
+    min_rev_annual: 'min_rev_annual_3',
+    min_rev_monthly: 'min_rev_monthly_3',
+    min_credit_score: 'min_credit_score_3',
+    max_position: 'max_position_3',
+    first_position: 'first_position_3',
+    state_restrictions: 'state_restrictions_3',
+    rest_industries: 'rest_industries_3',
+    insuffient_funds_30: 'insuffient_funds_30_3',
+    insuffient_funds_90: 'insuffient_funds_90_3',
+    negative_days_30: 'negative_days_30_3',
+    negative_days_90: 'negative_days_90_3',
+    min_month_dep_count: 'min_month_dep_count_3',
+    min_time_in_bus_months: 'min_time_in_bus_months_3',
+    min_avg_daily_balance: 'min_avg_daily_balance__1',
+    min_funding_amount: 'min_funding_amount_3',
+    max_funding_amount: 'max_funding_amount_3',
+    tier: 'tier_3',
+    past_settled_defaults: 'checkbox7__1',
   },
 };
 export const actionsNeeded = [

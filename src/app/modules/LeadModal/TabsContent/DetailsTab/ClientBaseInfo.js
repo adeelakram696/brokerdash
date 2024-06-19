@@ -5,19 +5,22 @@ import en from 'app/locales/en';
 import classNames from 'classnames';
 import { boardNames, columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import InputField from 'app/components/Forms/InputField';
 import SelectField from 'app/components/Forms/SelectField';
+import { LeadContext } from 'utils/contexts';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 import {
   existingDepts, importantToYou, loanPurpose, monthlyRevenue,
 } from '../../LeadIntake/data';
-import { businessTypes, listOfStates } from '../../QualificationMatrixForm/matrixData';
 
 function ClientBaseInfo({
   details, board, leadId, updateInfo,
 }) {
+  const {
+    states, industries,
+  } = useContext(LeadContext);
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
@@ -303,8 +306,8 @@ function ClientBaseInfo({
                         },
                       ]}
                     >
-                      <SelectField options={businessTypes.map(
-                        (v) => ({ value: v.businessType, label: v.businessType }),
+                      <SelectField options={industries.map(
+                        (v) => ({ value: v, label: v }),
                       )}
                       />
                     </Form.Item>
@@ -327,7 +330,7 @@ function ClientBaseInfo({
                         },
                       ]}
                     >
-                      <SelectField options={listOfStates.map(
+                      <SelectField options={states.map(
                         (v) => ({ value: v, label: v }),
                       )}
                       />

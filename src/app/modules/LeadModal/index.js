@@ -4,7 +4,8 @@ import {
   Modal, Flex, Spin, message,
 } from 'antd';
 import {
-  fetchBoardColumnStrings,
+  fetchBoardColorColumnStrings,
+  fetchBoardDropDownColumnStrings,
   fetchFunders,
   fetchLeadClientDetails,
   fetchLeadDocs,
@@ -34,6 +35,9 @@ function LeadModal({
   const location = useLocation();
   const [details, setDetails] = useState({});
   const [funders, setFunders] = useState({});
+  const [states, setStates] = useState([]);
+  const [industries, setRestIndustries] = useState([]);
+  const [users, setUsers] = useState([]);
   const [updates, setUpdates] = useState([]);
   const [currentTab, setCurrentTab] = useState([]);
   const [docs, setDocs] = useState({});
@@ -54,7 +58,21 @@ function LeadModal({
   };
   const getFunders = async () => {
     const res = await fetchFunders(env.boards.funders);
-    setFunders(res.data.funders[0].items_page?.items);
+    setFunders(res);
+  };
+  const getStates = async () => {
+    const res = await fetchBoardDropDownColumnStrings(
+      env.boards.funders,
+      columnIds.funders.state_restrictions,
+    );
+    setStates(res);
+  };
+  const getIndustries = async () => {
+    const res = await fetchBoardDropDownColumnStrings(
+      env.boards.funders,
+      columnIds.funders.rest_industries,
+    );
+    setRestIndustries(res);
   };
   const getMarkAsImportant = async () => {
     const importantUpdate = await fetchMarkAsImportant(leadId, columnIds[board].mark_as_important);
@@ -63,10 +81,10 @@ function LeadModal({
   const getUpdates = async () => {
     const res = await fetchLeadUpdates(leadId);
     setUpdates(res.data.items[0]?.updates);
-    // setUsers(res.data.users);
+    setUsers(res.data.users);
   };
   const getChannels = async () => {
-    const res = await fetchBoardColumnStrings(details?.board?.id, columnIds[board].channel);
+    const res = await fetchBoardColorColumnStrings(details?.board?.id, columnIds[board].channel);
     setChannels(res);
   };
   const refetchAllData = async () => {
@@ -127,6 +145,8 @@ function LeadModal({
     getData();
     getDocs();
     getFunders();
+    getStates();
+    getIndustries();
   }, [leadId]);
   useEffect(() => {
     if (!board) return;
@@ -165,11 +185,14 @@ function LeadModal({
           docs,
           importantMsg,
           leadId,
+          states,
+          industries,
           board,
           boardId: details?.board?.id,
           groupId: details?.group?.id,
           loadingData,
           updates,
+          users,
           messageApi,
           currentTab,
           channels,

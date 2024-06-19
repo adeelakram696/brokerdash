@@ -52,18 +52,15 @@
   font-weight: 300;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 300px;
   white-space: nowrap;
   cursor: 'pointer';
 }
 .breadcrumbRow {
   margin-top: 10px;
 }
-.uploadCard {
-  & > div {
-    padding: 10px !important;
-  }
-}
-.uploadContainer {
-  max-width: 300px;
+.fileSize {
+  font-size: 11px;
+  margin: 0 10px;
+  color: #6f7274;
+  font-weight: bold;
 }

@@ -33,7 +33,7 @@ function SubRow({
   useEffect(() => {
     if (!details.name || !details[columnIds[board].next_followup]) return;
     const value = getColumnValue(details.column_values, columnIds[board].next_followup);
-    const timeFormated = dayjs.utc(`${value.date} ${value.time}`).format();
+    const timeFormated = dayjs.utc(`${value.date} ${value.time ? value.time : '10:00:00'}`).format();
     setFollowUpDate(dayjs(timeFormated));
   }, [details]);
   const datePicker = (

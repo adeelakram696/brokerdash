@@ -22,7 +22,7 @@ import { fundersIntakeCalc } from './matrixData';
 function QualificationMatrixForm({ show, handleClose }) {
   const [form] = Form.useForm();
   const {
-    details, leadId, boardId, board, getData,
+    details, leadId, boardId, board, getData, funders,
   } = useContext(LeadContext);
   const [matrixValues, setMatrixValues] = useState({});
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ function QualificationMatrixForm({ show, handleClose }) {
     }, 0);
     const totalCredits = getColumnSum('totalCredit', sampleRow, values);
     const monthCashFlow = Math.round(totalCredits / monthsCount);
-    const isPastSetttled = values.past_settled_defaults === 'Yes';
+    const isPastSetttled = values.past_settled_defaults === 'yes';
     const totalBankActivityCounts = bankActivityColumns.reduce((prev, current) => {
       if (!current.totalCount) return prev;
       const val = { [current.key]: _.sumBy(sampleRow, (r) => (values[`${current.key}-${r.id}`] ? +values[`${current.key}-${r.id}`] : 0)) };
@@ -89,7 +89,7 @@ function QualificationMatrixForm({ show, handleClose }) {
     const ficoScore = extractLeastNumber(creditScore);
     const fundersData = fundersIntakeCalc({
       ficoScore, industry, state, timeInBusiness, ...matrixData, isPastSetttled,
-    });
+    }, funders);
     const sortedData = _.sortBy(fundersData, ['tier'], ['asc']);
     matrixData.fundersPriority = sortedData.slice(0, 7).map((i) => i.funder);
     setMatrixValues(matrixData);
@@ -147,7 +147,6 @@ function QualificationMatrixForm({ show, handleClose }) {
   useEffect(() => {
     setDefaultValues();
   }, [details.name]);
-
   const businessTimeMonth = matrixValues.business_start_date ? dayjs().diff(matrixValues.business_start_date, 'month') : 0;
   const businessTimeYear = matrixValues.business_start_date ? dayjs().diff(matrixValues.business_start_date, 'year') : 0;
   const getLastModified = () => {

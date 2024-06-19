@@ -4,7 +4,7 @@ import {
   Flex,
 } from 'antd';
 import {
-  fetchLeadersBoardEmployees, fetchBoardColumnStrings, getTotalActivities, fetchAllUsers,
+  fetchLeadersBoardEmployees, fetchBoardColorColumnStrings, getTotalActivities, fetchAllUsers,
 } from 'app/apis/query';
 import { useEffect, useRef, useState } from 'react';
 import { actionTypesList, env } from 'utils/constants';
@@ -29,8 +29,8 @@ function LeaderBoardModule({ withFilter }) {
   const [actionTypes, setActionTypes] = useState([]);
   const [saleActivities, setSalesActivities] = useState([]);
   const getActionTypes = async () => {
-    const res = await fetchBoardColumnStrings(env.boards.salesActivities, 'status');
-    const actions = res.reduce((prev, curr) => {
+    const res = await fetchBoardColorColumnStrings(env.boards.salesActivities, 'status');
+    const actions = Object.values(res).reduce((prev, curr) => {
       // eslint-disable-next-line no-param-reassign
       prev[curr.toLowerCase()] = curr.toLowerCase();
       return prev;

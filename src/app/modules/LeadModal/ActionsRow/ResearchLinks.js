@@ -10,7 +10,8 @@ function ResearchLinks() {
     board, details,
   } = useContext(LeadContext);
   const isDeal = board === boardNames.deals;
-  const data = isDeal ? details.client : details;
+  const state = isDeal ? details.clientAccount[columnIds
+    .clientAccount.state_incorporated] : details[columnIds[board].state_incorporated];
   const items = [
     {
       label: (
@@ -26,7 +27,7 @@ function ResearchLinks() {
     {
       label: (
         <a
-          href={`https://www.google.com/search?q=secretary+of+state+%E2%80%9C${data[columnIds[board].state]?.replace(/ /g, '+')}%E2%80%9D`}
+          href={`https://www.google.com/search?q=secretary+of+state+%E2%80%9C${state?.replace(/ /g, '+')}%E2%80%9D`}
           target="_blank"
           rel="noreferrer"
         >

@@ -49,7 +49,7 @@ export function transformData(data) {
       queueTime: columns[columnIds.leads.time_in_the_que],
       channel: columns[columnIds.leads.channel],
       timeToRespond,
-      assignedTo: columns[columnIds.leads.sales_rep],
+      assignedTo: columns[columnIds.leads.sales_rep] || '-',
     };
   });
   return _.sortBy(list, 'isNew').reverse();

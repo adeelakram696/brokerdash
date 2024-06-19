@@ -106,15 +106,21 @@
   align-items: center;
 }
 .commentCTA {
-  position: absolute;
-  right: 46px;
-  margin-top: 4px;
   background-color: #52B172;
   font-size: 12px;
   font-weight: bold;
   &:hover {
     background-color: #3e8154 !important;
   }
+}
+.updatesUsersList {
+  width: 230px;
+  margin-right: 10px;
+}
+.updateRightComp {
+  position: absolute;
+  right: 46px;
+  margin-top: 4px;
 }
 .readyForSubmission {
   margin-top: 4px;

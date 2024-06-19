@@ -180,3 +180,44 @@ export function toSentenceCase(str) {
   if (!str) return str; // Return the string if it's empty or null
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
+
+export function formatBytes(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024; // 1 KB = 1024 Bytes
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const formattedBytes = parseFloat((bytes / k ** i).toFixed(2));
+
+  return `${formattedBytes} ${sizes[i]}`;
+}
+export function convertToNumber(input) {
+  // Check if input is null, undefined, or a blank string
+  if (input === null || input === undefined || input.trim() === '') {
+    return 0;
+  }
+
+  // Convert the input to a number
+  const number = Number(input);
+
+  // Check if the result is a valid number
+  if (Number.isNaN(number)) {
+    return 0;
+  }
+
+  return number;
+}
+export function getMostValue(obj) {
+  return Object.entries(obj).reduce((prev, curr) => {
+    // eslint-disable-next-line no-param-reassign
+    if (curr[1] > prev[1]) prev = curr;
+    return prev;
+  }, [0, 0]);
+}
+export function getTotalSum(obj) {
+  return Object.values(obj).reduce((prev, curr) => {
+    // eslint-disable-next-line no-param-reassign
+    prev += curr;
+    return prev;
+  }, 0);
+}

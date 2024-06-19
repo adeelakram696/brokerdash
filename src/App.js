@@ -18,6 +18,7 @@ import duration from 'dayjs/plugin/duration';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './App.scss';
+import TeamLeaderBoard from 'app/pages/TeamLeaderBoard';
 
 const Dashboard = lazy(() => import('./app/pages/dashboard'));
 const LeadView = lazy(() => import('app/pages/LeadView'));
@@ -96,6 +97,11 @@ function App() {
               <Route exact path="/daily-matrics">
                 <Suspense fallback={<div>Loading...</div>}>
                   <DailyMatrics />
+                </Suspense>
+              </Route>
+              <Route exact path="/team-leader-board">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <TeamLeaderBoard />
                 </Suspense>
               </Route>
             </Switch>

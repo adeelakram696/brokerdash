@@ -7,6 +7,7 @@ import FileIcon from 'app/components/FileIcon';
 import TextAreaField from 'app/components/Forms/TextAreaField';
 import { useContext } from 'react';
 import { LeadContext } from 'utils/contexts';
+import { formatBytes } from 'utils/helpers';
 import styles from './SubmissionForm.module.scss';
 
 function SelectDocuments({
@@ -19,7 +20,7 @@ function SelectDocuments({
     <Flex vertical>
       <Flex className={styles.listContainer} vertical>
         {docs.assets?.map(({
-          name, file_extension, id,
+          name, file_extension, id, file_size,
         }) => (
           <Flex
             key={id}
@@ -34,7 +35,14 @@ function SelectDocuments({
           >
             <Flex className={styles.listTitle}>
               <Flex className={styles.listIcon} align="center"><FileIcon extension={file_extension.replace('.', '')} /></Flex>
-              {name}
+              <Flex vertical>
+                <Flex className={styles.fileName}>
+                  {name}
+                </Flex>
+                <Flex className={styles.fileSize}>
+                  {formatBytes(file_size)}
+                </Flex>
+              </Flex>
             </Flex>
           </Flex>
         ))}
