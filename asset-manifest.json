@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/brokerdash/static/css/main.688aeb89.css",
-    "main.js": "/brokerdash/static/js/main.e1ddad41.js",
-    "static/css/134.bc9062b6.chunk.css": "/brokerdash/static/css/134.bc9062b6.chunk.css",
+    "main.js": "/brokerdash/static/js/main.a2f99d06.js",
+    "static/css/134.a02ba62b.chunk.css": "/brokerdash/static/css/134.a02ba62b.chunk.css",
     "static/js/134.5f54c310.chunk.js": "/brokerdash/static/js/134.5f54c310.chunk.js",
-    "static/css/786.920f0034.chunk.css": "/brokerdash/static/css/786.920f0034.chunk.css",
+    "static/css/786.759eaea0.chunk.css": "/brokerdash/static/css/786.759eaea0.chunk.css",
     "static/js/786.e7381d6f.chunk.js": "/brokerdash/static/js/786.e7381d6f.chunk.js",
     "static/css/848.a752645f.chunk.css": "/brokerdash/static/css/848.a752645f.chunk.css",
     "static/js/848.3b540c7a.chunk.js": "/brokerdash/static/js/848.3b540c7a.chunk.js",
-    "static/css/368.d957751c.chunk.css": "/brokerdash/static/css/368.d957751c.chunk.css",
+    "static/css/368.9ba7ed3c.chunk.css": "/brokerdash/static/css/368.9ba7ed3c.chunk.css",
     "static/js/368.5e222c35.chunk.js": "/brokerdash/static/js/368.5e222c35.chunk.js",
     "static/js/335.43846b47.chunk.js": "/brokerdash/static/js/335.43846b47.chunk.js",
     "static/css/236.d2647a35.chunk.css": "/brokerdash/static/css/236.d2647a35.chunk.css",
     "static/js/236.26b2a498.chunk.js": "/brokerdash/static/js/236.26b2a498.chunk.js",
     "static/js/961.bd0cd74d.chunk.js": "/brokerdash/static/js/961.bd0cd74d.chunk.js",
-    "static/js/398.019dc0ef.chunk.js": "/brokerdash/static/js/398.019dc0ef.chunk.js",
+    "static/js/398.3e67b756.chunk.js": "/brokerdash/static/js/398.3e67b756.chunk.js",
     "static/media/approvalTick.svg": "/brokerdash/static/media/approvalTick.053bb133bcb2cfa179fbb48e4d3b484d.svg",
     "static/media/runingShoe.svg": "/brokerdash/static/media/runingShoe.abddc61641fd401b32a0de46fc33d303.svg",
     "static/media/signature.svg": "/brokerdash/static/media/signature.b5b95111e363c8e72be3996f037c2f12.svg",
@@ -23,6 +23,6 @@
   },
   "entrypoints": [
     "static/css/main.688aeb89.css",
-    "static/js/main.e1ddad41.js"
+    "static/js/main.a2f99d06.js"
   ]
 }
