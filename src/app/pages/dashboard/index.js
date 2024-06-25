@@ -1,5 +1,7 @@
 import {
   Flex, Progress, Row, Col,
+  ConfigProvider,
+  Layout,
 } from 'antd';
 import en from 'app/locales/en';
 import HeaderTitle from 'app/components/HeaderTitle';
@@ -34,22 +36,40 @@ function Dashboard() {
     setEffecincyScore(score);
   }, [cardsValues]);
   return (
-    <>
-      <Flex justify="space-between" align="flex-start">
-        <HeaderTitle>{en.dashboard.title}</HeaderTitle>
-        <Flex align="center" flex="0.3">
-          <span className={styles.effecincyText}>{en.dashboard.header.efficiencyTitle}</span>
-          <Progress percent={effecincyScore} size="small" />
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: 'Poppins',
+        },
+        components: {
+          Layout: {
+            bodyBg: '#E1EFF2',
+            headerBg: '#E1EFF2',
+          },
+        },
+      }}
+    >
+      <Layout
+        style={{
+          padding: '0 8px 24px',
+        }}
+      >
+        <Flex justify="space-between" align="flex-start">
+          <HeaderTitle>{en.dashboard.title}</HeaderTitle>
+          <Flex align="center" flex="0.3">
+            <span className={styles.effecincyText}>{en.dashboard.header.efficiencyTitle}</span>
+            <Progress percent={effecincyScore} size="small" />
+          </Flex>
         </Flex>
-      </Flex>
-      <Row gutter={[16, 16]}>
-        <Col span={12}><NewLeadsCard /></Col>
-        <Col span={12}><ActionsCard /></Col>
-        <ProgressCards handleChange={handleChange} />
-        <Col span={12}><ApprovalsCard /></Col>
-        <Col span={12}><ContractsOutCard /></Col>
-      </Row>
-    </>
+        <Row gutter={[16, 16]}>
+          <Col span={12}><NewLeadsCard /></Col>
+          <Col span={12}><ActionsCard /></Col>
+          <ProgressCards handleChange={handleChange} />
+          <Col span={12}><ApprovalsCard /></Col>
+          <Col span={12}><ContractsOutCard /></Col>
+        </Row>
+      </Layout>
+    </ConfigProvider>
   );
 }
 

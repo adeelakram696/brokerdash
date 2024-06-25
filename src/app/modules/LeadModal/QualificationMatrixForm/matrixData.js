@@ -5,7 +5,7 @@ export const fundersIntakeCalc = (values, funders) => {
   const filtered = values.isPastSetttled
     ? funders.filter((funder) => funder.pastSettledDefaults)
     : funders;
-  return filtered.map((funder) => {
+  return (filtered || []).map((funder) => {
     const funderCounts = {
       funder: funder.funder,
       minAnnualRevenue: Number(funder.minimumRevenueAnnual <= values.annualRevenue),

@@ -207,17 +207,49 @@ export function convertToNumber(input) {
 
   return number;
 }
-export function getMostValue(obj) {
-  return Object.entries(obj).reduce((prev, curr) => {
-    // eslint-disable-next-line no-param-reassign
-    if (curr[1] > prev[1]) prev = curr;
-    return prev;
-  }, [0, 0]);
-}
-export function getTotalSum(obj) {
+export function getMostValue(obj, status) {
   return Object.values(obj).reduce((prev, curr) => {
     // eslint-disable-next-line no-param-reassign
-    prev += curr;
+    if (curr[status] > (prev[status] || 0)) prev = curr;
+    return prev;
+  }, {});
+}
+export function getTotalSum(obj, status) {
+  return Object.values(obj).reduce((prev, curr) => {
+    // eslint-disable-next-line no-param-reassign
+    prev += (curr[status] || 0);
     return prev;
   }, 0);
+}
+
+export function maskNumber(input) {
+  // Remove all non-digit characters
+  const digits = input.replace(/\D/g, '');
+  const { length } = digits;
+
+  if (length <= 4) {
+    return digits;
+  }
+
+  // Mask all but the last 4 digits
+  // const maskedPart = '*'.repeat(length - 4);
+  const visiblePart = digits.slice(-4);
+
+  // Reconstruct the masked number with original dashes
+  let maskedInput = '';
+  let maskedIndex = 0;
+  let visibleIndex = 0;
+  for (let i = 0; i < input.length; i += 1) {
+    if (/\D/.test(input[i])) { // if it's a non-digit character
+      maskedInput += input[i];
+    } else if (maskedIndex < length - 4) {
+      maskedInput += '*';
+      maskedIndex += 1;
+    } else {
+      maskedInput += visiblePart[visibleIndex];
+      visibleIndex += 1;
+    }
+  }
+
+  return maskedInput;
 }

@@ -12,6 +12,7 @@ export const fetchCurrentDate = () => dayjs().format('YYYY-MM-DD');
 export const fetchCurrentUser = async () => {
   const res = await monday.api(`query {
     me {
+      id
       name
       is_admin
     }
@@ -741,6 +742,7 @@ export const fetchSaleActivities = async (cursor, dates) => {
       ) {
         cursor
         items {
+          id
           name
           column_values(ids: ["person", "status", "date4", "date__1"]) {
             id
@@ -928,7 +930,7 @@ export const fetchTeamGoals = async () => {
   return columns;
 };
 
-export const fetchUTeamSaleActivities = async (cursor, duration, actionIds) => {
+export const fetchUTeamSaleActivities = async (cursor, duration, actionIds, empIds) => {
   const query = `query {
     boards(ids: [${env.boards.salesActivities}]) {
       items_page(
@@ -936,6 +938,7 @@ export const fetchUTeamSaleActivities = async (cursor, duration, actionIds) => {
         rules: [
           { column_id: "date__1", compare_value: ${duration}, operator: any_of}
           { column_id: "status", compare_value: [${actionIds}], operator: any_of}
+          { column_id: "person", compare_value: [${empIds}], operator: any_of}
        ]
        }` : ''}
         limit: 500
@@ -957,7 +960,8 @@ export const fetchUTeamSaleActivities = async (cursor, duration, actionIds) => {
   return res;
 };
 
-export const getTeamTotalActivities = async (duration, actionIds) => {
+export const getTeamTotalActivities = async (duration, actionIds, employees) => {
+  const empIds = employees.map((emp) => (`"person-${emp.id}"`));
   let res = null;
   let itemsList = [];
   do {
@@ -966,6 +970,7 @@ export const getTeamTotalActivities = async (duration, actionIds) => {
       res ? res.data.boards[0].items_page.cursor : null,
       duration,
       actionIds,
+      empIds,
     );
     itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
   } while (res.data.boards[0].items_page.cursor);
@@ -974,13 +979,16 @@ export const getTeamTotalActivities = async (duration, actionIds) => {
     const owner = getColumnValue(curr.column_values || [], 'person');
     const obj = prev;
     if (_.isEmpty(owner)) return obj;
+    const person = employees.find(
+      (emp) => owner.personsAndTeams.find((o) => o.id.toString() === emp.id),
+    );
     const actionType = type.text.toLowerCase();
-    if (!obj[actionType]) {
-      obj[actionType] = { [owner.personsAndTeams[0].id]: 1 };
-    } else if (!obj[actionType][owner.personsAndTeams[0].id]) {
-      obj[actionType] = { ...obj[actionType], [owner.personsAndTeams[0].id]: 1 };
+    if (!obj[person.id]) {
+      obj[person.id] = { [actionType]: 1, person };
+    } else if (!obj[person.id][actionType]) {
+      obj[person.id] = { ...obj[person.id], [actionType]: 1 };
     } else {
-      obj[actionType][owner.personsAndTeams[0].id] += 1;
+      obj[person.id][actionType] += 1;
     }
     return obj;
   }, {});
@@ -994,7 +1002,7 @@ export const fetchDealFunds = async (cursor, employees) => {
       items_page(
       ${!cursor ? `query_params: {
         rules: [
-          { column_id: "${columnIds.deals.lead_creation_date}", compare_value: "THIS_MONTH", operator: any_of}
+          { column_id: "${columnIds.deals.funded__date}", compare_value: "THIS_MONTH", operator: any_of}
           { column_id: "${columnIds.deals.assginee}", compare_value: [${empIds}], operator: any_of}
        ]
        }` : ''}
@@ -1055,4 +1063,111 @@ export const getDealFunds = async (employees) => {
     return obj;
   }, {});
   return funds;
+};
+
+/* ---- Manager Board Funnel --------- */
+
+export const fetchThisWeekLeads = async (cursor, dates) => {
+  const query = `query {
+    boards(ids: [${env.boards.leads}]) {
+      items_page(
+      ${!cursor ? `query_params: {
+        rules: [
+          { column_id: "${columnIds.leads.application_date}", compare_value: [${dates}], operator: between}
+       ]
+       }` : ''}
+        limit: 500
+        ${cursor ? `cursor: "${cursor}"` : ''}
+      ) {
+        cursor
+        items {
+          id
+          name
+          group {
+            id
+            title
+          }
+          column_values{
+            id
+            text
+            value
+          }
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  return res;
+};
+export const fetchThisWeekDeals = async (cursor, dates) => {
+  const query = `query {
+    boards(ids: [${env.boards.deals}]) {
+      items_page(
+      ${!cursor ? `query_params: {
+        rules: [
+          { column_id: "${columnIds.deals.application_date}", compare_value: [${dates}], operator: between}
+       ]
+       }` : ''}
+        limit: 500
+        ${cursor ? `cursor: "${cursor}"` : ''}
+      ) {
+        cursor
+        items {
+          id
+          name
+          group {
+            id
+            title
+          }
+          column_values{
+            id
+            text
+            value
+          }
+          subitems {
+            id
+            name
+            column_values (ids: ["${columnIds.subItem.status}"]) {
+              id
+              text
+              value
+            }
+          }
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  return res;
+};
+
+export const getThisWeekLeadsDeals = async (dates) => {
+  const dateArray = dates.map((date) => `"${date.format('YYYY-MM-DD')}"`);
+  let res = null;
+  let itemsList = [];
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchThisWeekLeads(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dateArray,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchThisWeekDeals(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dateArray,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  const data = itemsList.map((item) => {
+    const columns = normalizeColumnValues(item.column_values);
+    return {
+      ...item,
+      ..._.omit(columns, 'subitems'),
+      isDeal: _.has(item, 'subitems'),
+    };
+  });
+  return data;
 };

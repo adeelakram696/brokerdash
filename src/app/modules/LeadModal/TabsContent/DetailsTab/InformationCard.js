@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import {
   Flex, Card, Divider, Form, Button,
 } from 'antd';
@@ -7,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { boardNames, columnIds } from 'utils/constants';
 import InputField from 'app/components/Forms/InputField';
 import { updateClientInformation } from 'app/apis/mutation';
+import { fetchUser } from 'app/apis/query';
+import { maskNumber } from 'utils/helpers';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 import LeadIntakeModal from '../../LeadIntake';
@@ -18,6 +21,7 @@ function InformationCard({
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
+  const user = fetchUser();
   const data = board === boardNames.clients ? details.client : details;
   const handleIntakeClick = () => {
     setIsIntakeModalOpen(true);
@@ -285,16 +289,21 @@ function InformationCard({
                 <Flex>
                   <Flex className={styles.label}>Social Security</Flex>
                   <Flex className={styles.value}>
-                    {isEdit
+                    {user.is_admin
                       ? (
-                        <Form.Item
-                          noStyle
-                          name={columnIds[board].social_security}
-                        >
-                          <InputField />
-                        </Form.Item>
-                      )
-                      : data[columnIds[board].social_security] || '-'}
+                        <>
+                          {isEdit
+                            ? (
+                              <Form.Item
+                                noStyle
+                                name={columnIds[board].social_security}
+                              >
+                                <InputField />
+                              </Form.Item>
+                            )
+                            : data[columnIds[board].social_security] || '-'}
+                        </>
+                      ) : maskNumber(data[columnIds[board].social_security]) || '-'}
                   </Flex>
                 </Flex>
                 <Flex>

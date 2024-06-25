@@ -34,7 +34,7 @@ function LeadModal({
   let timeoutId;
   const location = useLocation();
   const [details, setDetails] = useState({});
-  const [funders, setFunders] = useState({});
+  const [funders, setFunders] = useState([]);
   const [states, setStates] = useState([]);
   const [industries, setRestIndustries] = useState([]);
   const [users, setUsers] = useState([]);

@@ -1,5 +1,8 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 import {
   Flex,
+  Spin,
 } from 'antd';
 import {
   fetchBoardColorColumnStrings,
@@ -22,10 +25,10 @@ import MainDataTable from './MainDataTable';
 function TeamLeaderBoard() {
   let unsubscribe;
   let timeoutId;
+  const [loading, setLoading] = useState(false);
   const [goals, setGoals] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [saleActivities, setSalesActivities] = useState([]);
-  const [saleFunds, setSalesFunds] = useState({});
   const actionTypesRef = useRef();
   const employeeRef = useRef();
   const getActionTypes = async () => {
@@ -42,15 +45,25 @@ function TeamLeaderBoard() {
     setGoals(resp);
   };
   const getSaleActivities = async (duration, actionIds) => {
-    const res = await getTeamTotalActivities(duration, actionIds);
-    saleActivities[duration] = res;
-    setSalesActivities({ ...saleActivities });
+    const res = await getTeamTotalActivities(duration, actionIds, employeeRef.current);
+    const formatted = Object.entries(res).reduce((prev, curr) => {
+      const obj = prev;
+      obj[curr[0]] = { ...obj[curr[0]], ...curr[1] };
+      return obj;
+    }, saleActivities);
+    setSalesActivities({ ...formatted });
   };
   const getTotalFunds = async () => {
     const res = await getDealFunds(employeeRef.current);
-    setSalesFunds(res);
+    const formatted = Object.entries(res).reduce((prev, curr) => {
+      const obj = prev;
+      obj[curr[0]] = { ...obj[curr[0]], totalfunds: curr[1] };
+      return obj;
+    }, saleActivities);
+    setSalesActivities(formatted);
   };
-  const getTeamActivities = async () => {
+  const getTeamActivities = async (isLoading = false) => {
+    setLoading(true && isLoading);
     const actionTypesList = actionTypesRef.current;
     const dailyActivityIds = Object.keys(actionTypesList).filter(
       (key) => (
@@ -67,11 +80,12 @@ function TeamLeaderBoard() {
     const monthlyActivityIds = Object.keys(actionTypesList).filter(
       (key) => (actionTypesList[key] === statuses[4].actionName),
     );
-    getTotalFunds();
     getGoals();
     await getSaleActivities(durations.daily, dailyActivityIds);
     await getSaleActivities(durations.weekly, weeklyActivityIds);
     await getSaleActivities(durations.monthly, monthlyActivityIds);
+    await getTotalFunds();
+    setLoading(false);
   };
   useEffect(() => {
     getEmployeeList();
@@ -80,7 +94,7 @@ function TeamLeaderBoard() {
 
   useEffect(() => {
     if (employees.length === 0) return;
-    getTeamActivities();
+    getTeamActivities(true);
   }, [employees]);
 
   const refetchData = () => {
@@ -113,7 +127,8 @@ function TeamLeaderBoard() {
   }, []);
   return (
     <Flex flex={1}>
-      <MainDataTable saleActivities={saleActivities} employees={employees} saleFunds={saleFunds} />
+      <Spin tip="Loading..." spinning={loading} fullscreen />
+      <MainDataTable saleActivities={saleActivities} />
       <Flex flex={0.4} vertical>
         <Flex className={styles.logo} justify="center">
           <div
@@ -124,10 +139,8 @@ function TeamLeaderBoard() {
         </Flex>
         <AgentLeaderBoard
           saleActivities={saleActivities}
-          employees={employees}
-          saleFunds={saleFunds}
         />
-        <TeamLeaderboardGoal saleActivities={saleActivities} saleFunds={saleFunds} goals={goals} />
+        <TeamLeaderboardGoal saleActivities={saleActivities} goals={goals} />
       </Flex>
     </Flex>
   );

@@ -385,13 +385,14 @@ function QualificationMatrixForm({ show, handleClose }) {
             </Flex>
           </Flex>
           <Flex flex={1} wrap="wrap" justify="flex-start">
-            {(matrixValues.fundersPriority || []).map((v) => (
-              <Flex style={{ width: '45%', fontSize: '13px' }}>
-                -
-                {' '}
-                {v}
-              </Flex>
-            ))}
+            {matrixValues?.fundersPriority?.length > 0
+              ? (matrixValues.fundersPriority || []).map((funder) => (
+                <Flex style={{ width: '45%', fontSize: '13px' }}>
+                  -
+                  {' '}
+                  {funder}
+                </Flex>
+              )) : 'No suggested funder match found'}
           </Flex>
         </Flex>
       </Form>

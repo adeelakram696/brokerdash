@@ -94,7 +94,13 @@
 .activityButtons {
   font-size: 10px;
   margin-Left: 10px;
+  padding: 5px 10px;
   cursor: pointer;
+}
+.selectedUpdateType {
+  border-radius: 15px;
+  background-color: #676767;
+  color: white;
 }
 .threadList {
   margin-top: 5px;

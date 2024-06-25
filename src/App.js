@@ -3,7 +3,7 @@ import {
   useEffect, useState, Suspense, lazy,
 } from 'react';
 import {
-  Layout, theme, ConfigProvider, Spin,
+  Layout, theme, Spin,
 } from 'antd';
 import {
   HashRouter as Router,
@@ -17,8 +17,11 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import weekday from 'dayjs/plugin/weekday';
+import isBetween from 'dayjs/plugin/isBetween';
 import './App.scss';
 import TeamLeaderBoard from 'app/pages/TeamLeaderBoard';
+import ManagerFunnelBoard from 'app/pages/ManagerFunnelBoard';
 
 const Dashboard = lazy(() => import('./app/pages/dashboard'));
 const LeadView = lazy(() => import('app/pages/LeadView'));
@@ -30,6 +33,8 @@ dayjs.extend(duration);
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
+dayjs.extend(weekday);
+dayjs.extend(isBetween);
 const { Content } = Layout;
 function App() {
   const {
@@ -44,71 +49,56 @@ function App() {
     fetchCurrentUser().then((res) => setUserName(res));
   }, []);
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          fontFamily: 'Poppins',
-        },
-        components: {
-          Layout: {
-            bodyBg: '#E1EFF2',
-            headerBg: '#E1EFF2',
-          },
-        },
-      }}
-    >
-      <Layout
-        style={{
-          padding: '0 8px 24px',
-        }}
-      >
-        {userName && stagesFetched ? (
-          <Router>
-            <Switch>
-              <Route exact path="/">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Content
-                    style={{
-                      padding: 8,
-                      margin: 0,
-                      minHeight: 280,
-                      borderRadius: borderRadiusLG,
-                    }}
-                  >
-                    <Dashboard />
-                  </Content>
-                </Suspense>
-              </Route>
-              <Route exact path="/lead-view">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <LeadView />
-                </Suspense>
-              </Route>
-              <Route exact path="/leader-board">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <LeaderBoard />
-                </Suspense>
-              </Route>
-              <Route exact path="/leader-board-filter">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <LeaderBoard withFilter />
-                </Suspense>
-              </Route>
-              <Route exact path="/daily-matrics">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <DailyMatrics />
-                </Suspense>
-              </Route>
-              <Route exact path="/team-leader-board">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <TeamLeaderBoard />
-                </Suspense>
-              </Route>
-            </Switch>
-          </Router>
-        ) : <Spin spinning fullscreen />}
-      </Layout>
-    </ConfigProvider>
+    userName && stagesFetched ? (
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Suspense fallback={<div>Loading...</div>}>
+              <Content
+                style={{
+                  padding: 8,
+                  margin: 0,
+                  minHeight: 280,
+                  borderRadius: borderRadiusLG,
+                }}
+              >
+                <Dashboard />
+              </Content>
+            </Suspense>
+          </Route>
+          <Route exact path="/lead-view">
+            <Suspense fallback={<div>Loading...</div>}>
+              <LeadView />
+            </Suspense>
+          </Route>
+          <Route exact path="/leader-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <LeaderBoard />
+            </Suspense>
+          </Route>
+          <Route exact path="/leader-board-filter">
+            <Suspense fallback={<div>Loading...</div>}>
+              <LeaderBoard withFilter />
+            </Suspense>
+          </Route>
+          <Route exact path="/daily-matrics">
+            <Suspense fallback={<div>Loading...</div>}>
+              <DailyMatrics />
+            </Suspense>
+          </Route>
+          <Route exact path="/team-leader-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <TeamLeaderBoard />
+            </Suspense>
+          </Route>
+          <Route exact path="/funnel-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <ManagerFunnelBoard />
+            </Suspense>
+          </Route>
+        </Switch>
+      </Router>
+    ) : <Spin spinning fullscreen />
   );
 }
 

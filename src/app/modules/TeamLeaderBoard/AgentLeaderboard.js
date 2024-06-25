@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import styles from './TeamLeaderBoard.module.scss';
 import { statuses } from './data';
 
-function AgentLeaderBoard({ saleActivities, employees, saleFunds }) {
+function AgentLeaderBoard({ saleActivities }) {
   return (
     <Flex vertical className={styles.table}>
       <Flex className={styles.tableTitle}>
@@ -18,13 +18,8 @@ function AgentLeaderBoard({ saleActivities, employees, saleFunds }) {
       </Flex>
       <Flex className={styles.rightTableData} vertical>
         {statuses.map((status, index) => {
-          const val = status.actionName
-            ? getMostValue(
-              (saleActivities[status.actionDuration] || {})[status.actionName.toLowerCase()] || {},
-            )
-            : getMostValue((saleFunds));
-          const emp = employees.find((e) => e.id.toString() === val[0]) || {};
-          const preSign = status.actionName ? '' : '$';
+          const activity = getMostValue(saleActivities || {}, status.actionName.toLowerCase());
+          const preSign = activity.person ? status.preFix : '';
           return (
             <Flex
               flex={1}
@@ -47,10 +42,10 @@ function AgentLeaderBoard({ saleActivities, employees, saleFunds }) {
                   )
                 </Flex>
               </Flex>
-              <Flex flex={0.37}>{emp.name ? emp.name.split(' ')[0] : '-'}</Flex>
+              <Flex flex={0.37} className={styles.personName}>{activity?.person ? (`${activity.person?.name.split(' ')[0]} ${activity.person.name.split(' ')[1][0].toUpperCase()}`) : '-'}</Flex>
               <Flex flex={0.13}>
                 {preSign}
-                {numberWithCommas(val[1])}
+                {numberWithCommas(activity[status.actionName.toLowerCase()]) || '-'}
               </Flex>
             </Flex>
           );

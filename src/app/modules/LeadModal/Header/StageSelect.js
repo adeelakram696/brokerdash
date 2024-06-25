@@ -37,6 +37,7 @@ function StageSelect() {
   };
   const choosen = stages[board]?.find((s) => s.value === choosenStage);
   const selected = stages[board]?.find((s) => s.value === selectedStage);
+  const isDisqualified = selected?.label === 'Disqualified' || selected?.label === 'DQ';
   return (
     <Flex className={classNames(styles.stageDropdown, styles.marginRight, styles.marginTopNeg)} align="center" vertical>
       <div className={styles.statusLabel}>Stage</div>
@@ -44,9 +45,10 @@ function StageSelect() {
         className="stageDropdown"
         defaultValue="1"
         value={selectedStage}
+        disabled={isDisqualified}
         style={{ width: 250 }}
         onChange={(val) => { setChoosenStage(val); }}
-        options={stages[board]}
+        options={isDisqualified ? stages[board] : stages[board].filter((s) => s?.label !== 'Disqualified' && s?.label !== 'DQ')}
       />
       <Modal
         title="Update Stage"

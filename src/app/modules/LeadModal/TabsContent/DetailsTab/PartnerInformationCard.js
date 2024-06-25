@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import {
   Flex, Card, Divider, Form, Button,
 } from 'antd';
@@ -7,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { boardNames, columnIds, env } from 'utils/constants';
 import InputField from 'app/components/Forms/InputField';
 import { createClientInformation, updateClientInformation } from 'app/apis/mutation';
+import { fetchUser } from 'app/apis/query';
+import { maskNumber } from 'utils/helpers';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
@@ -15,6 +18,7 @@ function PartnerInformationCard({
 }) {
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const user = fetchUser();
   const [form] = Form.useForm();
   const data = board === boardNames.clients ? details.partner : details;
   const dialNumber = () => {
@@ -286,16 +290,21 @@ function PartnerInformationCard({
                 <Flex>
                   <Flex className={styles.label}>Social Security</Flex>
                   <Flex className={styles.value}>
-                    {isEdit
+                    {user.is_admin
                       ? (
-                        <Form.Item
-                          noStyle
-                          name={columnIds[board][getFieldName('social_security')]}
-                        >
-                          <InputField />
-                        </Form.Item>
-                      )
-                      : data[columnIds[board][getFieldName('social_security')]] || '-'}
+                        <>
+                          {isEdit
+                            ? (
+                              <Form.Item
+                                noStyle
+                                name={columnIds[board][getFieldName('social_security')]}
+                              >
+                                <InputField />
+                              </Form.Item>
+                            )
+                            : data[columnIds[board][getFieldName('social_security')]] || '-'}
+                        </>
+                      ) : maskNumber(data[columnIds[board][getFieldName('social_security')]]) || '-'}
                   </Flex>
                 </Flex>
                 <Flex>

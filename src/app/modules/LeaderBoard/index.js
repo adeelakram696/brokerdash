@@ -2,6 +2,7 @@ import {
   Avatar,
   DatePicker,
   Flex,
+  Spin,
 } from 'antd';
 import {
   fetchLeadersBoardEmployees, fetchBoardColorColumnStrings, getTotalActivities, fetchAllUsers,
@@ -20,6 +21,7 @@ const { RangePicker } = DatePicker;
 function LeaderBoardModule({ withFilter }) {
   let unsubscribe;
   let timeoutId;
+  const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [users, setUsers] = useState([]);
   const [usersOptions, setUsersOptions] = useState([]);
@@ -47,9 +49,11 @@ function LeaderBoardModule({ withFilter }) {
       setSelectedUsers(mapUsers);
     }
   };
-  const getSaleActivities = async (dates) => {
+  const getSaleActivities = async (dates, isLoading = true) => {
+    setLoading(true && isLoading);
     const res = await getTotalActivities(dates);
     setSalesActivities(res);
+    setLoading(false);
   };
   const getUsers = async () => {
     const res = await fetchAllUsers();
@@ -74,7 +78,7 @@ function LeaderBoardModule({ withFilter }) {
 
   const refetchData = (dates) => {
     getActionTypes();
-    getSaleActivities(dates);
+    getSaleActivities(dates, false);
   };
   const refetchEmployee = ({ data }) => {
     if (data.itemIds.includes(Number(env.leaderEmployeeItemId))) {
@@ -93,6 +97,7 @@ function LeaderBoardModule({ withFilter }) {
     };
   }, []);
   useEffect(() => {
+    if (withFilter) return null;
     const intervalId = setInterval(
       () => { refetchData(dateR.current); }
       , (1000 * env.performanceRefetchTime),
@@ -113,6 +118,7 @@ function LeaderBoardModule({ withFilter }) {
   };
   return (
     <Flex vertical flex={1}>
+      <Spin tip="Loading..." spinning={loading} fullscreen />
       {!withFilter ? null : (
         <Flex className={styles.filterbar} align="center">
           <Flex>Filters: </Flex>

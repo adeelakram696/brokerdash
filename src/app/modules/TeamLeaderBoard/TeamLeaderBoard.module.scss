@@ -1,6 +1,7 @@
 .table{
-  background-color: white;
-  border: 0.5px solid rgb(209, 208, 208);
+  // background-color: white;
+  color: white;
+  // border: 0.5px solid rgb(209, 208, 208);
   padding: 10px;
   border-radius: 15px;
   margin: 5px;
@@ -14,7 +15,13 @@
 }
 .dataColumnTitle {
   font-size: 16px;
-  border-right: 0.5px solid rgb(209, 208, 208);
+  border-right: 0.5px solid rgba(209, 208, 208, 0.212);
+  color:rgb(110, 247, 135);
+  font-weight: bold;
+}
+.personName {
+  color:rgb(110, 247, 135);
+  font-weight: bold;
 }
 .headerColumnTitle, .dataColumnTitle {
   width: 150px;
@@ -24,9 +31,9 @@
 }
 .dataColumnPerson {
   height: 50px;
-  font-size: 14px;
+  font-size: 18px;
   padding: 6px 10px;
-  border-right: 0.5px solid rgb(209, 208, 208);
+  border-right: 0.5px solid rgba(209, 208, 208, 0.233);
 }
 .dataRow {
   padding: 0px 5px;
@@ -45,7 +52,7 @@
   margin: 0 10px;
 }
 .alternateColor {
-  background-color: rgba(201, 201, 201, 0.3);
+  background-color: rgba(201, 201, 201, 0.103);
 }
 .rightTableData {
   margin-top: 20px;
@@ -56,6 +63,7 @@
 .rowStatusDurationText {
   font-size: 12px;
   font-weight: bold;
+  color:rgb(49, 223, 194);
 }
 .rowSpace {
   padding: 5px;
@@ -63,6 +71,7 @@
 .tableTitle {
   font-size: 16px;
   font-weight: bold;
+  color:rgb(233, 169, 9);
 }
 .tableTitleDate {
   font-size: 12px;
@@ -76,5 +85,6 @@
 }
 .extraHeading {
   padding: 0 5px;
-  font-size: 10px;
+  font-size: 12px;
+  color:rgb(233, 169, 9);
 }

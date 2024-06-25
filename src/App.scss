@@ -29,20 +29,32 @@ body {
 .ant-upload-wrapper {
   width: 100%;
 }
-.ant-tabs {
-  & .ant-tabs-tab {
-    font-size: 12px !important;
-    padding: 1px 0 !important;
-  }
-  & .ant-tabs-tab-btn {
-    color: #000 !important;
-  }
-  & .ant-tabs-ink-bar{
-    background: #52B172;
-    padding: 2px 0px !important;
+.lead-modal {
+  & .ant-tabs {
+    & .ant-tabs-tab {
+      font-size: 12px !important;
+      padding: 1px 0 !important;
+    }
+    & .ant-tabs-tab-btn {
+      color: #000 !important;
+    }
+    & .ant-tabs-ink-bar{
+      background: #52B172;
+      padding: 2px 0px !important;
+    }
   }
 }
-
+.manager-funnel {
+  & .ant-tabs {
+    & .ant-tabs-tab-btn {
+      color: white !important;
+    }
+    & .ant-tabs-ink-bar{
+      background: #ffffff;
+      padding: 2px 0px !important;
+    }
+  }
+}
 .goal-progress-bar {
   &.ant-progress {
     & .ant-progress-text {
@@ -67,6 +79,18 @@ body {
     border-radius: 20px;
     font-size: 12px;
   }
+}
+.funnelFilterField {
+  & .ant-select-selector {
+    border-radius: 0px;
+    font-size: 14px;
+    background-color: transparent !important;
+    color: white;
+  }
+  & .ant-select-arrow, .ant-picker-suffix, .ant-picker-separator, .ant-picker-input-placeholder > input {
+    color: white;
+  }
+
 }
 .stageDropdown {
   & .ant-select-selector {

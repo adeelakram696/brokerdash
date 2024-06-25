@@ -1,7 +1,7 @@
 import { ConfigProvider, Layout } from 'antd';
-import DailyMatricsModule from 'app/modules/DailyMatrics';
+import ManagerFunnelBoardModule from 'app/modules/ManagerFunnelBoard';
 
-function DailyMatrics() {
+function ManagerFunnelBoard() {
   return (
     <ConfigProvider
       theme={{
@@ -10,7 +10,7 @@ function DailyMatrics() {
         },
         components: {
           Layout: {
-            bodyBg: '#E1EFF2',
+            bodyBg: '#1a4049',
             headerBg: '#E1EFF2',
           },
         },
@@ -18,15 +18,13 @@ function DailyMatrics() {
     >
       <Layout
         style={{
-          padding: '0 8px 24px',
+          minHeight: '98vh',
         }}
       >
-        <DailyMatricsModule />
-        {' '}
-
+        <ManagerFunnelBoardModule />
       </Layout>
     </ConfigProvider>
   );
 }
 
-export default DailyMatrics;
+export default ManagerFunnelBoard;

@@ -10,11 +10,7 @@ import SelectField from 'app/components/Forms/SelectField';
 import { getColumnValue } from 'utils/helpers';
 import styles from '../LeadModal.module.scss';
 
-function SubRow({
-  lastCreated,
-  lastSpoke,
-  source,
-}) {
+function SubRow() {
   const {
     leadId, board, details, channels,
   } = useContext(LeadContext);
@@ -46,7 +42,11 @@ function SubRow({
       />
     </Flex>
   );
-  const sources = channels.map((c) => ({ value: c, label: c }));
+  const sources = Object.values(channels).map((c) => ({ value: c, label: c }));
+  const lastCreated = details[columnIds[board].creation_date] ? dayjs(details[columnIds[board].creation_date]).format('MM/DD/YYYY') : '-';
+  const lastSpoke = details[columnIds[board].last_touched] ? dayjs(details[columnIds[board].last_touched]).format('MM/DD/YYYY') : '-';
+  const source = details[columnIds[board].channel];
+  const rotationDate = details[columnIds[board].lead_rotation_date] ? dayjs(details[columnIds[board].lead_rotation_date]).format('MM/DD/YYYY') : '-';
   return (
     <Flex className={styles.subRow}>
       <Flex justify="space-between" flex={1}>
@@ -73,6 +73,10 @@ function SubRow({
           <Flex className={styles.subRowItem}>
             <Flex className={styles.subHeadingLabel}>Last Spoke to Client: </Flex>
             <Flex className={styles.subHeadingValue}>{lastSpoke || '-'}</Flex>
+          </Flex>
+          <Flex className={styles.subRowItem}>
+            <Flex className={styles.subHeadingLabel}>Lead Rotation Date: </Flex>
+            {rotationDate}
           </Flex>
           <Flex className={styles.subRowItem}>
             <Flex className={styles.subHeadingLabel}>Next Follow Up with Client: </Flex>

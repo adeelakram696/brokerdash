@@ -135,3 +135,18 @@ export const sendSubmission = async (leadId, boardId, data, emailOfferBtnId) => 
   }`;
   await monday.api(sendMutation);
 };
+
+export const sendNotification = async () => {
+  const mutation = `mutation {
+    create_notification(
+      user_id: 61325759
+      text: "testing notification"
+      target_id: 52149352
+      target_type: Post
+    ) {
+      id
+      text
+    }
+  }`;
+  await monday.api(mutation);
+};

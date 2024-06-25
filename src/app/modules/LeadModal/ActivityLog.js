@@ -25,7 +25,7 @@ function ActivityLog() {
     leadId, board, getMarkAsImportant, boardId, users,
     getUpdates, updates, setUpdates,
   } = useContext(LeadContext);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState('comment');
   const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState('');
   const [tagUsers, setTagUsers] = useState([]);
@@ -44,7 +44,6 @@ function ActivityLog() {
   const createUpdate = async (text) => {
     setLoading(true);
     const selectedUsers = users.filter((u) => tagUsers.includes(u.id));
-    console.log(selectedUsers);
     const tagging = selectedUsers.map((u) => `<a class="user_mention_editor router" href="${u.url}" data-mention-type="User" data-mention-id="${u.id}" target="_blank" rel="noopener noreferrer">@${u.name}</a>`);
     const updatedText = `<p>${tagging.join(' ')} ${text}</p>`;
     const parsedStr = updatedText.replace(/(<a[^>]*?href=")([^"]*)(".*?>)/g, (match, p1, p2, p3) => {
@@ -144,11 +143,11 @@ function ActivityLog() {
           Mark Important
         </Flex>
         <Flex>
-          <Flex className={styles.activityButtons} onClick={() => { handleFitlerUpdate('comment'); }}>
+          <Flex className={classNames(styles.activityButtons, { [styles.selectedUpdateType]: filter === 'comment' })} onClick={() => { handleFitlerUpdate('comment'); }}>
             <Flex className={styles.smallIcon}><CommentsIcon /></Flex>
             Comments only
           </Flex>
-          <Flex className={styles.activityButtons} onClick={() => { handleFitlerUpdate(''); }}>
+          <Flex className={classNames(styles.activityButtons, { [styles.selectedUpdateType]: filter === '' })} onClick={() => { handleFitlerUpdate(''); }}>
             <Flex className={styles.smallIcon}><ActivityClockIcon /></Flex>
             All
           </Flex>

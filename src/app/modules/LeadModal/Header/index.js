@@ -78,11 +78,7 @@ function ModalHeader() {
           ) : null}
         </Flex>
       </Flex>
-      <SubRow
-        lastCreated={details[columnIds[board].creation_date]}
-        lastSpoke={details[columnIds[board].last_touched]}
-        source={details[columnIds[board].channel]}
-      />
+      <SubRow />
     </>
   );
 }

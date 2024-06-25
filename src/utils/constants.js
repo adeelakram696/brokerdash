@@ -102,8 +102,8 @@ export const columnIds = {
     deal_partner: 'email',
     company_name: 'text97',
     source: 'text59',
-    contract_out: 'duration7',
-    contract_signed: 'time_tracking6',
+    contract_out: 'date6',
+    contract_signed: 'date7',
     doc_review: 'date1',
     last_touched: 'date9',
     rerun_round_robin: 'status0',
@@ -186,6 +186,7 @@ export const columnIds = {
     last_rep_assigned_date: 'date_1__1',
     dq_reason: 'dropdown4__1',
     lead_creation_date: 'date_17__1',
+    lead_rotation_date: 'date_11__1',
   },
   leads: {
     name: 'name',
@@ -327,6 +328,8 @@ export const columnIds = {
     qm_suggested_funders: 'long_text_1__1',
     last_lead_assigned: 'hour5__1',
     phone_burner: 'status54__1',
+    lead_rotation_date: 'date_1__1',
+    new_lead_spoken_to: 'status4__1',
   },
   subItem: {
     funding_accounts: 'connect_boards5',

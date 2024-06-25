@@ -15,11 +15,15 @@ import RenewalTab from './TabsContent/RenewalTab';
 
 function Content() {
   const {
-    leadId, board, handleReadyForSubmission, details, setCurrentTab,
+    leadId, board, handleReadyForSubmission, details, setCurrentTab, setLoadingData,
+    getData,
   } = useContext(LeadContext);
   const handlePitched = async (checked) => {
+    setLoadingData(true);
     const dataJson = { [columnIds[board].pitched]: { checked } };
     await updateClientInformation(leadId, details.board.id, dataJson);
+    await getData();
+    setLoadingData(false);
   };
   const readySubmissionBtn = {};
   const items = [
@@ -74,7 +78,7 @@ function Content() {
     );
   }
   return (
-    <Flex className={classNames(styles.columnLeft, styles.contentBody)} flex={0.6}>
+    <Flex className={classNames(styles.columnLeft, styles.contentBody, 'lead-modal')} flex={0.6}>
       <Tabs
         size="small"
         rootClassName={styles.tabs}
