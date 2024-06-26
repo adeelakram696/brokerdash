@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/brokerdash/static/css/main.37fdb0ac.css",
-    "main.js": "/brokerdash/static/js/main.c9567066.js",
-    "static/css/134.cb83be22.chunk.css": "/brokerdash/static/css/134.cb83be22.chunk.css",
+    "main.js": "/brokerdash/static/js/main.e2e0c375.js",
+    "static/css/134.77993eb0.chunk.css": "/brokerdash/static/css/134.77993eb0.chunk.css",
     "static/js/134.0f2c6e2d.chunk.js": "/brokerdash/static/js/134.0f2c6e2d.chunk.js",
-    "static/css/786.a7152d3b.chunk.css": "/brokerdash/static/css/786.a7152d3b.chunk.css",
+    "static/css/786.d5f6fa11.chunk.css": "/brokerdash/static/css/786.d5f6fa11.chunk.css",
     "static/js/786.587b61fe.chunk.js": "/brokerdash/static/js/786.587b61fe.chunk.js",
     "static/css/848.a752645f.chunk.css": "/brokerdash/static/css/848.a752645f.chunk.css",
     "static/js/848.623111ec.chunk.js": "/brokerdash/static/js/848.623111ec.chunk.js",
-    "static/css/863.e060f338.chunk.css": "/brokerdash/static/css/863.e060f338.chunk.css",
+    "static/css/863.00fb2fcc.chunk.css": "/brokerdash/static/css/863.00fb2fcc.chunk.css",
     "static/js/863.56f9c7b3.chunk.js": "/brokerdash/static/js/863.56f9c7b3.chunk.js",
     "static/js/270.0e0571cb.chunk.js": "/brokerdash/static/js/270.0e0571cb.chunk.js",
     "static/css/236.d2647a35.chunk.css": "/brokerdash/static/css/236.d2647a35.chunk.css",
     "static/js/236.e3fec45b.chunk.js": "/brokerdash/static/js/236.e3fec45b.chunk.js",
-    "static/js/398.c0d5396f.chunk.js": "/brokerdash/static/js/398.c0d5396f.chunk.js",
+    "static/js/398.6d8f0ca0.chunk.js": "/brokerdash/static/js/398.6d8f0ca0.chunk.js",
     "static/media/approvalTick.svg": "/brokerdash/static/media/approvalTick.053bb133bcb2cfa179fbb48e4d3b484d.svg",
     "static/media/runingShoe.svg": "/brokerdash/static/media/runingShoe.abddc61641fd401b32a0de46fc33d303.svg",
     "static/media/signature.svg": "/brokerdash/static/media/signature.b5b95111e363c8e72be3996f037c2f12.svg",
@@ -22,6 +22,6 @@
   },
   "entrypoints": [
     "static/css/main.37fdb0ac.css",
-    "static/js/main.c9567066.js"
+    "static/js/main.e2e0c375.js"
   ]
 }
