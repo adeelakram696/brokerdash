@@ -5,14 +5,13 @@ import {
 } from 'antd';
 import classNames from 'classnames';
 import { FireFilledIcon } from 'app/images/icons';
-import { columnIds, sequenceSteps } from 'utils/constants';
+import { boardNames, columnIds, sequenceSteps } from 'utils/constants';
 import { useContext } from 'react';
 import { LeadContext } from 'utils/contexts';
 import { SyncOutlined } from '@ant-design/icons';
 import { convertSequenceNameToKey } from 'utils/helpers';
 import styles from '../LeadModal.module.scss';
 import SubRow from './SubRow';
-import SalePersonSelect from './SalePersonSelect';
 import StageSelect from './StageSelect';
 
 function ModalHeader() {
@@ -32,6 +31,10 @@ function ModalHeader() {
     }
     return val;
   });
+  const isDeal = board === boardNames.deals;
+  const dataBoard = isDeal ? boardNames.clients : board;
+  const data = isDeal ? details.client : details;
+  const clientName = `${data[columnIds[dataBoard].first_name]} ${data[columnIds[dataBoard].last_name]}`;
   return (
     <>
       <Flex justify="space-between" flex={0.65}>
@@ -39,7 +42,7 @@ function ModalHeader() {
           <Flex className={classNames(styles.logo, styles.marginRight)} align="center"><FireFilledIcon /></Flex>
           <Flex className={classNames(styles.marginRight)} align="left" vertical>
             <Flex className={styles.title}>{details.name}</Flex>
-            <SalePersonSelect />
+            <Flex>{clientName}</Flex>
           </Flex>
           <StageSelect />
           <Flex className={classNames(styles.status, styles.marginRight, styles.marginTopNeg)} align="center" vertical>

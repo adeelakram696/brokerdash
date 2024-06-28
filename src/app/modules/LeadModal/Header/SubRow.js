@@ -9,6 +9,7 @@ import { LeadContext } from 'utils/contexts';
 import SelectField from 'app/components/Forms/SelectField';
 import { getColumnValue } from 'utils/helpers';
 import styles from '../LeadModal.module.scss';
+import SalePersonSelect from './SalePersonSelect';
 
 function SubRow() {
   const {
@@ -17,7 +18,7 @@ function SubRow() {
   const [followUpDate, setFollowUpDate] = useState();
   const handleFollowUpDateChange = async (date) => {
     await updateClientInformation(leadId, details?.board?.id, {
-      [columnIds[board].next_followup]: date?.utc().format('YYYY-MM-DD HH:mm:ss'),
+      [columnIds[board].next_followup]: date ? date?.utc().format('YYYY-MM-DD HH:mm:ss') : '',
     });
     setFollowUpDate(date);
   };
@@ -67,6 +68,9 @@ function SubRow() {
                 onChange={handleChangeSource}
               />
             </Flex>
+          </Flex>
+          <Flex className={styles.subRowItem}>
+            <SalePersonSelect />
           </Flex>
         </Flex>
         <Flex>

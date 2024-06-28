@@ -87,8 +87,19 @@ body {
     background-color: transparent !important;
     color: white;
   }
-  & .ant-select-arrow, .ant-picker-suffix, .ant-picker-separator, .ant-picker-input-placeholder > input {
+  & .ant-select-arrow, .ant-picker-suffix, .ant-picker-separator, .ant-picker-input-placeholder > input, .ant-select-selection-placeholder  {
     color: white;
+  }
+  & .ant-select-clear {
+    color: white;
+    &:hover {
+      color: white;
+    }
+  }
+  &.ant-select-open {
+    & .ant-select-selection-item, .ant-select-clear {
+      color: white;
+    }
   }
 
 }

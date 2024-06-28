@@ -34,12 +34,12 @@ function ClientBaseInfo({
       [columnIds[board].needs_money_for]: details[columnIds[board].needs_money_for],
       [columnIds[board].existing_debt]: details[columnIds[board].existing_debt],
       [columnIds[board].most_important]: details[columnIds[board].most_important],
+      [columnIds[board].requested_amount]: details[columnIds[board].requested_amount],
     };
     if (board === boardNames.leads) {
       valueData[columnIds[board].credit_score] = details[columnIds[board].credit_score];
       valueData[columnIds[board].industry] = details[columnIds[board].industry];
       valueData[columnIds[board].state_incorporated] = details[columnIds[board].state_incorporated];
-      valueData[columnIds[board].requested_amount] = details[columnIds[board].requested_amount];
       valueData[columnIds[board].business_start_date] = details[columnIds[board]
         .business_start_date];
     }
@@ -86,7 +86,8 @@ function ClientBaseInfo({
         .state_incorporated] = values[columnIds.clientAccount
         .state_incorporated];
       accountsPayload[
-        columnIds.clientAccount.business_start_date] = values[columnIds[board].business_start_date];
+        columnIds.clientAccount.business_start_date] = values[columnIds.clientAccount
+        .business_start_date];
     }
     await updateClientInformation(
       leadId,

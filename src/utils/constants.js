@@ -330,6 +330,8 @@ export const columnIds = {
     phone_burner: 'status54__1',
     lead_rotation_date: 'date_1__1',
     new_lead_spoken_to: 'status4__1',
+    docs_needed: 'dropdown04__1',
+    custom_docs: 'text_10__1',
   },
   subItem: {
     funding_accounts: 'connect_boards5',

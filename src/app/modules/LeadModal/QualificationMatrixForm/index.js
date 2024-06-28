@@ -10,7 +10,7 @@ import { LeadContext } from 'utils/contexts';
 import _ from 'lodash';
 import { boardNames, columnIds } from 'utils/constants';
 import { updateSimpleColumnValue } from 'app/apis/mutation';
-import { extractLeastNumber } from 'utils/helpers';
+import { extractLeastNumber, verifyDateFormat } from 'utils/helpers';
 import SelectField from 'app/components/Forms/SelectField';
 import styles from './QualificationMatrixForm.module.scss';
 import {
@@ -96,14 +96,22 @@ function QualificationMatrixForm({ show, handleClose }) {
   };
   const setDefaultValues = () => {
     if (!details.name) return;
+    const estDate = isDeal ? details.clientAccount[columnIds.clientAccount
+      .business_start_date] : details[columnIds[board]
+      .business_start_date];
+    const estDateFormat = verifyDateFormat(estDate);
     const bankActivity = JSON.parse(details[columnIds[board].qm_bank_activity] || '{}');
     const activePosition = JSON.parse(details[columnIds[board].qm_active_position] || '{}');
     const suggestedFunders = JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]');
+    // eslint-disable-next-line no-nested-ternary
+    const estDateValue = estDateFormat
+      ? dayjs(estDate, estDateFormat)
+      : (bankActivity.business_start_date ? dayjs(bankActivity.business_start_date) : '');
     const combined = {
       ...bankActivity,
       ...activePosition,
       fundersPriority: suggestedFunders,
-      business_start_date: dayjs(bankActivity.business_start_date),
+      business_start_date: estDateValue,
     };
     handleUpdate({}, combined);
     form.setFieldsValue(combined);
@@ -224,7 +232,10 @@ function QualificationMatrixForm({ show, handleClose }) {
                 noStyle
                 name="business_start_date"
               >
-                <DatePicker format="MM/DD/YYYY" />
+                <DatePicker
+                  format="MM/DD/YYYY"
+                  status={!matrixValues.business_start_date ? 'error' : 'success'}
+                />
               </Form.Item>
               {businessTimeMonth > 0 ? ` ${businessTimeMonth} month(s)` : ''}
               {' '}
@@ -392,7 +403,7 @@ function QualificationMatrixForm({ show, handleClose }) {
                   {' '}
                   {funder}
                 </Flex>
-              )) : 'No suggested funder match found'}
+              )) : 'No Funders match'}
           </Flex>
         </Flex>
       </Form>

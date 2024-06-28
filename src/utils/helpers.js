@@ -253,3 +253,17 @@ export function maskNumber(input) {
 
   return maskedInput;
 }
+export function verifyDateFormat(dateString) {
+  // Define regex patterns for the date formats
+  const formats = [
+    { regex: /^\d{4}-\d{1,2}-\d{1,2}$/, format: 'YYYY-D-M' },
+    { regex: /^\d{1,2}\/\d{1,2}\/\d{4}$/, format: 'M/D/YYYY' },
+    { regex: /^\d{1,2}-\d{1,2}-\d{4}$/, format: 'M-D-YYYY' },
+  ];
+
+  // Find the matching format
+  const matchingFormat = formats.find(({ regex }) => regex.test(dateString));
+
+  // Return the format if found, otherwise null
+  return matchingFormat ? matchingFormat.format : null;
+}

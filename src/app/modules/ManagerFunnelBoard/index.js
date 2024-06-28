@@ -6,7 +6,7 @@ import {
   Spin,
 } from 'antd';
 import { useEffect, useState } from 'react';
-import { getThisWeekLeadsDeals } from 'app/apis/query';
+import { fetchUsers, getThisWeekLeadsDeals } from 'app/apis/query';
 import dayjs from 'dayjs';
 import SelectField from 'app/components/Forms/SelectField';
 import classNames from 'classnames';
@@ -21,19 +21,21 @@ const { RangePicker } = DatePicker;
 function ManagerFunnelBoardModule() {
   const [data, setData] = useState([]);
   const [selectedStageData, setSelectedStageData] = useState({});
+  const [usersList, setUsersList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [dateRange, setDateRange] = useState(durationsDates.thisWeek);
   const [duration, setDuration] = useState(['thisWeek']);
   const [loading, setLoading] = useState(false);
-  const fetchData = async (dates) => {
+  const fetchData = async (dates, user) => {
     setLoading(true);
-    const res = await getThisWeekLeadsDeals(dates);
+    const res = await getThisWeekLeadsDeals(dates, user);
     const transformed = transformToFunnel(res, dates);
     setLoading(false);
     setData(transformed);
   };
   useEffect(() => {
-    fetchData(dateRange);
-  }, [dateRange]);
+    fetchData(dateRange, selectedUser);
+  }, [dateRange, selectedUser]);
   const handleChangeDates = (val) => {
     setDateRange(val);
   };
@@ -41,11 +43,32 @@ function ManagerFunnelBoardModule() {
     setDateRange(durationsDates[val]);
     setDuration(val);
   };
+  const getUsersList = async () => {
+    const res = await fetchUsers();
+    const list = (res || []).map((u) => ({
+      label: u.name,
+      value: u.id,
+    }));
+    setUsersList(list);
+  };
+  useEffect(() => {
+    getUsersList();
+  }, []);
   return (
     <Flex flex={1}>
       <Spin tip="Fetching Data..." spinning={loading} fullscreen />
       <Flex flex={0.3} className={styles.leftCol} vertical>
         <Flex justify="flex-end">
+          <Flex className={styles.filterField}>
+            <SelectField
+              classnames={classNames(styles.durations, 'funnelFilterField')}
+              options={usersList}
+              onChange={setSelectedUser}
+              placeholder="Users"
+              value={selectedUser}
+              allowClear
+            />
+          </Flex>
           <Flex className={styles.filterField}>
             <SelectField
               classnames={classNames(styles.durations, 'funnelFilterField')}

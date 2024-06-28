@@ -2,7 +2,7 @@ import { Flex, Dropdown } from 'antd';
 import {
   ThreeDotsIcon,
 } from 'app/images/icons';
-import { columnIds } from 'utils/constants';
+import { boardNames, columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
 import { LeadContext } from 'utils/contexts';
 import { useContext } from 'react';
@@ -10,6 +10,7 @@ import styles from './ActionsRow.module.scss';
 import ResearchLinks from './ResearchLinks';
 import SendSms from './SendSms';
 import Disqualified from './Disqualified';
+import DocsNeeded from './DocsNeeded';
 // import SendEmail from './SendEmail';
 
 const items = [
@@ -56,6 +57,11 @@ function ActionRow() {
     {
       component: (
         <Disqualified />
+      ),
+    },
+    {
+      component: (
+        board === boardNames.leads ? <DocsNeeded /> : null
       ),
     },
   ];

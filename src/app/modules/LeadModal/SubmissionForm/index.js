@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
 import { useContext, useEffect, useState } from 'react';
 import {
@@ -16,7 +17,9 @@ import SelectFunders from './SelectFundersForm';
 import SelectDocuments from './SelectDocuments';
 import QualificationCheck from './QualificationCheck';
 
-function SubmissionForm({ show, handleClose, type = 'funder' }) {
+function SubmissionForm({
+  show, handleClose, type = 'funder', inputPrevSubmission,
+}) {
   const {
     leadId, boardId, board, details,
   } = useContext(LeadContext);
@@ -27,7 +30,8 @@ function SubmissionForm({ show, handleClose, type = 'funder' }) {
   const [selectedDocs, setSelectedDoucments] = useState([]);
   const [showText, setShowText] = useState(false);
   const [textNote, setTextNote] = useState('');
-  const [step, setStep] = useState(isContract ? steps.documents : steps.qualification);
+  const [step, setStep] = useState(isContract ? steps.documents
+    : (inputPrevSubmission ? steps.funders : steps.qualification));
   useEffect(() => {
     const preSelected = getColumnValue(details?.column_values, columnIds.deals.funders_dropdown);
     const ids = preSelected?.linkedPulseIds?.map((v) => v.linkedPulseId.toString());
@@ -58,12 +62,14 @@ function SubmissionForm({ show, handleClose, type = 'funder' }) {
   const handleSubmit = async () => {
     const linkedPulseIds = selectedFunders.map((id) => ({ linkedPulseId: Number(id) }));
     const docs = selectedDocs.join(',');
-    let cta = [columnIds[board].submit_offers];
+    let cta = !inputPrevSubmission ? [columnIds[board].submit_offers] : null;
     let payload = {
       [columnIds[board].funders_dropdown]: { linkedPulseIds },
-      [columnIds[board].submit_offers_docs]: docs,
       [columnIds[board].additional_body_content]: textNote,
     };
+    if (!inputPrevSubmission) {
+      payload[columnIds[board].submit_offers_docs] = docs;
+    }
     if (isContract) {
       payload = {
         [columnIds[board].submit_contract_docs]: docs,
@@ -76,7 +82,8 @@ function SubmissionForm({ show, handleClose, type = 'funder' }) {
     setSelectedFunders([]);
     setSelectedDoucments([]);
     setTextNote('');
-    setStep(isContract ? steps.documents : steps.qualification);
+    setStep(isContract ? steps.documents
+      : (inputPrevSubmission ? steps.funders : steps.qualification));
     setLoading(false);
     handleClose();
   };
@@ -91,7 +98,7 @@ function SubmissionForm({ show, handleClose, type = 'funder' }) {
       open={show}
       footer={(
         <Flex justify="flex-end">
-          {stepData[step].prevStep && !isContract
+          {stepData[step].prevStep && !isContract && !inputPrevSubmission
             ? (
               <Button onClick={() => { setStep(stepData[step].prevStep); }} className={styles.footerBackBtn} shape="round">
                 Back
@@ -99,7 +106,7 @@ function SubmissionForm({ show, handleClose, type = 'funder' }) {
             ) : null}
           <Button
             onClick={
-              () => (stepData[step].nextStep
+              () => (stepData[step].nextStep && !inputPrevSubmission
                 ? handleNextStep(stepData[step].nextStep)
                 : handleSubmit())
             }
@@ -109,7 +116,7 @@ function SubmissionForm({ show, handleClose, type = 'funder' }) {
             disabled={!isNextEnabled}
             loading={loading}
           >
-            {stepData[step].nextStep ? 'Next Step' : `${isContract ? 'Send Contract' : 'Submit'}`}
+            {(stepData[step].nextStep && !inputPrevSubmission) ? 'Next Step' : `${isContract ? 'Send Contract' : `${inputPrevSubmission ? 'Input Previous' : 'Submit'}`}`}
           </Button>
         </Flex>
 )}

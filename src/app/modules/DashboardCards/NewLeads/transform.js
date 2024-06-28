@@ -19,7 +19,7 @@ export function transformData(data) {
     columns = _.mapValues(columns, 'text');
     const lastLeadAssigned = getColumnValue(item.column_values, columnIds.leads.last_lead_assigned);
     const leadTouchedTime = getColumnValue(item.column_values, columnIds.leads.new_lead_or_touched);
-    const isNew = columns[columnIds.leads.new_lead_or_touched] === 'Not Touched yet';
+    const isNew = columns[columnIds.leads.new_lead_or_touched] === 'Not Touched yet' && columns[columnIds.leads.channel] !== 'Phoneburner';
     const isAllPassed = columns[columnIds.leads.new_lead_or_touched] === 'Passed through all options';
     const isTouched = columns[columnIds.leads.new_lead_or_touched] === 'Touched';
     let time = 0;

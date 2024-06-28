@@ -15,7 +15,11 @@ const intialData = [
   { stage: 'Contracts Signed', number: 0 },
   { stage: 'Funded', number: 0 },
 ];
-function FunnelChart({ data, setSelectedStageData, selectedStageData }) {
+function FunnelChart({
+  data,
+  setSelectedStageData,
+  selectedStageData,
+}) {
   const [funnelData, setFunnelData] = useState(intialData);
   useEffect(() => {
     setFunnelData([
@@ -79,7 +83,7 @@ function FunnelChart({ data, setSelectedStageData, selectedStageData }) {
     ]);
   }, [data]);
   useEffect(() => {
-    if (selectedStageData?.number) return;
+    if (selectedStageData?.number === data.new?.length) return;
     setSelectedStageData({ stage: 'New Leads', number: data.new?.length, data: data.new });
   }, [data]);
   const config = {

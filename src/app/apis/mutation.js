@@ -128,6 +128,7 @@ export const sendSubmission = async (leadId, boardId, data, emailOfferBtnId) => 
     }
   }`;
   await monday.api(updateMutation);
+  if (!emailOfferBtnId) return;
   const sendMutation = `mutation {
     change_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${emailOfferBtnId}", value: "${JSON.stringify({ index: 0 }).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}") {
       id
