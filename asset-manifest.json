@@ -1,19 +1,14 @@
 {
   "files": {
-    "main.css": "/brokerdash/static/css/main.0e378533.css",
-    "main.js": "/brokerdash/static/js/main.6374ee5d.js",
-    "static/css/134.9625a99e.chunk.css": "/brokerdash/static/css/134.9625a99e.chunk.css",
-    "static/js/134.9da34fe6.chunk.js": "/brokerdash/static/js/134.9da34fe6.chunk.js",
-    "static/css/786.85282480.chunk.css": "/brokerdash/static/css/786.85282480.chunk.css",
-    "static/js/786.cb109986.chunk.js": "/brokerdash/static/js/786.cb109986.chunk.js",
+    "main.css": "/brokerdash/static/css/main.f9dd78e2.css",
+    "main.js": "/brokerdash/static/js/main.b465fd45.js",
+    "static/css/236.8b8a8734.chunk.css": "/brokerdash/static/css/236.8b8a8734.chunk.css",
+    "static/js/236.582f143e.chunk.js": "/brokerdash/static/js/236.582f143e.chunk.js",
+    "static/js/328.df34bd43.chunk.js": "/brokerdash/static/js/328.df34bd43.chunk.js",
     "static/css/848.a752645f.chunk.css": "/brokerdash/static/css/848.a752645f.chunk.css",
     "static/js/848.623111ec.chunk.js": "/brokerdash/static/js/848.623111ec.chunk.js",
-    "static/css/863.0891ebe7.chunk.css": "/brokerdash/static/css/863.0891ebe7.chunk.css",
-    "static/js/863.8a144214.chunk.js": "/brokerdash/static/js/863.8a144214.chunk.js",
-    "static/js/270.0e0571cb.chunk.js": "/brokerdash/static/js/270.0e0571cb.chunk.js",
-    "static/css/530.d2647a35.chunk.css": "/brokerdash/static/css/530.d2647a35.chunk.css",
-    "static/js/530.29d2db1e.chunk.js": "/brokerdash/static/js/530.29d2db1e.chunk.js",
-    "static/js/96.23b90b0f.chunk.js": "/brokerdash/static/js/96.23b90b0f.chunk.js",
+    "static/css/9.686df0a5.chunk.css": "/brokerdash/static/css/9.686df0a5.chunk.css",
+    "static/js/9.bed32fd7.chunk.js": "/brokerdash/static/js/9.bed32fd7.chunk.js",
     "static/media/approvalTick.svg": "/brokerdash/static/media/approvalTick.053bb133bcb2cfa179fbb48e4d3b484d.svg",
     "static/media/runingShoe.svg": "/brokerdash/static/media/runingShoe.abddc61641fd401b32a0de46fc33d303.svg",
     "static/media/signature.svg": "/brokerdash/static/media/signature.b5b95111e363c8e72be3996f037c2f12.svg",
@@ -21,7 +16,7 @@
     "index.html": "/brokerdash/index.html"
   },
   "entrypoints": [
-    "static/css/main.0e378533.css",
-    "static/js/main.6374ee5d.js"
+    "static/css/main.f9dd78e2.css",
+    "static/js/main.b465fd45.js"
   ]
 }
