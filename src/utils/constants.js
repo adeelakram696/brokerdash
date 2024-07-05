@@ -3,6 +3,7 @@ export const env = {
     coldProspecting: process.env.REACT_APP_COLD_PROSPECTING_BOARD_ID,
     deals: process.env.REACT_APP_DEALS_BOARD_ID,
     leads: process.env.REACT_APP_LEADS_BOARD_ID,
+    submissions: process.env.REACT_APP_SUBMISSIONS_BOARD,
     funders: process.env.REACT_APP_FUNDERS_BOARD_ID,
     clients: process.env.REACT_APP_CLIENTS_BOARD_ID,
     clientAccounts: process.env.REACT_APP_CLIENT_ACCOUNTS_BOARD_ID,

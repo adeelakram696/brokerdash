@@ -45,7 +45,6 @@ function StageSelect() {
         className="stageDropdown"
         defaultValue="1"
         value={selectedStage}
-        disabled={isDisqualified}
         style={{ width: 250 }}
         onChange={(val) => { setChoosenStage(val); }}
         options={isDisqualified ? stages[board] : stages[board].filter((s) => s?.label !== 'Disqualified' && s?.label !== 'DQ')}

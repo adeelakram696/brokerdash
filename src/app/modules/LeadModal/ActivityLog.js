@@ -10,12 +10,12 @@ import {
 } from 'app/images/icons';
 import ThreadBox from 'app/components/ThreadBox';
 import dayjs from 'dayjs';
-import { createNewUpdate, updateSimpleColumnValue } from 'app/apis/mutation';
+import { createNewUpdate, sendNotification, updateSimpleColumnValue } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { LeadContext } from 'utils/contexts';
-import { splitActionFromUpdate } from 'utils/helpers';
+import { cutStringAfterLimit, splitActionFromUpdate } from 'utils/helpers';
 import { ExclamationCircleTwoTone, MessageTwoTone, UserOutlined } from '@ant-design/icons';
 import SelectField from 'app/components/Forms/SelectField';
 import styles from './LeadModal.module.scss';
@@ -60,7 +60,14 @@ function ActivityLog() {
       setLoading(false);
       return;
     }
-    setUpdates([(res.data || []).create_update, ...updates]);
+    const userIds = selectedUsers.map((u) => u.id);
+    const plain = refEditor.current.unprivilegedEditor.getText();
+    const notificationText = `You got mentioned in an update: ${cutStringAfterLimit(plain, 200)}`;
+    const updateId = (res.data || {})?.create_update?.id;
+    userIds.forEach((id) => {
+      sendNotification(id, notificationText, updateId);
+    });
+    setUpdates([(res.data || {}).create_update, ...updates]);
     setLoading(false);
   };
   useEffect(() => {

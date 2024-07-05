@@ -26,9 +26,9 @@ function MainDataTable({ saleActivities }) {
       {sorted.map((activity, index) => (
         <Flex className={classNames(styles.dataRow, { [styles.alternateColor]: index % 2 })} justify="space-between">
           <Flex flex={0.25} className={styles.dataColumnTitle} align="center">
-            {activity.person.name.split(' ')[0]}
+            {activity?.person?.name?.split(' ')[0]}
             {' '}
-            {activity.person.name.split(' ')[1][0].toUpperCase()}
+            {activity?.person?.name.split(' ')[1][0].toUpperCase()}
           </Flex>
           {statuses.map((status) => (
             <Flex flex={0.13} className={styles.dataColumnPerson} style={{ minWidth: status.width }} justify="center" align="center">

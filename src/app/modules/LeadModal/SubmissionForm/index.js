@@ -5,7 +5,7 @@ import {
   Modal, Flex, Button,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
-import { columnIds } from 'utils/constants';
+import { columnIds, env } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import { sendSubmission } from 'app/apis/mutation';
 import { getColumnValue } from 'utils/helpers';
@@ -16,21 +16,23 @@ import {
 import SelectFunders from './SelectFundersForm';
 import SelectDocuments from './SelectDocuments';
 import QualificationCheck from './QualificationCheck';
+import { statuses } from '../TabsContent/Common/FundersList/data';
 
 function SubmissionForm({
-  show, handleClose, type = 'funder', inputPrevSubmission,
+  show, handleClose, type = 'funder', inputPrevSubmission, resubmiteId,
 }) {
   const {
-    leadId, boardId, board, details,
+    leadId, boardId, board, details, getData,
   } = useContext(LeadContext);
   const isContract = type === 'contract';
+  const isResubmit = type === 'renew';
   const [loading, setLoading] = useState(false);
   const [submittedFunders, setSubmittedFunders] = useState([]);
   const [selectedFunders, setSelectedFunders] = useState([]);
   const [selectedDocs, setSelectedDoucments] = useState([]);
   const [showText, setShowText] = useState(false);
   const [textNote, setTextNote] = useState('');
-  const [step, setStep] = useState(isContract ? steps.documents
+  const [step, setStep] = useState((isContract || isResubmit) ? steps.documents
     : (inputPrevSubmission ? steps.funders : steps.qualification));
   useEffect(() => {
     const preSelected = getColumnValue(details?.column_values, columnIds.deals.funders_dropdown);
@@ -77,12 +79,27 @@ function SubmissionForm({
       };
       cta = [columnIds[board].request_contract];
     }
+    if (isResubmit) {
+      payload = {
+        [columnIds[board].submit_offers_docs]: docs,
+        [columnIds[board].additional_body_content]: textNote,
+      };
+      cta = null;
+    }
     setLoading(true);
     await sendSubmission(leadId, boardId, payload, cta);
+    if (isResubmit) {
+      await sendSubmission(
+        resubmiteId,
+        env.boards.submissions,
+        { [columnIds.subItem.status]: statuses.new },
+      );
+    }
+    getData();
     setSelectedFunders([]);
     setSelectedDoucments([]);
     setTextNote('');
-    setStep(isContract ? steps.documents
+    setStep((isContract || isResubmit) ? steps.documents
       : (inputPrevSubmission ? steps.funders : steps.qualification));
     setLoading(false);
     handleClose();
@@ -93,12 +110,22 @@ function SubmissionForm({
     [steps.documents]: selectedDocs,
   };
   const isNextEnabled = selectedValues[step]?.length > 0;
+  let ctaText = 'Submit';
+  if ((stepData[step].nextStep && !inputPrevSubmission)) {
+    ctaText = 'Next Step';
+  } else if (isContract) {
+    ctaText = 'Send Contract';
+  } else if (isResubmit) {
+    ctaText = 'Resubmit';
+  } else if (inputPrevSubmission) {
+    ctaText = 'Input Previous';
+  }
   return (
     <Modal
       open={show}
       footer={(
         <Flex justify="flex-end">
-          {stepData[step].prevStep && !isContract && !inputPrevSubmission
+          {stepData[step].prevStep && !(isContract || isResubmit) && !inputPrevSubmission
             ? (
               <Button onClick={() => { setStep(stepData[step].prevStep); }} className={styles.footerBackBtn} shape="round">
                 Back
@@ -116,7 +143,7 @@ function SubmissionForm({
             disabled={!isNextEnabled}
             loading={loading}
           >
-            {(stepData[step].nextStep && !inputPrevSubmission) ? 'Next Step' : `${isContract ? 'Send Contract' : `${inputPrevSubmission ? 'Input Previous' : 'Submit'}`}`}
+            {ctaText}
           </Button>
         </Flex>
 )}
@@ -150,7 +177,6 @@ function SubmissionForm({
           handleShowText={setShowText}
           text={textNote}
           handleTextChange={setTextNote}
-          isContract={isContract}
         />
       ) : null}
     </Modal>

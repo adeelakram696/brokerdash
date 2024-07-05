@@ -7,6 +7,8 @@ import { useContext, useEffect, useState } from 'react';
 import { updateClientInformation } from 'app/apis/mutation';
 import { LeadContext } from 'utils/contexts';
 import { fetchUser, fetchUsers } from 'app/apis/query';
+import { getColumnValue } from 'utils/helpers';
+import SharePerson from './SharePerson';
 
 function SalePersonSelect() {
   const {
@@ -22,7 +24,10 @@ function SalePersonSelect() {
   const handleUpdateAssignee = async () => {
     const id = selectedUser;
     setLoading(true);
-    const dataJson = { [columnIds[board].assginee]: { personsAndTeams: [{ id, kind: 'person' }] } };
+    let persons = getColumnValue(details.column_values, columnIds[board].assginee);
+    if (!persons.personsAndTeams) persons = { personsAndTeams: [{ id, kind: 'person' }] };
+    else persons.personsAndTeams[0] = { id, kind: 'person' };
+    const dataJson = { [columnIds[board].assginee]: { personsAndTeams: persons.personsAndTeams } };
     await updateClientInformation(leadId, details.board.id, dataJson);
     setLoading(false);
     hideModal();
@@ -40,9 +45,9 @@ function SalePersonSelect() {
     setSelectedUser(key);
   };
   useEffect(() => {
-    if (isAdmin) getUsersList();
+    getUsersList();
   }, []);
-
+  const assingee = details[columnIds[board].assginee];
   return (
     <Flex>
       Assigned To
@@ -56,7 +61,7 @@ function SalePersonSelect() {
         trigger={['click']}
         disabled={!isAdmin}
       >
-        <b style={{ marginLeft: 5, cursor: 'pointer' }}>{(board === 'deals' ? details[columnIds.deals.agent] : details[columnIds.leads.sales_rep]) || '-- Select --'}</b>
+        <b style={{ marginLeft: 5, cursor: 'pointer' }}>{((assingee) || '-- Select --').split(',')[0]}</b>
       </Dropdown>
       <Modal
         title="Update Assginee"
@@ -71,6 +76,9 @@ function SalePersonSelect() {
           Are you sure to update this assginee?
         </p>
       </Modal>
+      <Flex>
+        <SharePerson usersList={usersList} />
+      </Flex>
     </Flex>
   );
 }

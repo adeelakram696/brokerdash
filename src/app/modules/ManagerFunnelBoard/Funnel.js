@@ -83,7 +83,7 @@ function FunnelChart({
     ]);
   }, [data]);
   useEffect(() => {
-    if (selectedStageData?.number === data.new?.length) return;
+    if (selectedStageData?.number === data.new?.length || data.isIntervalFetch) return;
     setSelectedStageData({ stage: 'New Leads', number: data.new?.length, data: data.new });
   }, [data]);
   const config = {

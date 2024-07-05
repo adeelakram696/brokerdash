@@ -57,7 +57,7 @@ function TeamLeaderBoard() {
     const res = await getDealFunds(employeeRef.current);
     const formatted = Object.entries(res).reduce((prev, curr) => {
       const obj = prev;
-      obj[curr[0]] = { ...obj[curr[0]], totalfunds: curr[1] };
+      obj[curr[0]] = { ...obj[curr[0]], ...curr[1] };
       return obj;
     }, saleActivities);
     setSalesActivities(formatted);

@@ -1,0 +1,83 @@
+.dataTable {
+  width: 100%;
+  padding: 10px;
+}
+.itemRow {
+  color: white;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+  font-size: 16px;
+  padding: 10px 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.351);
+  }
+}
+.list {
+  padding: 0px 10px;
+  overflow-y: auto;
+  max-height: 91vh;
+}
+.agentName {
+  color:rgb(110, 247, 135);
+}
+.header {
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+.headerItem {
+  cursor: pointer;
+}
+.sortingIcon {
+  color: rgb(251, 255, 0);
+  font-size: 18px;
+}
+.heading {
+  font-size: 25px;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+}
+.headingCount {
+  font-size: 25px;
+  color: white;
+  padding: 10px 0;
+}
+.headingduration {
+  font-size: 25px;
+  color: white;
+  padding: 10px 0;
+}
+.dataCard {
+  width: 350px;
+  height: 200px;
+  margin: 10px;
+  background-color: rgba(175, 172, 172, 0.162);
+  cursor: pointer;
+  border-color: rgba(255, 255, 255, 0.281);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.344);
+  }
+}
+.contentContainer {
+  height: 165px;
+}
+.name {
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+}
+.fundingAmt {
+  font-size: 22px;
+  color: white;
+  font-weight: bold;
+}
+.date {
+  font-size: 13px;
+  color: white;
+}
+.stage {
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+}

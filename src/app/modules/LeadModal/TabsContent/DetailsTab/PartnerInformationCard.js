@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { boardNames, columnIds, env } from 'utils/constants';
 import InputField from 'app/components/Forms/InputField';
 import { createClientInformation, updateClientInformation } from 'app/apis/mutation';
-import { fetchUser } from 'app/apis/query';
 import { maskNumber } from 'utils/helpers';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
@@ -18,20 +17,20 @@ function PartnerInformationCard({
 }) {
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const user = fetchUser();
+  const [showMasked, setShowMasked] = useState(false);
   const [form] = Form.useForm();
   const data = board === boardNames.clients ? details.partner : details;
-  const dialNumber = () => {
-    const number = data[columnIds[board].phone];
-    window.open(`tel:${number}`);
-  };
-  const emailUser = () => {
-    const email = data[columnIds[board].email];
-    window.open(`mailto:${email}`);
-  };
   const getFieldName = (name) => {
     if (board === boardNames.clients) return name;
     return `partner_${name}`;
+  };
+  const dialNumber = () => {
+    const number = data[columnIds[board][getFieldName('phone')]];
+    window.open(`tel:${number}`);
+  };
+  const emailUser = () => {
+    const email = data[columnIds[board][getFieldName('email')]];
+    window.open(`mailto:${email}`);
   };
   const setFieldsValues = () => {
     form.setFieldsValue({
@@ -289,22 +288,17 @@ function PartnerInformationCard({
               <Flex vertical flex={1}>
                 <Flex>
                   <Flex className={styles.label}>Social Security</Flex>
-                  <Flex className={styles.value}>
-                    {user.is_admin
+                  <Flex className={styles.value} onClick={() => { setShowMasked(!showMasked); }}>
+                    {isEdit
                       ? (
-                        <>
-                          {isEdit
-                            ? (
-                              <Form.Item
-                                noStyle
-                                name={columnIds[board][getFieldName('social_security')]}
-                              >
-                                <InputField />
-                              </Form.Item>
-                            )
-                            : data[columnIds[board][getFieldName('social_security')]] || '-'}
-                        </>
-                      ) : maskNumber(data[columnIds[board][getFieldName('social_security')]]) || '-'}
+                        <Form.Item
+                          noStyle
+                          name={columnIds[board][getFieldName('social_security')]}
+                        >
+                          <InputField />
+                        </Form.Item>
+                      )
+                      : maskNumber(data[columnIds[board][getFieldName('social_security')]], showMasked) || '-'}
                   </Flex>
                 </Flex>
                 <Flex>

@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { boardNames, columnIds } from 'utils/constants';
 import InputField from 'app/components/Forms/InputField';
 import { updateClientInformation } from 'app/apis/mutation';
-import { fetchUser } from 'app/apis/query';
 import { maskNumber } from 'utils/helpers';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
@@ -20,8 +19,8 @@ function InformationCard({
   const [isIntakeModalOpen, setIsIntakeModalOpen] = useState();
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [showMasked, setShowMasked] = useState(false);
   const [form] = Form.useForm();
-  const user = fetchUser();
   const data = board === boardNames.clients ? details.client : details;
   const handleIntakeClick = () => {
     setIsIntakeModalOpen(true);
@@ -288,22 +287,17 @@ function InformationCard({
               <Flex vertical flex={1}>
                 <Flex>
                   <Flex className={styles.label}>Social Security</Flex>
-                  <Flex className={styles.value}>
-                    {user.is_admin
+                  <Flex className={styles.value} onClick={() => { setShowMasked(!showMasked); }}>
+                    {isEdit
                       ? (
-                        <>
-                          {isEdit
-                            ? (
-                              <Form.Item
-                                noStyle
-                                name={columnIds[board].social_security}
-                              >
-                                <InputField />
-                              </Form.Item>
-                            )
-                            : data[columnIds[board].social_security] || '-'}
-                        </>
-                      ) : maskNumber(data[columnIds[board].social_security]) || '-'}
+                        <Form.Item
+                          noStyle
+                          name={columnIds[board].social_security}
+                        >
+                          <InputField />
+                        </Form.Item>
+                      )
+                      : maskNumber(data[columnIds[board].social_security], showMasked) || '-'}
                   </Flex>
                 </Flex>
                 <Flex>

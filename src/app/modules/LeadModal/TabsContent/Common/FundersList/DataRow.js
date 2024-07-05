@@ -2,15 +2,15 @@ import {
   Flex,
   Modal,
   Spin,
+  Tooltip,
 } from 'antd';
-import {
-  PencilIcon,
-} from 'app/images/icons';
 import { useContext, useState } from 'react';
 import FunderSubmissionForm from 'app/modules/LeadModal/FunderSubmissionForm';
 import { columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
 import { LeadContext } from 'utils/contexts';
+import { EditOutlined, RedoOutlined } from '@ant-design/icons';
+import SubmissionForm from 'app/modules/LeadModal/SubmissionForm';
 import styles from './FundersList.module.scss';
 import { columns } from './data';
 
@@ -21,6 +21,7 @@ function DataRow({
     getData,
   } = useContext(LeadContext);
   const [showLoading, setLoading] = useState(false);
+  const [resubmitedFunder, setResubmitFunder] = useState(null);
   const [showFunderForm, setShowFunderForm] = useState();
   const [confirmation, setConfirmation] = useState(false);
   const [statusVal, setStatusValue] = useState();
@@ -77,8 +78,21 @@ function DataRow({
         <Flex
           style={{ cursor: 'pointer' }}
           onClick={() => { setShowFunderForm(true); }}
+          align="baseline"
         >
-          <PencilIcon />
+          <Tooltip title="Edit">
+            <EditOutlined />
+          </Tooltip>
+        </Flex>
+        <Flex
+          className={styles.resubmitBtn}
+          style={{ cursor: 'pointer' }}
+          onClick={() => { setResubmitFunder(data.id); }}
+          align="baseline"
+        >
+          <Tooltip title="Resubmit">
+            <RedoOutlined style={{ fontSize: 22 }} rotate={87} />
+          </Tooltip>
         </Flex>
       </Flex>
       <FunderSubmissionForm
@@ -103,6 +117,12 @@ function DataRow({
           <b style={{ margin: '0 5px' }}>{statusVal}</b>
         </p>
       </Modal>
+      <SubmissionForm
+        show={resubmitedFunder}
+        handleClose={() => { setResubmitFunder(null); }}
+        type="renew"
+        resubmiteId={resubmitedFunder}
+      />
     </Flex>
   );
 }

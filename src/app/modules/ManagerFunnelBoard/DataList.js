@@ -1,19 +1,24 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-unused-vars */
 import {
   Flex,
   Tabs,
 } from 'antd';
-import { useEffect, useState } from 'react';
-import { columnIds, env } from 'utils/constants';
+import { useState } from 'react';
+import { boardNames, columnIds } from 'utils/constants';
 import classNames from 'classnames';
 import styles from './ManagerFunnelBoard.module.scss';
+import LeadModal from '../LeadModal';
 
 function DataList({ data }) {
   const [currentTab, setCurrentTab] = useState('details');
-  const handleClick = (item) => {
-    const url = `${env.boardBaseURL}${item.isDeal ? env.boards.deals : env.boards.leads}/pulses/${item.id}`;
-    window.open(url, '_blank');
+  const [isModalOpen, setIsModalOpen] = useState();
+  const [selectedLead, setSelectedLead] = useState();
+  const handleRowClick = (item) => {
+    setSelectedLead(item);
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setSelectedLead('');
+    setIsModalOpen(false);
   };
   const items = [
     {
@@ -23,7 +28,7 @@ function DataList({ data }) {
         <Flex vertical className={styles.list} flex={1}>
           <Flex vertical>
             {data?.data?.map((d) => (
-              <Flex justify="space-between" className={styles.itemRow} onClick={() => { handleClick(d); }}>
+              <Flex justify="space-between" className={styles.itemRow} onClick={() => { handleRowClick(d); }}>
                 <Flex flex={0.4}>{d.name}</Flex>
                 <Flex
                   flex={0.3}
@@ -48,7 +53,7 @@ function DataList({ data }) {
         <Flex vertical className={styles.list} flex={1}>
           <Flex vertical>
             {data?.excludedData?.map((d) => (
-              <Flex justify="space-between" className={styles.itemRow} onClick={() => { handleClick(d); }}>
+              <Flex justify="space-between" className={styles.itemRow} onClick={() => { handleRowClick(d); }}>
                 <Flex flex={0.4}>{d.name}</Flex>
                 <Flex
                   flex={0.3}
@@ -77,7 +82,14 @@ function DataList({ data }) {
         items={items}
         onChange={setCurrentTab}
       />
-
+      {isModalOpen ? (
+        <LeadModal
+          show={isModalOpen}
+          handleClose={handleClose}
+          leadId={selectedLead?.id}
+          board={selectedLead?.isDeal ? boardNames.deals : boardNames.lead}
+        />
+      ) : null}
     </Flex>
   );
 }

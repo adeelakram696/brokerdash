@@ -745,6 +745,21 @@ export const fetchBoardColorColumnStrings = async (boardId, columnId) => {
   const column = JSON.parse(res.data.boards[0].columns[0].settings_str);
   return column.labels;
 };
+export const fetchBoardColorColumnStringsWithColors = async (boardId, columnId) => {
+  const query = `query {
+    boards(ids: [${boardId}]) {
+      columns(ids: ["${columnId}"]) {
+        settings_str
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  const column = JSON.parse(res.data.boards[0].columns[0].settings_str);
+  const withColor = Object.entries(column.labels).map(
+    ([key, title]) => ({ label: title, color: column.labels_colors[key].color }),
+  );
+  return withColor;
+};
 export const fetchBoardDropDownColumnStrings = async (boardId, columnId) => {
   const query = `query {
     boards(ids: [${boardId}]) {
@@ -963,7 +978,7 @@ export const fetchTeamGoals = async () => {
 
 export const fetchUTeamSaleActivities = async (cursor, duration, actionIds, empIds) => {
   const query = `query {
-    boards(ids: [${env.boards.salesActivities}]) {
+    saleActivities: boards(ids: [${env.boards.salesActivities}]) {
       items_page(
       ${!cursor ? `query_params: {
         rules: [
@@ -998,13 +1013,13 @@ export const getTeamTotalActivities = async (duration, actionIds, employees) => 
   do {
     // eslint-disable-next-line no-await-in-loop
     res = await fetchUTeamSaleActivities(
-      res ? res.data.boards[0].items_page.cursor : null,
+      res ? res.data.saleActivities[0].items_page.cursor : null,
       duration,
       actionIds,
       empIds,
     );
-    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
-  } while (res.data.boards[0].items_page.cursor);
+    itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
+  } while (res.data.saleActivities[0].items_page.cursor);
   const activities = itemsList.reduce((prev, curr) => {
     const type = curr?.column_values?.find((col) => col.id === 'status');
     const owner = getColumnValue(curr.column_values || [], 'person');
@@ -1029,7 +1044,7 @@ export const getTeamTotalActivities = async (duration, actionIds, employees) => 
 export const fetchDealFunds = async (cursor, employees) => {
   const empIds = employees.map((emp) => (`"person-${emp.id}"`));
   const query = `query {
-    boards(ids: [${env.boards.deals}]) {
+    totalFunds: boards(ids: [${env.boards.deals}]) {
       items_page(
       ${!cursor ? `query_params: {
         rules: [
@@ -1072,24 +1087,34 @@ export const getDealFunds = async (employees) => {
   do {
     // eslint-disable-next-line no-await-in-loop
     res = await fetchDealFunds(
-      res ? res.data.boards[0].items_page.cursor : null,
+      res ? res.data.totalFunds[0].items_page.cursor : null,
       employees,
     );
-    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
-  } while (res.data.boards[0].items_page.cursor);
+    itemsList = [...itemsList, ...res.data.totalFunds[0].items_page.items];
+  } while (res.data.totalFunds[0].items_page.cursor);
   const funds = itemsList.reduce((prev, curr) => {
+    const obj = prev;
     const selected = curr.subitems.find(
       (item) => item.column_values.find(
         (col) => (col.id === columnIds.subItem.status && col.text === 'Selected'),
       ),
     );
-    if (!selected) return prev;
-    const personId = (JSON.parse(curr.column_values[0].value) || {}).personsAndTeams[0].id;
-    const obj = prev;
-    if (obj[personId]) {
-      obj[personId] += convertToNumber(selected.column_values[1].text);
+    if (!selected) return obj;
+    const owner = getColumnValue(curr.column_values || [], columnIds.deals.assginee);
+    if (_.isEmpty(owner)) return obj;
+    const person = employees.find(
+      (emp) => owner.personsAndTeams.find((o) => o.id.toString() === emp.id),
+    );
+    const actionType = 'totalfunds';
+    if (!obj[person.id]) {
+      obj[person.id] = { [actionType]: convertToNumber(selected.column_values[1].text), person };
+    } else if (!obj[person.id][actionType]) {
+      obj[person.id] = {
+        ...obj[person.id],
+        [actionType]: convertToNumber(selected.column_values[1].text),
+      };
     } else {
-      obj[personId] = convertToNumber(selected.column_values[1].text);
+      obj[person.id][actionType] += convertToNumber(selected.column_values[1].text);
     }
     return obj;
   }, {});
@@ -1204,6 +1229,84 @@ export const getThisWeekLeadsDeals = async (dates, user) => {
       ...item,
       ..._.omit(columns, 'subitems'),
       isDeal: _.has(item, 'subitems'),
+    };
+  });
+  return data;
+};
+
+/* ---- Approvals Board Funnel --------- */
+
+export const fetchApprovals = async (cursor, dates) => {
+  const query = `query {
+    boards(ids: [${env.boards.submissions}]) {
+      items_page(
+      ${!cursor ? `query_params: {
+        rules: [
+          { column_id: "__last_updated__", compare_value: [${dates}], operator: between, compare_attribute:"UPDATED_AT"}
+          {column_id: "status" compare_value:[1] operator:any_of}
+       ]
+       }` : ''}
+        limit: 500
+        ${cursor ? `cursor: "${cursor}"` : ''}
+      ) {
+        cursor
+        items {
+          id
+          name
+          updated_at
+          parent_item {
+            id
+            name
+            column_values(ids: ["${columnIds.deals.agent}", "${columnIds.deals.stage}", "${columnIds.deals.last_touched}"]){
+              id
+              text
+              value
+            }
+          }
+          column_values{
+            id
+            text
+            value
+          }
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  return res;
+};
+
+export const getAllApprovals = async () => {
+  const dateArray = [`"${dayjs().subtract(30, 'days').format('YYYY-MM-DD')}"`, `"${dayjs().format('YYYY-MM-DD')}"`];
+  let res = null;
+  let itemsList = [];
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchApprovals(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dateArray,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  const reduced = itemsList.reduce((prev, curr) => {
+    const isFunded = curr.parent_item.column_values.find((c) => c.id === columnIds.deals.stage && (
+      c.text === 'Funded'
+    || c.text === 'DQ'
+    || c.text === 'Lost Deals'
+    ));
+    if (isFunded) return prev;
+    const obj = prev;
+    const item = { ...curr.parent_item, subitems: [_.omit(curr, 'parent_item')] };
+    if (obj[item.id]) {
+      obj[item.id] = { ...item, subitems: [...obj[item.id].subitems, ...item.subitems] };
+    } else obj[item.id] = item;
+    return obj;
+  }, {});
+  const data = Object.values(reduced).map((item) => {
+    const columns = normalizeColumnValues(item.column_values);
+    return {
+      ...item,
+      ...columns,
     };
   });
   return data;

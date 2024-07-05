@@ -22,6 +22,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 import './App.scss';
 import TeamLeaderBoard from 'app/pages/TeamLeaderBoard';
 import ManagerFunnelBoard from 'app/pages/ManagerFunnelBoard';
+import ApprovalsBoard from 'app/pages/ApprovalsBoard';
 
 const Dashboard = lazy(() => import('./app/pages/dashboard'));
 const LeadView = lazy(() => import('app/pages/LeadView'));
@@ -94,6 +95,16 @@ function App() {
           <Route exact path="/funnel-board">
             <Suspense fallback={<div>Loading...</div>}>
               <ManagerFunnelBoard />
+            </Suspense>
+          </Route>
+          <Route exact path="/user-funnel-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <ManagerFunnelBoard isUser />
+            </Suspense>
+          </Route>
+          <Route exact path="/approvals-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <ApprovalsBoard />
             </Suspense>
           </Route>
         </Switch>

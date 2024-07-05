@@ -137,12 +137,12 @@ export const sendSubmission = async (leadId, boardId, data, emailOfferBtnId) => 
   await monday.api(sendMutation);
 };
 
-export const sendNotification = async () => {
+export const sendNotification = async (to, text, updateId) => {
   const mutation = `mutation {
     create_notification(
-      user_id: 61325759
-      text: "testing notification"
-      target_id: 52149352
+      user_id: ${to}
+      text: "${text}"
+      target_id: ${updateId}
       target_type: Post
     ) {
       id

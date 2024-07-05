@@ -71,6 +71,7 @@ body {
 .leadModal {
   & .ant-modal-content {
     padding: 16px;
+    min-height: 500px;
   }
 }
 .selectField {

@@ -1,15 +1,14 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-unused-vars */
 import {
   DatePicker,
   Flex,
   Spin,
 } from 'antd';
-import { useEffect, useState } from 'react';
-import { fetchUsers, getThisWeekLeadsDeals } from 'app/apis/query';
+import { useEffect, useRef, useState } from 'react';
+import { fetchUser, fetchUsers, getThisWeekLeadsDeals } from 'app/apis/query';
 import dayjs from 'dayjs';
 import SelectField from 'app/components/Forms/SelectField';
 import classNames from 'classnames';
+import { env } from 'utils/constants';
 import styles from './ManagerFunnelBoard.module.scss';
 import FunnelChart from './Funnel';
 import { transformToFunnel } from './transformData';
@@ -18,29 +17,36 @@ import { durations, durationsDates } from './data';
 
 const { RangePicker } = DatePicker;
 
-function ManagerFunnelBoardModule() {
+function ManagerFunnelBoardModule({ isUser }) {
   const [data, setData] = useState([]);
+  const me = fetchUser();
+  const dateR = useRef();
+  const selectedUserRef = useRef();
   const [selectedStageData, setSelectedStageData] = useState({});
   const [usersList, setUsersList] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(isUser ? me.id : null);
   const [dateRange, setDateRange] = useState(durationsDates.thisWeek);
   const [duration, setDuration] = useState(['thisWeek']);
   const [loading, setLoading] = useState(false);
-  const fetchData = async (dates, user) => {
-    setLoading(true);
+  const fetchData = async (dates, user, showLoading = true) => {
+    setLoading(true && showLoading);
     const res = await getThisWeekLeadsDeals(dates, user);
-    const transformed = transformToFunnel(res, dates);
+    const transformed = transformToFunnel(res, dates, !showLoading);
     setLoading(false);
     setData(transformed);
   };
   useEffect(() => {
+    selectedUserRef.current = isUser ? me.id : selectedUser;
+    dateR.current = dateRange;
     fetchData(dateRange, selectedUser);
   }, [dateRange, selectedUser]);
   const handleChangeDates = (val) => {
+    dateR.current = val;
     setDateRange(val);
   };
   const handleRangeDates = (val) => {
     setDateRange(durationsDates[val]);
+    dateR.current = durationsDates[val];
     setDuration(val);
   };
   const getUsersList = async () => {
@@ -52,23 +58,36 @@ function ManagerFunnelBoardModule() {
     setUsersList(list);
   };
   useEffect(() => {
-    getUsersList();
+    selectedUserRef.current = isUser ? me.id : null;
+    dateR.current = durationsDates.thisWeek;
+    if (!isUser) getUsersList();
+  }, []);
+  useEffect(() => {
+    const intervalId = setInterval(
+      () => { fetchData(dateR.current, selectedUserRef.current, false); }
+      , (1000 * env.intervalTime),
+    );
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
   return (
     <Flex flex={1}>
       <Spin tip="Fetching Data..." spinning={loading} fullscreen />
       <Flex flex={0.3} className={styles.leftCol} vertical>
         <Flex justify="flex-end">
-          <Flex className={styles.filterField}>
-            <SelectField
-              classnames={classNames(styles.durations, 'funnelFilterField')}
-              options={usersList}
-              onChange={setSelectedUser}
-              placeholder="Users"
-              value={selectedUser}
-              allowClear
-            />
-          </Flex>
+          {!isUser ? (
+            <Flex className={styles.filterField}>
+              <SelectField
+                classnames={classNames(styles.durations, 'funnelFilterField')}
+                options={usersList}
+                onChange={setSelectedUser}
+                placeholder="Users"
+                value={selectedUser}
+                allowClear
+              />
+            </Flex>
+          ) : null}
           <Flex className={styles.filterField}>
             <SelectField
               classnames={classNames(styles.durations, 'funnelFilterField')}

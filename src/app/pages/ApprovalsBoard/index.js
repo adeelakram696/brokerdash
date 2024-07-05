@@ -1,7 +1,7 @@
 import { ConfigProvider, Layout } from 'antd';
-import ManagerFunnelBoardModule from 'app/modules/ManagerFunnelBoard';
+import ApprovalsBoardModule from 'app/modules/ApprovalsBoard';
 
-function ManagerFunnelBoard({ isUser }) {
+function ApprovalsBoard() {
   return (
     <ConfigProvider
       theme={{
@@ -18,13 +18,13 @@ function ManagerFunnelBoard({ isUser }) {
     >
       <Layout
         style={{
-          minHeight: '98vh',
+          minHeight: '100vh',
         }}
       >
-        <ManagerFunnelBoardModule isUser={isUser} />
+        <ApprovalsBoardModule />
       </Layout>
     </ConfigProvider>
   );
 }
 
-export default ManagerFunnelBoard;
+export default ApprovalsBoard;

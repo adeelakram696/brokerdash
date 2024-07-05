@@ -222,7 +222,8 @@ export function getTotalSum(obj, status) {
   }, 0);
 }
 
-export function maskNumber(input) {
+export function maskNumber(input, showMask) {
+  if (showMask) return input;
   // Remove all non-digit characters
   const digits = input.replace(/\D/g, '');
   const { length } = digits;
@@ -266,4 +267,39 @@ export function verifyDateFormat(dateString) {
 
   // Return the format if found, otherwise null
   return matchingFormat ? matchingFormat.format : null;
+}
+export const sortData = (data, columnName, columnType, order) => data.sort((a, b) => {
+  const valueA = a[columnName];
+  const valueB = b[columnName];
+  let comparison = 0;
+
+  switch (columnType) {
+    case 'string':
+      comparison = valueA.localeCompare(valueB);
+      break;
+
+    case 'number':
+      comparison = valueA - valueB;
+      break;
+
+    case 'date':
+      // eslint-disable-next-line no-case-declarations
+      const dateA = new Date(valueA.split('/').reverse().join('-'));
+      // eslint-disable-next-line no-case-declarations
+      const dateB = new Date(valueB.split('/').reverse().join('-'));
+      comparison = dateA - dateB;
+      break;
+
+    default:
+      throw new Error('Unsupported column type');
+  }
+
+  return order ? comparison : -comparison;
+});
+
+export function cutStringAfterLimit(text, limit) {
+  if (text.length > limit) {
+    return text.substring(0, limit);
+  }
+  return text;
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   Modal, Flex, Spin, message,
+  Skeleton,
 } from 'antd';
 import {
   fetchBoardColorColumnStrings,
@@ -221,7 +222,7 @@ function LeadModal({
                   <ActivityLog />
                 </Flex>
               </>
-            ) : null}
+            ) : <Skeleton title />}
           </Flex>
 
         </Spin>
