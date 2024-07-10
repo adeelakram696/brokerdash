@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/brokerdash/static/css/main.ae9afb06.css",
-    "main.js": "/brokerdash/static/js/main.b378cc10.js",
+    "main.css": "/brokerdash/static/css/main.757460b2.css",
+    "main.js": "/brokerdash/static/js/main.8a64ab1b.js",
     "static/css/236.8b8a8734.chunk.css": "/brokerdash/static/css/236.8b8a8734.chunk.css",
     "static/js/236.2197c0f8.chunk.js": "/brokerdash/static/js/236.2197c0f8.chunk.js",
     "static/js/328.3a4a8106.chunk.js": "/brokerdash/static/js/328.3a4a8106.chunk.js",
@@ -16,7 +16,7 @@
     "index.html": "/brokerdash/index.html"
   },
   "entrypoints": [
-    "static/css/main.ae9afb06.css",
-    "static/js/main.b378cc10.js"
+    "static/css/main.757460b2.css",
+    "static/js/main.8a64ab1b.js"
   ]
 }
