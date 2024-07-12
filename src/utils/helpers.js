@@ -223,9 +223,9 @@ export function getTotalSum(obj, status) {
 }
 
 export function maskNumber(input, showMask) {
-  if (showMask) return input;
+  if (showMask || !input) return input;
   // Remove all non-digit characters
-  const digits = input.replace(/\D/g, '');
+  const digits = input?.replace(/\D/g, '');
   const { length } = digits;
 
   if (length <= 4) {

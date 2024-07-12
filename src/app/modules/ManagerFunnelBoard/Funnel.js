@@ -23,7 +23,12 @@ function FunnelChart({
   const [funnelData, setFunnelData] = useState(intialData);
   useEffect(() => {
     setFunnelData([
-      { stage: 'New Leads', number: data.new?.length, data: data.new },
+      {
+        stage: 'New Leads',
+        number: data.new?.length,
+        data: data.new,
+        dq: data.disqualified,
+      },
       {
         stage: 'New Leads Spoken To',
         number: data.newLeadsSpokenTo?.length,
@@ -97,7 +102,13 @@ function FunnelChart({
     },
     label: [
       {
-        text: (d) => `${d.stage}\n${d.number}(${((d.number / data.new?.length) * 100).toFixed(2)}%)`,
+        text: (d) => {
+          const percentage = ((d.number / data.new?.length) * 100).toFixed(2);
+          const dq = percentage === '100.00' ? data.disqualified?.length : 0;
+          const title = d.stage;
+          const total = d.number;
+          return `${title}\n${total - dq}${dq ? `(${total} Total, ${dq} DQ)` : ''}(${percentage}%)`;
+        },
         position: 'inside',
         fill: 'white',
         stroke: 'white',

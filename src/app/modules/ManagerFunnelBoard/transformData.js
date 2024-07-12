@@ -49,6 +49,7 @@ export const transformToFunnel = (data, dates, isIntervalFetch) => {
   });
   const funded = contractsSigned.filter((d) => d.isDeal && d[columnIds.deals.stage] === 'Funded');
   const notFunded = contractsSigned.filter((d) => d.isDeal && d[columnIds.deals.stage] !== 'Funded');
+  const disqualified = data.filter((d) => d.group.title === 'DQ' || d.group.title === 'Disqualified');
   return {
     new: data,
     newLeadsSpokenTo,
@@ -69,5 +70,6 @@ export const transformToFunnel = (data, dates, isIntervalFetch) => {
     funded,
     notFunded,
     isIntervalFetch,
+    disqualified,
   };
 };

@@ -198,6 +198,11 @@ body {
       background: #B0B0B0 !important;
     }
   }
+  &.Waiting_for_Admin_to_Submit {
+    & .ant-select-selector {
+      background: #79affd !important;
+    }
+  }
 }
 .App {
   height: 100vh;

@@ -14,6 +14,7 @@ export const statuses = {
   killedAtFundingCall: 'Killed at Funding call',
   declined: 'Declined',
   new: 'New',
+  waitingForAdmin: 'Waiting for Admin to Submit',
 };
 export const statusValues = [
   { value: statuses.submitted, label: statuses.submitted },
@@ -23,6 +24,7 @@ export const statusValues = [
   { value: statuses.killedAtFundingCall, label: statuses.killedAtFundingCall },
   { value: statuses.declined, label: statuses.declined },
   { value: statuses.new, label: statuses.new },
+  { value: statuses.waitingForAdmin, label: statuses.waitingForAdmin },
 ];
 
 export const productTypes = [
