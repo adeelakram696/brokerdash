@@ -303,3 +303,22 @@ export function cutStringAfterLimit(text, limit) {
   }
   return text;
 }
+
+export function formatDate(date, format) {
+  const formattedDate = dayjs(date, ['YYYY-MM-DD', 'YYYY/MM/DD', 'DD-MM-YYYY', 'MM/DD/YYYY', 'MM-DD-YYYY', 'MM/DD/YYYY', 'M-D-YYYY', 'M/D/YYYY', 'M-D-YY', 'M/D/YY'], true);
+  return formattedDate.isValid() ? formattedDate.format(format) : '';
+}
+
+export function cleanStrToNum(phoneNumber) {
+  // Remove any non-digit characters using regex
+  const cleanedNumber = phoneNumber?.replace(/\D/g, '');
+  return cleanedNumber;
+}
+export function cleanPhoneNumber(phoneNumber) {
+  // Check if the phone number starts with '+1' and remove it
+  if (phoneNumber.startsWith('+1')) {
+    // eslint-disable-next-line no-param-reassign
+    phoneNumber = phoneNumber.substring(2);
+  }
+  return cleanStrToNum(phoneNumber);
+}

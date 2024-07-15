@@ -122,6 +122,7 @@ function DataRow({
         handleClose={() => { setResubmitFunder(null); }}
         type="renew"
         resubmiteId={resubmitedFunder}
+        funderName={data.name}
       />
     </Flex>
   );

@@ -9,6 +9,8 @@ import { columnIds, env } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import { sendSubmission } from 'app/apis/mutation';
 import { getColumnValue } from 'utils/helpers';
+import { validateSubmission } from 'utils/validateSubmission';
+import { resendSubmissionApplication } from 'app/apis/reSubmitSubmission';
 import styles from './SubmissionForm.module.scss';
 import {
   qualifications, stepData, steps,
@@ -17,9 +19,11 @@ import SelectFunders from './SelectFundersForm';
 import SelectDocuments from './SelectDocuments';
 import QualificationCheck from './QualificationCheck';
 import { statuses } from '../TabsContent/Common/FundersList/data';
+import { SubmissionErrors } from './SubmissionErrors';
 
 function SubmissionForm({
   show, handleClose, type = 'funder', inputPrevSubmission, resubmiteId,
+  funderName,
 }) {
   const {
     leadId, boardId, board, details, getData,
@@ -30,6 +34,8 @@ function SubmissionForm({
   const [submittedFunders, setSubmittedFunders] = useState([]);
   const [selectedFunders, setSelectedFunders] = useState([]);
   const [selectedDocs, setSelectedDoucments] = useState([]);
+  const [submissionErrors, setSubmissionErrors] = useState([]);
+  const [showErrors, setShowErrors] = useState(false);
   const [showText, setShowText] = useState(false);
   const [textNote, setTextNote] = useState('');
   const [step, setStep] = useState((isContract || isResubmit) ? steps.documents
@@ -62,6 +68,20 @@ function SubmissionForm({
     setStep(nextStep);
   };
   const handleSubmit = async () => {
+    if (!isContract) {
+      const validation = await validateSubmission(
+        selectedFunders,
+        submittedFunders,
+        details,
+        isResubmit,
+      );
+      if (validation.length > 0) {
+        setSubmissionErrors(validation);
+        setShowErrors(true);
+        return;
+      }
+    }
+    // eslint-disable-next-line no-unreachable
     const linkedPulseIds = selectedFunders.map((id) => ({ linkedPulseId: Number(id) }));
     const docs = selectedDocs.join(',');
     let cta = !inputPrevSubmission ? [columnIds[board].submit_offers] : null;
@@ -93,6 +113,10 @@ function SubmissionForm({
         resubmiteId,
         env.boards.submissions,
         { [columnIds.subItem.status]: statuses.new },
+      );
+      await resendSubmissionApplication(
+        resubmiteId,
+        funderName,
       );
     }
     getData();
@@ -179,6 +203,11 @@ function SubmissionForm({
           handleTextChange={setTextNote}
         />
       ) : null}
+      <SubmissionErrors
+        show={showErrors}
+        errors={submissionErrors}
+        handleClose={() => setShowErrors(false)}
+      />
     </Modal>
   );
 }

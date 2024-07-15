@@ -39,6 +39,7 @@ export const env = {
   leaderEmployeeItemId: process.env.REACT_APP_LEADERBOARD_EMPLOYEES_ITEM_ID,
   metricsGoalItemId: process.env.REACT_APP_METRICS_GOALS_ITEM_ID,
   teamLeaderBoardGoalItemId: process.env.REACT_APP_TEAM_LEADERBOARD_GOALS_ITEM_ID,
+  apiBaseURL: process.env.REACT_APP_API_BASE_URL,
 };
 
 export const boardNames = {
@@ -361,6 +362,8 @@ export const columnIds = {
     owner: 'person',
     dropbox_url: 'dropbox_url',
     renewal: 'color__1',
+    api_submission_response: 'long_text__1',
+    offers_response: 'long_text4__1',
   },
   coldProspecting: {
     name: 'name',
@@ -847,3 +850,32 @@ export const actionTypesList = [
   'Gross Commission',
   'Contract lost (signed w/competitor)',
 ];
+
+export const submissionFunders = {
+  onDeck: 'OnDeck',
+};
+
+export const allowedFunders = [
+  6976521906,
+  6948733727,
+];
+
+export const fundersServices = {
+  6976521906: submissionFunders.onDeck,
+  6948733727: submissionFunders.onDeck,
+  // 'OnDeck - MCA': submissionFunders.onDeck,
+  // 'OnDeck Canada (LOGIC)': submissionFunders.onDeck,
+};
+
+export const onDeckEntityMapping = {
+  'sole proprietorship': 'SP',
+  llc: 'LLC',
+  corporation: 'CORP',
+  corp: 'CORP',
+  gp: 'GP',
+  other: 'UNKNOWN',
+};
+
+export const dateFormat = {
+  YYYYMD: 'YYYY-M-D',
+};
