@@ -18,11 +18,15 @@ import { durations, durationsDates } from './data';
 const { RangePicker } = DatePicker;
 
 function ManagerFunnelBoardModule({ isUser }) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const me = fetchUser();
   const dateR = useRef();
   const selectedUserRef = useRef();
-  const [selectedStageData, setSelectedStageData] = useState({});
+  const [selectedStageData, setSelectedStageData] = useState({
+    stage: 'New Leads',
+    number: data.new?.length,
+    data: data?.new,
+  });
   const [usersList, setUsersList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(isUser ? me.id : null);
   const [dateRange, setDateRange] = useState(durationsDates.thisWeek);

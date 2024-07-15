@@ -27,7 +27,6 @@ function FunnelChart({
         stage: 'New Leads',
         number: data.new?.length,
         data: data.new,
-        dq: data.disqualified,
       },
       {
         stage: 'New Leads Spoken To',
@@ -88,9 +87,9 @@ function FunnelChart({
     ]);
   }, [data]);
   useEffect(() => {
-    if (selectedStageData?.number === data.new?.length || data.isIntervalFetch) return;
-    setSelectedStageData({ stage: 'New Leads', number: data.new?.length, data: data.new });
-  }, [data]);
+    const stageData = funnelData.find((funnel) => funnel.stage === selectedStageData.stage) || {};
+    setSelectedStageData(stageData);
+  }, [funnelData]);
   const config = {
     data: funnelData,
     xField: 'stage',
@@ -104,10 +103,11 @@ function FunnelChart({
       {
         text: (d) => {
           const percentage = ((d.number / data.new?.length) * 100).toFixed(2);
-          const dq = percentage === '100.00' ? data.disqualified?.length : 0;
+          const disqualified = d?.data?.filter((list) => list.group.title === 'DQ' || list.group.title === 'Disqualified');
+          const dqCount = disqualified?.length;
           const title = d.stage;
           const total = d.number;
-          return `${title}\n${total - dq}${dq ? `(${total} Total, ${dq} DQ)` : ''}(${percentage}%)`;
+          return `${title}\n${total - dqCount}${dqCount ? `(${total} Total, ${dqCount} DQ)` : ''}(${percentage}%)`;
         },
         position: 'inside',
         fill: 'white',

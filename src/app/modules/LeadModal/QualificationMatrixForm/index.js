@@ -12,6 +12,7 @@ import { boardNames, columnIds } from 'utils/constants';
 import { updateSimpleColumnValue } from 'app/apis/mutation';
 import { extractLeastNumber, verifyDateFormat } from 'utils/helpers';
 import SelectField from 'app/components/Forms/SelectField';
+import InputField from 'app/components/Forms/InputField';
 import styles from './QualificationMatrixForm.module.scss';
 import {
   activePositionKeys,
@@ -279,6 +280,17 @@ function QualificationMatrixForm({ show, handleClose }) {
           <Divider />
           <Flex flex={1} justify="center">
             <Flex vertical flex={0.5}>
+              <Flex flex={1} className={styles.inputRow} justify="space-between">
+                <Flex flex={0.6} className={styles.smallLabel} align="center">Min Daily Balance</Flex>
+                <Flex flex={0.4} className={styles.smallValue} style={{ marginRight: 10 }}>
+                  <Form.Item
+                    noStyle
+                    name="min_daily_balnc"
+                  >
+                    <InputField />
+                  </Form.Item>
+                </Flex>
+              </Flex>
               <Flex flex={1} className={styles.inputRow} justify="space-between">
                 <Flex flex={0.7} className={styles.smallLabel}>Min Monthly Deposit Count</Flex>
                 <Flex flex={0.3} className={styles.smallValue}>

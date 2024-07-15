@@ -22,12 +22,13 @@ export const fundersIntakeCalc = (values, funders) => {
       industryType: Number(!(funder.restrictedIndustries.indexOf(values.industry) >= 0)),
       state: Number(!funder.stateRestrictions.indexOf(values.state) >= 0),
       timeInBusiness: Number(funder.minimumTimeInBusinessMonths <= values.timeInBusiness),
+      minDailybalnce: Number(values.min_daily_balnc <= funder.minAvgDailyBalance),
       tier: funder.tier,
     };
     const trueCount = Object.values(funderCounts).filter((v) => v === 1).length;
     funderCounts.ranking = trueCount - Number(funder.tier === 1);
     return funderCounts;
-  }).filter((data) => data.ranking === 12);
+  }).filter((data) => data.ranking === 13);
 };
 
 export const transformFundersforQM = (funder, columns) => ({
@@ -49,7 +50,7 @@ export const transformFundersforQM = (funder, columns) => ({
   ],
   minimumMonthlyDepositcount: convertToNumber(columns[columnIds.funders.min_month_dep_count]),
   minimumTimeInBusinessMonths: convertToNumber(columns[columnIds.funders.min_time_in_bus_months]),
-  minAvgDailyBalance: columns[columnIds.funders.min_avg_daily_balance],
+  minAvgDailyBalance: convertToNumber(columns[columnIds.funders.min_avg_daily_balance]),
   minFundingAmount$: convertToNumber(columns[columnIds.funders.min_funding_amount]),
   maxFundingAmount$: convertToNumber(columns[columnIds.funders.max_funding_amount]),
   restrictedIndustries: columns[columnIds.funders.rest_industries]?.split(',') || [],

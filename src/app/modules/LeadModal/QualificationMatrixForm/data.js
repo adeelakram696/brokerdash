@@ -128,6 +128,7 @@ export const bankActivityKeys = [
   'depCnt-1',
   'depCnt-2',
   'depCnt-3',
+  'min_daily_balnc',
   'minMonthlyDepositCount',
   'monthCashFlow',
   'monthId-1',
