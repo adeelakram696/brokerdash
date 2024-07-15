@@ -526,6 +526,7 @@ export const fetchLeadClientDetails = async (leadId) => {
         column_values {
           id
           text
+          value
         }
       }
     }
