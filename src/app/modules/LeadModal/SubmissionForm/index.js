@@ -41,8 +41,11 @@ function SubmissionForm({
   const [step, setStep] = useState((isContract || isResubmit) ? steps.documents
     : (inputPrevSubmission ? steps.funders : steps.qualification));
   useEffect(() => {
-    const preSelected = getColumnValue(details?.column_values, columnIds.deals.funders_dropdown);
-    const ids = preSelected?.linkedPulseIds?.map((v) => v.linkedPulseId.toString());
+    const ids = details?.subitems?.map((item) => {
+      const preSelected = getColumnValue(item?.column_values, columnIds.subItem.funding_accounts);
+      const id = preSelected?.linkedPulseIds?.map((v) => v.linkedPulseId.toString());
+      return id[0];
+    });
     setSelectedFunders(ids || []);
     setSubmittedFunders(ids || []);
   }, []);
@@ -91,6 +94,9 @@ function SubmissionForm({
     };
     if (!inputPrevSubmission) {
       payload[columnIds[board].submit_offers_docs] = docs;
+    }
+    if (inputPrevSubmission) {
+      payload[columnIds[board].input_previous_submission] = 'Trigger';
     }
     if (isContract) {
       payload = {

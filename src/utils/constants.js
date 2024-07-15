@@ -189,6 +189,7 @@ export const columnIds = {
     dq_reason: 'dropdown4__1',
     lead_creation_date: 'date_17__1',
     lead_rotation_date: 'date_11__1',
+    input_previous_submission: 'status13__1',
   },
   leads: {
     name: 'name',
