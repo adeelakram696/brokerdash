@@ -17,7 +17,7 @@ function ApprovalsBoardModule() {
   const [sorting, setSorting] = useState({ maxApproved: false });
   const sortBy = (currentData, column, type) => {
     const sorted = sortData(currentData, column, type, sorting[column]);
-    setData(sorted);
+    setData([...sorted]);
     setSorting({ [column]: !sorting[column] });
   };
   const fetchData = async (isLoading = true) => {
