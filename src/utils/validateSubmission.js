@@ -4,8 +4,8 @@ import { transformDealDetails, transformIntoSubmission } from './funderSubmissio
 
 const OnDeckPayloadValidation = async (payload) => {
   try {
-    const validations = await onDeckSchema.validate(payload, { abortEarly: false });
-    return validations;
+    await onDeckSchema.validate(payload, { abortEarly: false });
+    return null;
   } catch (err) {
     let validationErrors = [];
     if (err.inner) {
@@ -42,5 +42,5 @@ export const validateSubmission = async (funders, alreadySubmitted, details, isR
       errors: validation,
     };
   }));
-  return fundersValidations;
+  return fundersValidations.filter((d) => d.errors);
 };

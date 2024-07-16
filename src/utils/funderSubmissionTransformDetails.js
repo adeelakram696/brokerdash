@@ -83,7 +83,7 @@ const OnDeckSubmissionPayload = (data) => {
       businessInceptionDate: formatDate(data.account.businessStartDate, dateFormat.YYYYMD) || '', // required
       industryNAICSCode: '',
       industrySICCode: '',
-      taxID: (data.account.taxID) || '', // required
+      taxID: cleanStrToNum(data.account.taxID) || '', // required
       doingBusinessAs: '',
       loanPurpose: data.moneyNeededFor || '',
       natureOfBusiness: data.account?.industry || '',

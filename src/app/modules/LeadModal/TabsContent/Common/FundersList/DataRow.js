@@ -11,6 +11,7 @@ import { updateClientInformation } from 'app/apis/mutation';
 import { LeadContext } from 'utils/contexts';
 import { EditOutlined, RedoOutlined } from '@ant-design/icons';
 import SubmissionForm from 'app/modules/LeadModal/SubmissionForm';
+// import { decodeJson } from 'utils/encrypt';
 import styles from './FundersList.module.scss';
 import { columns } from './data';
 
@@ -46,6 +47,8 @@ function DataRow({
   const hideModal = () => {
     setConfirmation(false);
   };
+  // const offer = data[columnIds.subItem.offers_response];
+  // console.log(offer ? decodeJson(offer) : '');
   return (
     <Flex flex={1}>
       <Flex vertical flex={0.97}>
