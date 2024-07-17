@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { DatePicker, Flex, Tooltip } from 'antd';
+import {
+  DatePicker, Flex, Switch, Tooltip,
+} from 'antd';
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { updateClientInformation, updateSimpleColumnValue } from 'app/apis/mutation';
-import { columnIds } from 'utils/constants';
+import { boardNames, columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import SelectField from 'app/components/Forms/SelectField';
 import { getColumnValue } from 'utils/helpers';
@@ -13,7 +15,7 @@ import SalePersonSelect from './SalePersonSelect';
 
 function SubRow() {
   const {
-    leadId, board, details, channels,
+    leadId, board, details, channels, getData, setLoadingData,
   } = useContext(LeadContext);
   const [followUpDate, setFollowUpDate] = useState();
   const handleFollowUpDateChange = async (date) => {
@@ -26,6 +28,13 @@ function SubRow() {
     await updateClientInformation(leadId, details?.board?.id, {
       [columnIds[board].channel]: val,
     });
+  };
+  const handleActiveWorking = async (checked) => {
+    setLoadingData(true);
+    const dataJson = { [columnIds[board].actively_working]: checked ? 'Yes' : '' };
+    await updateClientInformation(leadId, details.board.id, dataJson);
+    await getData();
+    setLoadingData(false);
   };
   useEffect(() => {
     if (!details.name || !details[columnIds[board].next_followup]) return;
@@ -47,6 +56,7 @@ function SubRow() {
   const lastCreated = details[columnIds[board].creation_date] ? dayjs(details[columnIds[board].creation_date]).format('MM/DD/YYYY') : '-';
   const lastSpoke = details[columnIds[board].last_touched] ? dayjs(details[columnIds[board].last_touched]).format('MM/DD/YYYY') : '-';
   const source = details[columnIds[board].channel];
+  const isActivelyWorking = details[columnIds[board].actively_working] === 'Yes';
   const rotationDate = details[columnIds[board].lead_rotation_date] ? dayjs(details[columnIds[board].lead_rotation_date]).format('MM/DD/YYYY') : '-';
   return (
     <Flex className={styles.subRow}>
@@ -74,6 +84,19 @@ function SubRow() {
           </Flex>
         </Flex>
         <Flex>
+          {board === boardNames.leads ? (
+            <Flex className={styles.subRowItem}>
+              <Flex className={styles.subHeadingLabel}>Actively Working On: </Flex>
+              <Flex className={styles.subHeadingValue}>
+                <Switch
+                  onClick={handleActiveWorking}
+                  checkedChildren="Active"
+                  unCheckedChildren="No"
+                  value={isActivelyWorking}
+                />
+              </Flex>
+            </Flex>
+          ) : null}
           <Flex className={styles.subRowItem}>
             <Flex className={styles.subHeadingLabel}>Last Spoke to Client: </Flex>
             <Flex className={styles.subHeadingValue}>{lastSpoke || '-'}</Flex>
