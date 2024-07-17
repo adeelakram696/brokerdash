@@ -6,6 +6,7 @@ export const fundersIntakeCalc = (values, funders) => {
     ? funders.filter((funder) => funder.pastSettledDefaults)
     : funders;
   return (filtered || []).map((funder) => {
+    const isAvgbalanceZero = funder.minAvgDailyBalance === 0;
     const funderCounts = {
       funder: funder.funder,
       minAnnualRevenue: Number(funder.minimumRevenueAnnual <= values.annualRevenue),
@@ -22,8 +23,9 @@ export const fundersIntakeCalc = (values, funders) => {
       industryType: Number(!(funder.restrictedIndustries.indexOf(values.industry) >= 0)),
       state: Number(!funder.stateRestrictions.indexOf(values.state) >= 0),
       timeInBusiness: Number(funder.minimumTimeInBusinessMonths <= values.timeInBusiness),
-      minDailybalnce: Number(funder.minAvgDailyBalance > 0
-        && values.min_daily_balnc >= funder.minAvgDailyBalance),
+      minDailybalnce: Number(!values.min_daily_balnc
+        || isAvgbalanceZero
+        || values.min_daily_balnc >= funder.minAvgDailyBalance),
       tier: funder.tier,
     };
     const trueCount = Object.values(funderCounts).filter((v) => v === 1).length;
