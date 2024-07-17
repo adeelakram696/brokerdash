@@ -1027,8 +1027,9 @@ export const getTeamTotalActivities = async (duration, actionIds, employees) => 
     const obj = prev;
     if (_.isEmpty(owner)) return obj;
     const person = employees.find(
-      (emp) => owner.personsAndTeams.find((o) => o.id.toString() === emp.id),
+      (emp) => owner.personsAndTeams[0].id === Number(emp.id),
     );
+    if (!person) return obj;
     const actionType = type.text.toLowerCase();
     if (!obj[person.id]) {
       obj[person.id] = { [actionType]: 1, person };
@@ -1104,8 +1105,9 @@ export const getDealFunds = async (employees) => {
     const owner = getColumnValue(curr.column_values || [], columnIds.deals.assginee);
     if (_.isEmpty(owner)) return obj;
     const person = employees.find(
-      (emp) => owner.personsAndTeams.find((o) => o.id.toString() === emp.id),
+      (emp) => owner.personsAndTeams[0].id === Number(emp.id),
     );
+    if (!person) return obj;
     const actionType = 'totalfunds';
     if (!obj[person.id]) {
       obj[person.id] = { [actionType]: convertToNumber(selected.column_values[1].text), person };
