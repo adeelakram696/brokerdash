@@ -8,10 +8,12 @@ import { useContext, useState } from 'react';
 import SubmissionForm from 'app/modules/LeadModal/SubmissionForm';
 import styles from './FundersList.module.scss';
 import { statuses } from './data';
+import { OffersProducts } from './OffersProducts';
 
 function ExpendedData({ isExpended = false, data }) {
   const formulaVal = getFormulaValues(data);
   const [showContractSubmission, setShowContractSubmission] = useState();
+  const [showOfferDetails, setShowOfferDetails] = useState(false);
   const {
     board,
     details,
@@ -27,6 +29,9 @@ function ExpendedData({ isExpended = false, data }) {
     window.open(url, '_blank');
   };
   const isSelected = data[columnIds.subItem.status] === statuses.selected;
+  const responseRecieved = data[columnIds.subItem.status] === statuses.responseRecieved
+  || data[columnIds.subItem.status] === statuses.approved;
+  const offerData = data[columnIds.subItem.offers_response];
   return (
     <Flex justify="space-around" style={{ marginTop: 15, display: isExpended ? 'flex' : 'none' }}>
       <Flex vertical flex={0.4}>
@@ -119,6 +124,8 @@ function ExpendedData({ isExpended = false, data }) {
         </Flex>
       </Flex>
       <Flex flex={0.2} vertical justify="flex-start" align="flex-end">
+        {offerData && responseRecieved && <Flex style={{ marginBottom: 10 }}><Button onClick={() => { setShowOfferDetails(true); }} shape="round" size="small">View Offer Details</Button></Flex>}
+
         {isSelected && <Flex style={{ marginBottom: 10 }}><Button onClick={() => { setShowContractSubmission(true); }} shape="round" size="small">Request Contract</Button></Flex>}
 
         {isSelected && details[columnIds[board].intent_letter_link_pandadoc] ? <Flex style={{ marginBottom: 10 }}><Button onClick={handleIntentLetterClick} shape="round" size="small">Send Intent Letter</Button></Flex> : null}
@@ -129,6 +136,11 @@ function ExpendedData({ isExpended = false, data }) {
         show={showContractSubmission}
         handleClose={() => { setShowContractSubmission(false); }}
         type="contract"
+      />
+      <OffersProducts
+        show={showOfferDetails}
+        handleClose={() => { setShowOfferDetails(false); }}
+        data={data}
       />
     </Flex>
   );

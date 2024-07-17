@@ -120,7 +120,7 @@ function SubmissionForm({
         env.boards.submissions,
         { [columnIds.subItem.status]: statuses.new },
       );
-      await resendSubmissionApplication(
+      resendSubmissionApplication(
         resubmiteId,
         funderName,
       );
