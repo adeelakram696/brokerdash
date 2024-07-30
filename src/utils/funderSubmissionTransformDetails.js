@@ -2,7 +2,7 @@ import {
   columnIds, dateFormat, onDeckEntityMapping,
 } from './constants';
 import {
-  cleanPhoneNumber, cleanStrToNum, extractLeastNumber, formatDate,
+  cleanPhoneNumber, cleanStrToNum, formatDate,
 } from './helpers';
 
 export const transformDealDetails = (item) => {
@@ -36,7 +36,6 @@ export const transformDealDetails = (item) => {
       address: item.client[columnIds.clients.address],
       zipCode: item.client[columnIds.clients.zip],
       ownership: item.client[columnIds.clients.ownership],
-      creditScore: extractLeastNumber(item.client[columnIds.clients.credit_score]),
     },
     partner: item.partner.id
       ? {
@@ -100,8 +99,8 @@ const OnDeckSubmissionPayload = (data) => {
       averageBalance: data.avgBalance,
       // averageCCvolume: 123123,
       // mcaBalance: 12312,
-      desiredLoanAmount: data.requestedAmount,
-      personalCreditScore: data.client.creditScore,
+      // desiredLoanAmount: data.requestedAmount,
+      // personalCreditScore: data.client.creditScore,
       // creditCardMoreThan3months: undefined,
       separateBusinessBankAccount: true,
       // hasAdditionalManagingPartners: undefined,

@@ -21,7 +21,3 @@ export const monthlyRevenue = [
   { value: '$80-$199k', label: '$80-$199k' },
   { value: '$200k+', label: '$200k+' },
 ];
-export const existingDepts = [
-  { value: 'Yes', label: 'Yes' },
-  { value: 'No', label: 'No' },
-];

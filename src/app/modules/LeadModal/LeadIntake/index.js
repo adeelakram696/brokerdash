@@ -10,7 +10,7 @@ import TooltipWrap from 'app/components/TooltipWrap';
 import { columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
 import { useState } from 'react';
-import { existingDepts, importantToYou, loanPurpose } from './data';
+import { importantToYou, loanPurpose } from './data';
 import styles from './LeadIntake.module.scss';
 import { ExploreMindTooltip, GoalTooltip, PastNCurrentTooltip } from './tooltipsData';
 
@@ -147,7 +147,7 @@ function LeadIntakeModal({
                     noStyle
                     name={columnIds[board].existing_debt}
                   >
-                    <SelectField options={existingDepts} />
+                    <InputField placeholder="Existing Debt" />
                   </Form.Item>
                 </Flex>
               </Flex>

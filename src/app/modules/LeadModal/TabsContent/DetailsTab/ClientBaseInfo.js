@@ -12,7 +12,7 @@ import { LeadContext } from 'utils/contexts';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 import {
-  existingDepts, importantToYou, loanPurpose, monthlyRevenue,
+  importantToYou, loanPurpose, monthlyRevenue,
 } from '../../LeadIntake/data';
 
 function ClientBaseInfo({
@@ -286,7 +286,7 @@ function ClientBaseInfo({
                       noStyle
                       name={columnIds[board].existing_debt}
                     >
-                      <SelectField options={existingDepts} />
+                      <InputField />
                     </Form.Item>
                   )
                   : details[columnIds[board].existing_debt] || '-'}

@@ -860,13 +860,15 @@ export const submissionFunders = {
 export const allowedFunders = [
   6976521906,
   6948733727,
+  6765205008,
+  6765205031,
 ];
 
 export const fundersServices = {
   6976521906: submissionFunders.onDeck,
   6948733727: submissionFunders.onDeck,
-  // 'OnDeck - MCA': submissionFunders.onDeck,
-  // 'OnDeck Canada (LOGIC)': submissionFunders.onDeck,
+  6765205008: submissionFunders.onDeck,
+  6765205031: submissionFunders.onDeck,
 };
 
 export const onDeckEntityMapping = {

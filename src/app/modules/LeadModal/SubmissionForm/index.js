@@ -44,7 +44,7 @@ function SubmissionForm({
     const ids = details?.subitems?.map((item) => {
       const preSelected = getColumnValue(item?.column_values, columnIds.subItem.funding_accounts);
       const id = preSelected?.linkedPulseIds?.map((v) => v.linkedPulseId.toString());
-      return id[0];
+      return (id || [])[0];
     });
     setSelectedFunders(ids || []);
     setSubmittedFunders(ids || []);
