@@ -20,6 +20,9 @@ const en = {
     newLeads: {
       title: 'New Leads',
     },
+    leadRotated: {
+      title: 'Leads Rotated',
+    },
     actionsNeeded: {
       title: 'Actions Needed',
       subtitle: 'Items that require attention',

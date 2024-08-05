@@ -77,13 +77,13 @@ function TeamLeaderBoard() {
         || actionTypesList[key] === statuses[3].actionName
       ),
     );
-    const monthlyActivityIds = Object.keys(actionTypesList).filter(
-      (key) => (actionTypesList[key] === statuses[4].actionName),
-    );
+    // const monthlyActivityIds = Object.keys(actionTypesList).filter(
+    //   (key) => (actionTypesList[key] === statuses[4].actionName),
+    // );
     getGoals();
     await getSaleActivities(durations.daily, dailyActivityIds);
     await getSaleActivities(durations.weekly, weeklyActivityIds);
-    await getSaleActivities(durations.monthly, monthlyActivityIds);
+    // await getSaleActivities(durations.monthly, monthlyActivityIds);
     await getTotalFunds();
     setLoading(false);
   };

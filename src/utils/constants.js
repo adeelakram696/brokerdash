@@ -9,6 +9,7 @@ export const env = {
     clientAccounts: process.env.REACT_APP_CLIENT_ACCOUNTS_BOARD_ID,
     employees: process.env.REACT_APP_EMPLOYEES_BOARD,
     salesActivities: process.env.REACT_APP_SALES_ACTIVITIES_BOARD,
+    salesActivities2: process.env.REACT_APP_SALES_ACTIVITIES2_BOARD,
     metrics: process.env.REACT_APP_METRICS_BOARD,
     teamLeaderBoard: process.env.REACT_APP_TEAM_LEADERBOARD_BOARD,
     [process.env.REACT_APP_DEALS_BOARD_ID]: 'deals',
@@ -190,6 +191,10 @@ export const columnIds = {
     lead_creation_date: 'date_17__1',
     lead_rotation_date: 'date_11__1',
     input_previous_submission: 'status13__1',
+    approvd_application: 'button__1',
+    logic_application: 'button_1__1',
+    create_renewal: 'button3__1',
+    renewal: 'button7__1',
   },
   leads: {
     name: 'name',
@@ -336,6 +341,8 @@ export const columnIds = {
     docs_needed: 'dropdown04__1',
     custom_docs: 'text_10__1',
     actively_working: 'status37__1',
+    renewal: 'button__1',
+    date_last_rotated: 'date_17__1',
   },
   subItem: {
     funding_accounts: 'connect_boards5',

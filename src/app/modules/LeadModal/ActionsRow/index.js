@@ -11,6 +11,7 @@ import ResearchLinks from './ResearchLinks';
 import SendSms from './SendSms';
 import Disqualified from './Disqualified';
 import DocsNeeded from './DocsNeeded';
+import GenerateApp from './GenerateApp';
 // import SendEmail from './SendEmail';
 
 const items = [
@@ -57,6 +58,11 @@ function ActionRow() {
     {
       component: (
         <Disqualified />
+      ),
+    },
+    {
+      component: (
+        board === boardNames.deals ? <GenerateApp /> : null
       ),
     },
     {

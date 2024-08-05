@@ -71,7 +71,7 @@ function SubmissionForm({
     setStep(nextStep);
   };
   const handleSubmit = async () => {
-    if (!isContract) {
+    if (!isContract || inputPrevSubmission) {
       const validation = await validateSubmission(
         selectedFunders,
         submittedFunders,

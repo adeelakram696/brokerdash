@@ -11,6 +11,15 @@ export const updateStage = async (id, group) => {
   const res = await monday.api(mutation);
   return res?.data?.move_item_to_group?.id || '';
 };
+
+export const ctaBtn = async (leadId, boardId, btnId) => {
+  const sendMutation = `mutation {
+    change_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${btnId}", value: "${JSON.stringify({ index: 0 }).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}") {
+      id
+    }
+  }`;
+  await monday.api(sendMutation);
+};
 export const updateStageToSubmission = async (id) => {
   const mutation = `mutation {
     change_simple_column_value(
@@ -102,12 +111,7 @@ export const sendSmsToClient = async (leadId, boardId, smsBtncolumnId, textColum
     }
   }`;
   await monday.api(setTextMutation);
-  const sendMutation = `mutation {
-    change_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${smsBtncolumnId}", value: "${JSON.stringify({ index: 0 }).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}") {
-      id
-    }
-  }`;
-  await monday.api(sendMutation);
+  await ctaBtn(leadId, boardId, smsBtncolumnId);
 };
 export const sendRequestContract = async (leadId, boardId, requestContractId) => {
   const sendMutation = `mutation {
@@ -129,12 +133,7 @@ export const sendSubmission = async (leadId, boardId, data, emailOfferBtnId) => 
   }`;
   await monday.api(updateMutation);
   if (!emailOfferBtnId) return;
-  const sendMutation = `mutation {
-    change_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${emailOfferBtnId}", value: "${JSON.stringify({ index: 0 }).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}") {
-      id
-    }
-  }`;
-  await monday.api(sendMutation);
+  await ctaBtn(leadId, boardId, emailOfferBtnId);
 };
 
 export const sendNotification = async (to, text, updateId) => {

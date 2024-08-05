@@ -12,6 +12,7 @@ import ApprovalsCard from 'app/modules/DashboardCards/Approvals';
 import ProgressCards from 'app/modules/DashboardCards/ProgressCards';
 import { useEffect, useState } from 'react';
 import _ from 'lodash';
+import LeadRotatedCard from 'app/modules/DashboardCards/LeadRotated';
 import styles from './Dashboard.module.css';
 
 function Dashboard() {
@@ -62,8 +63,9 @@ function Dashboard() {
           </Flex>
         </Flex>
         <Row gutter={[16, 16]}>
-          <Col span={12}><NewLeadsCard /></Col>
-          <Col span={12}><ActionsCard /></Col>
+          <Col span={8}><NewLeadsCard /></Col>
+          <Col span={8}><LeadRotatedCard /></Col>
+          <Col span={8}><ActionsCard /></Col>
           <ProgressCards handleChange={handleChange} />
           <Col span={12}><ApprovalsCard /></Col>
           <Col span={12}><ContractsOutCard /></Col>

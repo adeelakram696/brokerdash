@@ -1,5 +1,5 @@
 import {
-  Button, Flex, Switch, Tabs,
+  Button, Flex, Space, Switch, Tabs,
 } from 'antd';
 import classNames from 'classnames';
 import { LeadContext } from 'utils/contexts';
@@ -16,6 +16,7 @@ import RenewalTab from './TabsContent/RenewalTab';
 function Content() {
   const {
     leadId, board, handleReadyForSubmission, details, setCurrentTab, setLoadingData,
+    handleRenewal,
     getData,
   } = useContext(LeadContext);
   const handlePitched = async (checked) => {
@@ -52,29 +53,42 @@ function Content() {
       });
     }
   }
+  const RenewalBtn = (
+    <Button
+      className={styles.readyForSubmission}
+      type="primary"
+      shape="round"
+      onClick={handleRenewal}
+    >
+      Renewal
+    </Button>
+  );
   if (board === 'leads') {
     readySubmissionBtn.right = (
-      <Button
-        className={styles.readyForSubmission}
-        type="primary"
-        shape="round"
-        onClick={handleReadyForSubmission}
-      >
-        Ready For Submission
-      </Button>
+      <Flex align="center">
+        <Button
+          className={styles.readyForSubmission}
+          type="primary"
+          shape="round"
+          onClick={handleReadyForSubmission}
+        >
+          Ready For Submission
+        </Button>
+      </Flex>
     );
   }
   if (board === 'deals') {
     const pitchedVal = getColumnValue(details?.column_values, columnIds[board].pitched);
     readySubmissionBtn.right = (
-      <span>
+      <Space align="center">
+        {RenewalBtn}
         <Switch
           onClick={handlePitched}
           checkedChildren="Pitched"
           unCheckedChildren="UnPitched"
           value={pitchedVal?.checked}
         />
-      </span>
+      </Space>
     );
   }
   return (

@@ -8,6 +8,7 @@ import {
   fetchBoardColorColumnStrings,
   fetchBoardDropDownColumnStrings,
   fetchFunders,
+  fetchNewItemBaseInfo,
   fetchLeadClientDetails,
   fetchLeadDocs,
   fetchLeadUpdates,
@@ -15,7 +16,7 @@ import {
 } from 'app/apis/query';
 import { columnIds, env } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
-import { updateStageToSubmission } from 'app/apis/mutation';
+import { ctaBtn, updateStageToSubmission } from 'app/apis/mutation';
 import { getColumnValue, getQueryParams } from 'utils/helpers';
 import monday from 'utils/mondaySdk';
 import styles from './LeadModal.module.scss';
@@ -32,6 +33,7 @@ function LeadModal({
 }) {
   let unsubscribe;
   let unsubscribe1;
+  let unsubscribeRenewal;
   let timeoutId;
   const location = useLocation();
   const [details, setDetails] = useState({});
@@ -114,6 +116,16 @@ function LeadModal({
       window.open(url, '_blank');
     }
   };
+  const redirectToRenewal = async ({ data }) => {
+    if (data.type === 'new_items') {
+      const resp = await fetchNewItemBaseInfo(data.itemIds, details.name);
+      if (resp) {
+        unsubscribeRenewal();
+        const url = `${env.boardBaseURL}${data.boardId}/pulses/${resp.id}`;
+        window.open(url, '_blank');
+      }
+    }
+  };
   const validateData = () => {
     const companyName = details[columnIds.leads.company_name];
     const email = details[columnIds.leads.email];
@@ -128,6 +140,17 @@ function LeadModal({
     if (!incoming_files) { errorFields.push('Incoming Files'); }
     if (errorFields.length > 0) messageApi.error(`${errorFields.join(', ')} is required before Ready for Submission`);
     return errorFields.length === 0;
+  };
+  const handleRenewal = async () => {
+    setLoadingData(true);
+    const res = await ctaBtn(leadId, details.board.id, columnIds[board].create_renewal);
+    if (res) messageApi.success('Successfully updated');
+    await getData();
+    const { itemId, boardId } = getQueryParams(location);
+    if (itemId && boardId) {
+      unsubscribeRenewal = monday.listen('events', redirectToRenewal);
+    }
+    setLoadingData(false);
   };
   const handleReadyForSubmission = async () => {
     const isValidated = validateData();
@@ -157,6 +180,10 @@ function LeadModal({
   useEffect(() => () => {
     if (!unsubscribe) return;
     unsubscribe();
+  }, []);
+  useEffect(() => () => {
+    if (!unsubscribeRenewal) return;
+    unsubscribeRenewal();
   }, []);
   useEffect(() => {
     unsubscribe1 = monday.listen('events', refetchData);
@@ -206,6 +233,7 @@ function LeadModal({
           setUpdates,
           refetchAllData,
           handleReadyForSubmission,
+          handleRenewal,
           setLoadingData,
           setCurrentTab,
         }}

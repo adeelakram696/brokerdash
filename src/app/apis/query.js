@@ -253,6 +253,39 @@ export const fetchNewLeadsData = async () => {
   ), []);
   return [...items1, ...items2];
 };
+export const fetchLeadsRotatedData = async () => {
+  const me = fetchUser();
+  const query1 = `query {
+    leadRotate: boards(ids: [${env.boards.leads}]) {
+      groups(ids: ["new_group79229", "new_group42384", "new_group7612", "new_group96588"]){
+        items_page(
+          query_params: {
+            rules: [
+              { column_id: "${columnIds.leads.sales_rep}" compare_value:"${me.name}" operator:contains_text }
+              { column_id: "${columnIds.leads.date_last_rotated}" compare_value:"YESTERDAY" operator:any_of }
+            ]
+          }
+          limit: 500
+        ) {
+          items {
+            name
+            id
+            column_values(ids: ["${columnIds.leads.stage}","${columnIds.leads.last_lead_assigned}", "${columnIds.leads.new_lead_or_touched}", "${columnIds.leads.channel}"]) {
+              id
+              text
+              value
+            }
+          }
+        }
+      }
+    }     
+  }`;
+  const res1 = await monday.api(query1);
+  const items1 = res1.data.leadRotate[0].groups.reduce((prev, curr) => (
+    [...prev, ...curr.items_page.items]
+  ), []);
+  return items1;
+};
 export const fetchActionsNeededLeadsData = async () => {
   const me = fetchUser();
   const query = `query {
@@ -653,6 +686,18 @@ export const fetchLeadUpdates = async (leadId) => {
   const res = await monday.api(query);
   return res;
 };
+
+export const fetchNewItemBaseInfo = async (leadIds, name) => {
+  const query1 = `query {
+    items(ids:${leadIds}) {
+      id
+      name
+    }
+  }`;
+  const res = await monday.api(query1);
+  const item = res.data.items.find((obj) => obj.name.includes(name));
+  return item;
+};
 export const fetchMarkAsImportant = async (leadId, column) => {
   const query1 = `query {
     items(ids:["${leadId}"]) {
@@ -774,10 +819,10 @@ export const fetchBoardDropDownColumnStrings = async (boardId, columnId) => {
   return column.labels.map((v) => v.name);
 };
 
-export const fetchSaleActivities = async (cursor, dates) => {
+export const fetchSaleActivities = async (cursor, dates, board) => {
   const dateArray = dates.map((date) => `"${date.format('YYYY-MM-DD')}"`);
   const query = `query {
-    boards(ids: [${env.boards.salesActivities}]) {
+    boards(ids: [${board}]) {
       items_page(
       ${!cursor ? `query_params: {
         rules: [
@@ -809,7 +854,21 @@ export const getTotalActivities = async (dates) => {
   let itemsList = [];
   do {
     // eslint-disable-next-line no-await-in-loop
-    res = await fetchSaleActivities(res ? res.data.boards[0].items_page.cursor : null, dates);
+    res = await fetchSaleActivities(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dates,
+      env.boards.salesActivities,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  res = null;
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchSaleActivities(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dates,
+      env.boards.salesActivities2,
+    );
     itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
   } while (res.data.boards[0].items_page.cursor);
   const activities = itemsList.reduce((prev, curr) => {
@@ -977,9 +1036,9 @@ export const fetchTeamGoals = async () => {
   return columns;
 };
 
-export const fetchUTeamSaleActivities = async (cursor, duration, actionIds, empIds) => {
+export const fetchUTeamSaleActivities = async (cursor, duration, actionIds, empIds, boardId) => {
   const query = `query {
-    saleActivities: boards(ids: [${env.boards.salesActivities}]) {
+    saleActivities: boards(ids: [${boardId}]) {
       items_page(
       ${!cursor ? `query_params: {
         rules: [
@@ -1018,6 +1077,19 @@ export const getTeamTotalActivities = async (duration, actionIds, employees) => 
       duration,
       actionIds,
       empIds,
+      env.boards.salesActivities,
+    );
+    itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
+  } while (res.data.saleActivities[0].items_page.cursor);
+  res = null;
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchUTeamSaleActivities(
+      res ? res.data.saleActivities[0].items_page.cursor : null,
+      duration,
+      actionIds,
+      empIds,
+      env.boards.salesActivities2,
     );
     itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
   } while (res.data.saleActivities[0].items_page.cursor);
@@ -1109,15 +1181,22 @@ export const getDealFunds = async (employees) => {
     );
     if (!person) return obj;
     const actionType = 'totalfunds';
+    const actionTypeDeals = 'fully funded';
     if (!obj[person.id]) {
-      obj[person.id] = { [actionType]: convertToNumber(selected.column_values[1].text), person };
+      obj[person.id] = {
+        [actionType]: convertToNumber(selected.column_values[1].text),
+        [actionTypeDeals]: 1,
+        person,
+      };
     } else if (!obj[person.id][actionType]) {
       obj[person.id] = {
         ...obj[person.id],
         [actionType]: convertToNumber(selected.column_values[1].text),
+        [actionTypeDeals]: 1,
       };
     } else {
       obj[person.id][actionType] += convertToNumber(selected.column_values[1].text);
+      obj[person.id][actionTypeDeals] += 1;
     }
     return obj;
   }, {});

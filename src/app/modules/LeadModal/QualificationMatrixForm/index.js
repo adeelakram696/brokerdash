@@ -31,6 +31,11 @@ function QualificationMatrixForm({ show, handleClose }) {
 
   const getColumnSum = (columnKey, rows, data) => rows.reduce((prev, current) => prev + Number(data[`${columnKey}-${current.id}`] || 0), 0);
 
+  const getLastMonthVal = (columnKey, rows, data) => rows.reduce((prev, current) => {
+    const val = Number(data[`${columnKey}-${current.id}`]);
+    return val || prev;
+  }, 0);
+
   const getColumnMin = (columnKey, rows, data) => rows.reduce((prev, current) => {
     if (prev === 0 || prev > Number(data[`${columnKey}-${current.id}`])) return Number(data[`${columnKey}-${current.id}`]);
     return prev;
@@ -71,9 +76,9 @@ function QualificationMatrixForm({ show, handleClose }) {
       'startingBal-3': startingBal3,
     };
     matrixData.minMonthlyDepositCount = getColumnMin('depCnt', sampleRow, matrixData);
-    matrixData.nSFLast30Days = getColumnSum('nsf', [...sampleRow].slice(1, 3), matrixData);
+    matrixData.nSFLast30Days = getLastMonthVal('nsf', sampleRow, matrixData);
     matrixData.nSFLast90Days = getColumnSum('nsf', sampleRow, matrixData);
-    matrixData.negativeDaysLast30 = getColumnSum('days', [...sampleRow].slice(1, 3), matrixData);
+    matrixData.negativeDaysLast30 = getLastMonthVal('days', sampleRow, matrixData);
     matrixData.negativeDaysLast90 = getColumnSum('days', sampleRow, matrixData);
     matrixData.numberOfPositions = sampleRowFunders.filter((i) => values[`funderId-${i.id}`]).length;
     const industry = isDeal
@@ -306,7 +311,7 @@ function QualificationMatrixForm({ show, handleClose }) {
               <Flex flex={1} className={styles.inputRow} justify="space-between">
                 <Flex flex={0.7} className={styles.smallLabel}>NSF (last 30)</Flex>
                 <Flex flex={0.3} className={styles.smallValue}>
-                  {getColumnSum('nsf', [...sampleRow].slice(1, 3), matrixValues)}
+                  {getLastMonthVal('nsf', sampleRow, matrixValues)}
                 </Flex>
               </Flex>
             </Flex>
@@ -320,7 +325,7 @@ function QualificationMatrixForm({ show, handleClose }) {
               <Flex flex={1} className={styles.inputRow} justify="space-between">
                 <Flex flex={0.7} className={styles.smallLabel}>Negative Days (Last 30 Days)</Flex>
                 <Flex flex={0.3} className={styles.smallValue}>
-                  {getColumnSum('days', [...sampleRow].slice(1, 3), matrixValues)}
+                  {getLastMonthVal('days', sampleRow, matrixValues)}
                 </Flex>
               </Flex>
               <Flex flex={1} className={styles.inputRow} justify="space-between">
