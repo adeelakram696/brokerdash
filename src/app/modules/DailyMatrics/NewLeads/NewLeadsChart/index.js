@@ -13,12 +13,12 @@ import styles from './NewLeadsChart.module.scss';
 const { RangePicker } = DatePicker;
 function NewLeadsChart() {
   const {
-    newLeads, dateRange, handleChangeDates,
+    newLeads, dateRange, handleChangeDates, submittedDeals,
   } = useContext(MatrixContext);
   const [leadsChannel, setLeadsChannel] = useState({});
   useEffect(() => {
     if (!(newLeads)) return;
-    const formatedList = newLeads?.reduce((prev, curr) => {
+    const formatedLeads = newLeads?.reduce((prev, curr) => {
       const obj = prev;
       const channel = curr.channel === null ? 'None' : curr.channel;
       if (obj[channel]) {
@@ -28,6 +28,16 @@ function NewLeadsChart() {
       }
       return obj;
     }, {});
+    const formatedList = submittedDeals?.reduce((prev, curr) => {
+      const obj = prev;
+      const channel = curr.channel === null ? 'None' : curr.channel;
+      if (obj[channel]) {
+        obj[channel] += 1;
+      } else {
+        obj[channel] = 1;
+      }
+      return obj;
+    }, formatedLeads);
     setLeadsChannel(formatedList);
   }, [newLeads]);
   return (
@@ -47,7 +57,7 @@ function NewLeadsChart() {
     >
       <Flex justify="space-around">
         <Flex>
-          <PieChart data={leadsChannel} total={newLeads.length} />
+          <PieChart data={leadsChannel} total={newLeads.length + submittedDeals.length} />
         </Flex>
         <Legends data={leadsChannel} />
       </Flex>

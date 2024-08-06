@@ -898,7 +898,7 @@ export const fetchAllNewLeadsData = async (cursor, dates) => {
       items_page(
       ${!cursor ? `query_params: {
         rules: [
-          { column_id: "${columnIds.leads.creation_date}", compare_value:[${dateArray}], operator:between}
+          { column_id: "${columnIds.leads.application_date}", compare_value:[${dateArray}], operator:between}
           { column_id: "${columnIds.leads.phone_burner}", compare_value:"", operator:is_empty}
        ]
        operator: and
@@ -940,7 +940,7 @@ export const fetchAllSubmittedDeals = async (cursor, dates) => {
       items_page(
       ${!cursor ? `query_params: {
         rules: [
-          { column_id: "${columnIds.deals.lead_creation_date}", compare_value:[${dateArray}], operator:between}
+          { column_id: "${columnIds.deals.application_date}", compare_value:[${dateArray}], operator:between}
        ]
        }` : ''}
         limit: 500

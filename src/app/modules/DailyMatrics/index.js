@@ -11,7 +11,7 @@ import NewLeads from './NewLeads';
 import NewDealsSubmitted from './NewDealsSubmitted';
 import LeadsWithOfferToPitch from './LeadsWithOfferToPitch';
 import TotalDeclines from './TotalDeclines';
-import { transformData } from './NewLeads/transform';
+import { transformData, transformDealsData } from './NewLeads/transform';
 import NewDealsPitched from './NewDealsPitched';
 import FundedDeals from './FundedDeals';
 import FundedDealsAmount from './FundedDealsAmount';
@@ -30,7 +30,8 @@ function DailyMatricsModule() {
   };
   const getSubmittedDeals = async (dates) => {
     const items = await getAllSubmittedDeals(dates);
-    setSubmittedDeals(items);
+    const transformed = transformDealsData(items);
+    setSubmittedDeals(transformed);
   };
   const getGoals = async () => {
     const resp = await fetchMetricsGoals();

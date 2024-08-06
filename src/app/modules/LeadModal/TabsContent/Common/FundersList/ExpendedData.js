@@ -10,11 +10,13 @@ import { updateSimpleColumnValue } from 'app/apis/mutation';
 import styles from './FundersList.module.scss';
 import { statuses } from './data';
 import { OffersProducts } from './OffersProducts';
+import { RequiredDocsModal } from './RequiredDocs';
 
 function ExpendedData({ isExpended = false, data }) {
   const formulaVal = getFormulaValues(data);
   const [showContractSubmission, setShowContractSubmission] = useState();
   const [showOfferDetails, setShowOfferDetails] = useState(false);
+  const [showRequiredDocs, setShowRequiredDocs] = useState(false);
   const {
     board,
     details,
@@ -39,6 +41,7 @@ function ExpendedData({ isExpended = false, data }) {
   const responseRecieved = data[columnIds.subItem.status] === statuses.responseRecieved
   || data[columnIds.subItem.status] === statuses.approved;
   const offerData = data[columnIds.subItem.offers_response];
+  const requiredDocsData = data[columnIds.subItem.documents_required_response];
   return (
     <Flex justify="space-around" style={{ marginTop: 15, display: isExpended ? 'flex' : 'none' }}>
       <Flex vertical flex={0.4}>
@@ -133,6 +136,8 @@ function ExpendedData({ isExpended = false, data }) {
       <Flex flex={0.2} vertical justify="flex-start" align="flex-end">
         {offerData && responseRecieved && <Flex style={{ marginBottom: 10 }}><Button onClick={() => { setShowOfferDetails(true); }} shape="round" size="small">View Offer Details</Button></Flex>}
 
+        {requiredDocsData && responseRecieved && <Flex style={{ marginBottom: 10 }}><Button onClick={() => { setShowRequiredDocs(true); }} shape="round" size="small">View Required Docs</Button></Flex>}
+
         {isSelected && <Flex style={{ marginBottom: 10 }}><Button onClick={() => { setShowContractSubmission(true); }} shape="round" size="small">Request Contract</Button></Flex>}
 
         {isSelected && details[columnIds[board].intent_letter_link_pandadoc] ? <Flex style={{ marginBottom: 10 }}><Button onClick={handleIntentLetterClick} shape="round" size="small">Send Intent Letter</Button></Flex> : null}
@@ -147,6 +152,11 @@ function ExpendedData({ isExpended = false, data }) {
       <OffersProducts
         show={showOfferDetails}
         handleClose={() => { setShowOfferDetails(false); }}
+        data={data}
+      />
+      <RequiredDocsModal
+        show={showRequiredDocs}
+        handleClose={() => { setShowRequiredDocs(false); }}
         data={data}
       />
     </Flex>

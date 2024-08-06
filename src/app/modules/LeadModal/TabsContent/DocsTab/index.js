@@ -24,7 +24,6 @@ function DocsTab() {
   const [selectedDocs, setSelectedDocs] = useState([]);
 
   const uploadFile = async () => {
-    console.log(columnIds[board].incoming_files);
     await monday.execute('triggerFilesUpload', {
       boardId,
       itemId: leadId,

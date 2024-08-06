@@ -54,3 +54,18 @@ export function transformData(data) {
   });
   return _.sortBy(list, 'isNew').reverse();
 }
+export function transformDealsData(data) {
+  const list = data.map((item) => {
+    let columns = _.mapKeys(item.column_values, 'id');
+    columns = _.mapValues(columns, 'text');
+    return {
+      key: item.id,
+      name: item.name,
+      stage: columns[columnIds.deals.stage],
+      channel: columns[columnIds.deals.channel],
+      ...columns,
+      ...item,
+    };
+  });
+  return _.sortBy(list, 'isNew').reverse();
+}

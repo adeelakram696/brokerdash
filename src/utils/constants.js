@@ -373,6 +373,7 @@ export const columnIds = {
     renewal: 'color__1',
     api_submission_response: 'long_text__1',
     offers_response: 'long_text4__1',
+    documents_required_response: 'long_text2__1',
   },
   coldProspecting: {
     name: 'name',

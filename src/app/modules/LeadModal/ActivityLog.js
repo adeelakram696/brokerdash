@@ -16,7 +16,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { LeadContext } from 'utils/contexts';
 import { cutStringAfterLimit, splitActionFromUpdate } from 'utils/helpers';
-import { ExclamationCircleTwoTone, MessageTwoTone, UserOutlined } from '@ant-design/icons';
+import {
+  ExclamationCircleTwoTone, MessageTwoTone, UserOutlined,
+} from '@ant-design/icons';
 import SelectField from 'app/components/Forms/SelectField';
 import styles from './LeadModal.module.scss';
 
@@ -94,6 +96,21 @@ function ActivityLog() {
     setDisablePost(!plain.toString().trim());
     setComment(value);
   };
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'blockquote'],
+      [{ list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      ['link'],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'blockquote',
+    'bullet', 'indent',
+    'link',
+  ];
   return (
     <Flex className={classNames(styles.columnRight, styles.contentBody)} flex={0.4} vertical>
       <Flex align="flex-start">
@@ -140,6 +157,8 @@ function ActivityLog() {
               onChange={handleCommentChange}
               placeholder="Write an update....."
               className={styles.activityInput}
+              modules={modules}
+              formats={formats}
             />
           </Form.Item>
         </Form>
