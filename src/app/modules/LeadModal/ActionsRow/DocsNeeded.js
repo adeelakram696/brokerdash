@@ -3,7 +3,7 @@ import {
   Button,
   Form,
 } from 'antd';
-import { columnIds, env } from 'utils/constants';
+import { boardNames, columnIds, env } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import { useContext, useEffect, useState } from 'react';
 import { FileOutlined } from '@ant-design/icons';
@@ -14,7 +14,7 @@ import styles from './ActionsRow.module.scss';
 
 function DocsNeeded() {
   const {
-    details, leadId, getData,
+    details, leadId, getData, board,
   } = useContext(LeadContext);
   const [form] = Form.useForm();
   const [selectedDoc, setSelectedDoc] = useState('');
@@ -26,8 +26,8 @@ function DocsNeeded() {
   };
   const getDocsList = async () => {
     const res = await fetchBoardDropDownColumnStrings(
-      env.boards.leads,
-      columnIds.leads.docs_needed,
+      env.boards[board],
+      columnIds[board].docs_needed,
     );
     setDocsList(res);
   };
@@ -37,11 +37,12 @@ function DocsNeeded() {
   const handleDocsNeededSelected = async (values) => {
     setLoading(true);
     const dataJson = {
-      [isCustom ? columnIds.leads.custom_docs : columnIds.leads.docs_needed]: isCustom
+      [isCustom ? columnIds[board].custom_docs : columnIds[board].docs_needed]: isCustom
         ? values.customText : selectedDoc,
     };
     await updateClientInformation(leadId, details.board.id, dataJson);
-    await updateStage(leadId, 'new_group7612');
+    await updateStage(leadId, board === boardNames.leads ? 'new_group7612' : 'new_group1842__1');
+    setIsCustom(false);
     setLoading(false);
     hideModal();
     getData();

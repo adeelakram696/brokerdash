@@ -24,9 +24,6 @@ function LeadRotatedCard() {
       clearInterval(intervalId1);
     };
   }, []);
-  const onFinishTimer = () => {
-    getApprovedData();
-  };
   return (
     <Card className={classNames(styles.cardContainer, styles.newLeadsCard)}>
       <Header
@@ -35,11 +32,10 @@ function LeadRotatedCard() {
       />
       <div className={styles.tableContainer}>
         <DataTable
-          columns={columns(onFinishTimer)}
+          columns={columns()}
           data={list}
           highlightClass={styles.red}
           newTagClass={styles.white}
-          board="leads"
         />
       </div>
     </Card>

@@ -10,7 +10,9 @@ import { LeadContext } from 'utils/contexts';
 import _ from 'lodash';
 import { boardNames, columnIds } from 'utils/constants';
 import { updateSimpleColumnValue } from 'app/apis/mutation';
-import { extractLeastNumber, verifyDateFormat } from 'utils/helpers';
+import {
+  convertToNumber, extractLeastNumber, numberWithCommas, verifyDateFormat,
+} from 'utils/helpers';
 import SelectField from 'app/components/Forms/SelectField';
 import InputField from 'app/components/Forms/InputField';
 import styles from './QualificationMatrixForm.module.scss';
@@ -29,15 +31,15 @@ function QualificationMatrixForm({ show, handleClose }) {
   const [loading, setLoading] = useState(false);
   const isDeal = board === boardNames.deals;
 
-  const getColumnSum = (columnKey, rows, data) => rows.reduce((prev, current) => prev + Number(data[`${columnKey}-${current.id}`] || 0), 0);
+  const getColumnSum = (columnKey, rows, data) => rows.reduce((prev, current) => prev + convertToNumber(data[`${columnKey}-${current.id}`] || 0), 0);
 
   const getLastMonthVal = (columnKey, rows, data) => rows.reduce((prev, current) => {
-    const val = Number(data[`${columnKey}-${current.id}`]);
+    const val = convertToNumber(data[`${columnKey}-${current.id}`]);
     return val || prev;
   }, 0);
 
   const getColumnMin = (columnKey, rows, data) => rows.reduce((prev, current) => {
-    if (prev === 0 || prev > Number(data[`${columnKey}-${current.id}`])) return Number(data[`${columnKey}-${current.id}`]);
+    if (prev === 0 || prev > convertToNumber(data[`${columnKey}-${current.id}`])) return convertToNumber(data[`${columnKey}-${current.id}`]);
     return prev;
   }, 0);
 
@@ -51,29 +53,48 @@ function QualificationMatrixForm({ show, handleClose }) {
     const isPastSetttled = values.past_settled_defaults === 'yes';
     const totalBankActivityCounts = bankActivityColumns.reduce((prev, current) => {
       if (!current.totalCount) return prev;
-      const val = { [current.key]: _.sumBy(sampleRow, (r) => (values[`${current.key}-${r.id}`] ? +values[`${current.key}-${r.id}`] : 0)) };
+      const val = { [current.key]: _.sumBy(sampleRow, (r) => (values[`${current.key}-${r.id}`] ? convertToNumber(values[`${current.key}-${r.id}`]) : 0)) };
       return { ...prev, ...val };
     }, {});
     const totalActivePositionsCounts = activePositionsColumns.reduce((prev, current) => {
       if (!current.totalCount) return prev;
-      const val = { [current.key]: _.sumBy(sampleRowFunders, (r) => (values[`${current.key}-${r.id}`] ? +values[`${current.key}-${r.id}`] : 0)) };
+      const val = {
+        [current.key]: _.sumBy(sampleRowFunders, (r) => {
+          if (current.renderKey) {
+            return current.renderCount(convertToNumber(values[`${current.renderKey}-${r.id}`]) || 0);
+          }
+          return values[`${current.key}-${r.id}`] ? convertToNumber(values[`${current.key}-${r.id}`]) : 0;
+        }),
+      };
       return { ...prev, ...val };
     }, {});
-    const monthlyTotal = _.sum(Object.values(totalActivePositionsCounts));
-    const startingBal2 = Number(values['startingBal-1']) + Number(values['totalCredit-1']) + Number(values['totalDebit-1']);
-    const startingBal3 = startingBal2 + Number(values['totalCredit-2']) + Number(values['totalDebit-2']);
+    const monthlyTotal = totalActivePositionsCounts.daily * 21;
+    const startingBal2 = convertToNumber(values['startingBal-1']) + convertToNumber(values['totalCredit-1']) + convertToNumber(values['totalDebit-1']);
+    const startingBal3 = startingBal2 + convertToNumber(values['totalCredit-2']) + convertToNumber(values['totalDebit-2']);
+    const weeklyAmountPositions = [1, 2, 3, 4, 5].reduce((prev, curr) => {
+      // eslint-disable-next-line no-param-reassign
+      prev[`weekly-${curr}`] = values[`daily-${curr}`] ? convertToNumber(values[`daily-${curr}`]) * 5 : 0;
+      return prev;
+    }, {});
+    const monthlyAmountPositions = [1, 2, 3, 4, 5].reduce((prev, curr) => {
+      // eslint-disable-next-line no-param-reassign
+      prev[`monthly-${curr}`] = values[`daily-${curr}`] ? convertToNumber(values[`daily-${curr}`]) * 21 : 0;
+      return prev;
+    }, {});
     const matrixData = {
       ...values,
       totalBankActivityCounts,
       totalActivePositionsCounts,
       monthCashFlow,
-      monthlyTotal,
-      existingMonthlyDebt: -1 * monthlyTotal,
+      monthlyTotal: monthlyTotal.toFixed(2),
+      existingMonthlyDebt: -1 * monthlyTotal.toFixed(2),
       remainingCashFlow: monthCashFlow + (-monthlyTotal),
       annualRevenue: monthCashFlow * 12,
       annualDebtToIncome: (monthlyTotal / monthCashFlow).toFixed(4),
-      'startingBal-2': startingBal2,
-      'startingBal-3': startingBal3,
+      'startingBal-2': convertToNumber(startingBal2).toFixed(2),
+      'startingBal-3': convertToNumber(startingBal3).toFixed(2),
+      ...weeklyAmountPositions,
+      ...monthlyAmountPositions,
     };
     matrixData.minMonthlyDepositCount = getColumnMin('depCnt', sampleRow, matrixData);
     matrixData.nSFLast30Days = getLastMonthVal('nsf', sampleRow, matrixData);
@@ -100,15 +121,15 @@ function QualificationMatrixForm({ show, handleClose }) {
     matrixData.fundersPriority = sortedData.slice(0, 7).map((i) => i.funder);
     setMatrixValues(matrixData);
   };
-  const setDefaultValues = () => {
+  const setDefaultValues = (qmValues) => {
     if (!details.name) return;
     const estDate = isDeal ? details.clientAccount[columnIds.clientAccount
       .business_start_date] : details[columnIds[board]
       .business_start_date];
     const estDateFormat = verifyDateFormat(estDate);
-    const bankActivity = JSON.parse(details[columnIds[board].qm_bank_activity] || '{}');
-    const activePosition = JSON.parse(details[columnIds[board].qm_active_position] || '{}');
-    const suggestedFunders = JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]');
+    const bankActivity = qmValues?.bankActivity ? qmValues.bankActivity : JSON.parse(details[columnIds[board].qm_bank_activity] || '{}');
+    const activePosition = qmValues?.activePositions ? qmValues.activePositions : JSON.parse(details[columnIds[board].qm_active_position] || '{}');
+    const suggestedFunders = qmValues?.suggestedFunders ? qmValues.suggestedFunders : JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]');
     // eslint-disable-next-line no-nested-ternary
     const estDateValue = estDateFormat
       ? dayjs(estDate, estDateFormat)
@@ -122,8 +143,8 @@ function QualificationMatrixForm({ show, handleClose }) {
     handleUpdate({}, combined);
     form.setFieldsValue(combined);
   };
-  const onClose = () => {
-    setDefaultValues();
+  const onClose = (data = null) => {
+    setDefaultValues(data);
     handleClose();
   };
   const handleSubmit = async () => {
@@ -154,9 +175,13 @@ function QualificationMatrixForm({ show, handleClose }) {
       JSON.stringify(matrixValues.fundersPriority).replace(/\\/g, '\\\\').replace(/"/g, '\\"'),
       columnIds[board].qm_suggested_funders,
     );
+    await getData();
     setLoading(false);
-    getData();
-    onClose();
+    onClose({
+      bankActivity,
+      activePositions,
+      suggestedFunders: matrixValues.fundersPriority,
+    });
   };
   useEffect(() => {
     setDefaultValues();
@@ -255,7 +280,7 @@ function QualificationMatrixForm({ show, handleClose }) {
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
-            <Flex flex={0.4} className={styles.label}>Past Settled Defaults</Flex>
+            <Flex flex={0.4} className={styles.label}>Past Settled</Flex>
             <Flex flex={0.6} className={styles.value}>
               <Form.Item
                 noStyle
@@ -299,7 +324,7 @@ function QualificationMatrixForm({ show, handleClose }) {
               <Flex flex={1} className={styles.inputRow} justify="space-between">
                 <Flex flex={0.7} className={styles.smallLabel}>Min Monthly Deposit Count</Flex>
                 <Flex flex={0.3} className={styles.smallValue}>
-                  {matrixValues.minMonthlyDepositCount}
+                  {convertToNumber(matrixValues.minMonthlyDepositCount)}
                 </Flex>
               </Flex>
               <Flex flex={1} className={styles.inputRow} justify="space-between">
@@ -356,7 +381,7 @@ function QualificationMatrixForm({ show, handleClose }) {
                 <Flex flex={0.3} className={styles.smallValue}>
                   $
                   {' '}
-                  {matrixValues.monthCashFlow}
+                  {numberWithCommas(convertToNumber(matrixValues.monthCashFlow))}
                 </Flex>
               </Flex>
               <Flex flex={1} className={styles.inputRow} justify="space-between">
@@ -364,7 +389,7 @@ function QualificationMatrixForm({ show, handleClose }) {
                 <Flex flex={0.3} className={styles.smallValue}>
                   $
                   {' '}
-                  {matrixValues.existingMonthlyDebt}
+                  {numberWithCommas(convertToNumber(matrixValues.existingMonthlyDebt))}
                 </Flex>
               </Flex>
               <Flex flex={1} className={styles.inputRow} justify="space-between">
@@ -372,7 +397,7 @@ function QualificationMatrixForm({ show, handleClose }) {
                 <Flex flex={0.3} className={styles.smallValue}>
                   $
                   {' '}
-                  {matrixValues.remainingCashFlow}
+                  {numberWithCommas(convertToNumber(matrixValues.remainingCashFlow))}
                 </Flex>
               </Flex>
             </Flex>
@@ -382,7 +407,7 @@ function QualificationMatrixForm({ show, handleClose }) {
                 <Flex flex={0.3} className={styles.smallValue}>
                   $
                   {' '}
-                  {matrixValues.monthlyTotal}
+                  {numberWithCommas(convertToNumber(matrixValues.monthlyTotal))}
                 </Flex>
               </Flex>
               <Flex flex={1} className={styles.inputRow} justify="space-between">
@@ -390,13 +415,13 @@ function QualificationMatrixForm({ show, handleClose }) {
                 <Flex flex={0.3} className={styles.smallValue}>
                   $
                   {' '}
-                  {matrixValues.annualRevenue}
+                  {numberWithCommas(convertToNumber(matrixValues.annualRevenue))}
                 </Flex>
               </Flex>
               <Flex flex={1} className={styles.inputRow} justify="space-between">
                 <Flex flex={0.7} className={styles.smallLabel}>Annual Debt to Income</Flex>
                 <Flex flex={0.3} className={styles.smallValue}>
-                  {matrixValues.annualDebtToIncome}
+                  {convertToNumber(matrixValues.annualDebtToIncome)}
                   {' '}
                   %
                 </Flex>

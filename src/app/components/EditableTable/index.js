@@ -2,6 +2,7 @@ import {
   Flex, Form,
 } from 'antd';
 import classNames from 'classnames';
+import { numberWithCommas } from 'utils/helpers';
 import styles from './EditableTable.module.scss';
 import InputField from '../Forms/InputField';
 
@@ -41,7 +42,7 @@ function EditableTable({
                     <Flex flex={1} className={styles.itemColumn} justify={column.align} align="center">
                       <InputField
                         value={sum}
-                        defaultValue={data[column.key]}
+                        defaultValue={sum}
                         readOnly={isDisabled}
                         noBorder
                       />
@@ -64,7 +65,7 @@ function EditableTable({
             >
               {column.totalPrefix}
               {' '}
-              {totalCounts[column.key] || ' '}
+              {totalCounts[column.key] ? numberWithCommas(totalCounts[column.key].toFixed(0)) : ' '}
             </Flex>
           ))
         }

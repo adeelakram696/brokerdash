@@ -286,6 +286,21 @@ function InformationCard({
             <Flex>
               <Flex vertical flex={1}>
                 <Flex>
+                  <Flex className={styles.label}>Phone 2</Flex>
+                  <Flex className={styles.value}>
+                    {isEdit
+                      ? (
+                        <Form.Item
+                          noStyle
+                          name={columnIds[board].phone2}
+                        >
+                          <InputField />
+                        </Form.Item>
+                      )
+                      : data[columnIds[board].phone2] || '-'}
+                  </Flex>
+                </Flex>
+                <Flex>
                   <Flex className={styles.label}>Social Security</Flex>
                   <Flex className={styles.value} onClick={() => { setShowMasked(!showMasked); }}>
                     {isEdit

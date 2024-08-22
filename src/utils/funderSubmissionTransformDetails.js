@@ -79,10 +79,10 @@ const OnDeckSubmissionPayload = (data) => {
   const payload = {
     business: {
       phone: cleanPhoneNumber(data.client.phone) || '', // required
-      businessInceptionDate: formatDate(data.account.businessStartDate, dateFormat.YYYYMD) || '', // required
+      businessInceptionDate: formatDate(data.account?.businessStartDate, dateFormat.YYYYMD) || '', // required
       industryNAICSCode: '',
       industrySICCode: '',
-      taxID: cleanStrToNum(data.account.taxID) || '', // required
+      taxID: cleanStrToNum(data.account?.taxID) || '', // required
       doingBusinessAs: '',
       loanPurpose: data.moneyNeededFor || '',
       natureOfBusiness: data.account?.industry || '',

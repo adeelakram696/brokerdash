@@ -1,5 +1,7 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { Flex, Dropdown } from 'antd';
-import { boardNames, columnIds } from 'utils/constants';
+import { boardNames, columnIds, stateSOS } from 'utils/constants';
 import { TelescopeIcon } from 'app/images/icons';
 import { LeadContext } from 'utils/contexts';
 import { useContext } from 'react';
@@ -12,6 +14,12 @@ function ResearchLinks() {
   const isDeal = board === boardNames.deals;
   const state = isDeal ? details.clientAccount[columnIds
     .clientAccount.state_incorporated] : details[columnIds[board].state_incorporated];
+
+  const openStateUrl = (st) => {
+    const url = stateSOS[st];
+    window.open(url, '_blank');
+  };
+
   const items = [
     {
       label: (
@@ -27,9 +35,10 @@ function ResearchLinks() {
     {
       label: (
         <a
-          href={`https://www.google.com/search?q=secretary+of+state+%E2%80%9C${state?.replace(/ /g, '+')}%E2%80%9D`}
+          href="https://iapps.courts.state.ny.us/nyscef/CaseSearch?TAB=name"
           target="_blank"
           rel="noreferrer"
+          onClick={(e) => { e.preventDefault(); openStateUrl(state); }}
         >
           SOS
         </a>),

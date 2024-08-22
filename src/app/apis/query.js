@@ -270,7 +270,10 @@ export const fetchLeadsRotatedData = async () => {
           items {
             name
             id
-            column_values(ids: ["${columnIds.leads.stage}","${columnIds.leads.last_lead_assigned}", "${columnIds.leads.new_lead_or_touched}", "${columnIds.leads.channel}"]) {
+            board {
+              id
+            }
+            column_values(ids: ["${columnIds.leads.stage}"]) {
               id
               text
               value
@@ -284,7 +287,39 @@ export const fetchLeadsRotatedData = async () => {
   const items1 = res1.data.leadRotate[0].groups.reduce((prev, curr) => (
     [...prev, ...curr.items_page.items]
   ), []);
-  return items1;
+  const query2 = `query {
+    dealRotate: boards(ids: [${env.boards.deals}]) {
+      groups(ids: ["new_group40775", "new_group1842__1", "new_group748", "new_group54418", "new_group61375", "new_group59616", "new_group26835"]){
+        items_page(
+          query_params: {
+            rules: [
+              { column_id: "${columnIds.deals.agent}" compare_value:"${me.name}" operator:contains_text }
+              { column_id: "${columnIds.deals.date_last_rotated}" compare_value:"YESTERDAY" operator:greater_than_or_equals }
+            ]
+          }
+          limit: 500
+        ) {
+          items {
+            name
+            id
+            board {
+              id
+            }
+            column_values(ids: ["${columnIds.deals.stage}"]) {
+              id
+              text
+              value
+            }
+          }
+        }
+      }
+    }     
+  }`;
+  const res2 = await monday.api(query2);
+  const items2 = res2.data.dealRotate[0].groups.reduce((prev, curr) => (
+    [...prev, ...curr.items_page.items]
+  ), []);
+  return [...items1, ...items2];
 };
 export const fetchActionsNeededLeadsData = async () => {
   const me = fetchUser();
@@ -402,6 +437,7 @@ export const fetchDocReviews = async () => {
     boards(ids: [${env.boards.leads}]) {
       docReview: groups(ids: ["${env.pages.docReview}"]) {
         items_page(
+          limit: 500
           query_params:{
             rules: [
               { column_id: "${columnIds.leads.sales_rep}", compare_value: "${me.name}", operator:contains_text}
@@ -425,13 +461,16 @@ export const fetchLeadsFollowUps = async () => {
   const me = fetchUser();
   const res = await monday.api(`query {
     leads: boards(ids: [${env.boards.leads}]){
-      items_page(query_params:{
-        rules: [
-          { column_id: "${columnIds.leads.sales_rep}", compare_value: "${me.name}", operator: contains_text }
-          { column_id: "${columnIds.leads.next_followup}", compare_value: "TODAY", operator: lower_than_or_equal}
-          { column_id: "${columnIds.leads.next_followup}",compare_value: "", operator: is_not_empty }
-        ]
-      }){
+      items_page(
+        limit: 500
+        query_params:{
+          rules: [
+              { column_id: "${columnIds.leads.sales_rep}", compare_value: "${me.name}", operator: contains_text }
+              { column_id: "${columnIds.leads.next_followup}", compare_value: "TODAY", operator: lower_than_or_equal}
+              { column_id: "${columnIds.leads.next_followup}",compare_value: "", operator: is_not_empty }
+            ]
+          }
+        ){
         items {
           id
         }
@@ -446,12 +485,14 @@ export const fetchDealsFollowUps = async () => {
   const me = fetchUser();
   const res = await monday.api(`query {
     deals: boards(ids: [${env.boards.deals}]){
-      items_page(query_params:{
-        rules: [
-          { column_id: "${columnIds.deals.agent}", compare_value: "${me.name}", operator: contains_text }
-          { column_id: "${columnIds.deals.next_followup}", compare_value: "TODAY", operator: lower_than_or_equal}
-          { column_id: "${columnIds.deals.next_followup}",compare_value: "", operator: is_not_empty }
-        ]
+      items_page(
+      limit: 500
+        query_params:{
+          rules: [
+            { column_id: "${columnIds.deals.agent}", compare_value: "${me.name}", operator: contains_text }
+            { column_id: "${columnIds.deals.next_followup}", compare_value: "TODAY", operator: lower_than_or_equal}
+            { column_id: "${columnIds.deals.next_followup}",compare_value: "", operator: is_not_empty }
+          ]
       }){
         items {
           id
@@ -469,6 +510,7 @@ export const fetchReadyForSubmissions = async () => {
     boards(ids: [${env.boards.deals}]) {
       readyForSubmission: groups(ids: ["${env.pages.readyForSubmission}"]) {
         items_page(
+          limit: 500
           query_params:{
             rules: [
               { column_id: "${columnIds.deals.agent}", compare_value: "${me.name}", operator:contains_text}
@@ -494,6 +536,7 @@ export const fetchWaitingForOffer = async () => {
     boards(ids: [${env.boards.deals}]) {
      waitingForOffer: groups(ids: ["${env.pages.waitingForOffer}"]) {
         items_page(
+          limit: 500
           query_params:{
             rules: [
               { column_id: "${columnIds.deals.agent}", compare_value: "${me.name}", operator:contains_text}

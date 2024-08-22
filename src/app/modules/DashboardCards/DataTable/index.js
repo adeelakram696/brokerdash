@@ -13,7 +13,6 @@ function DataTable({
   highlightClass,
   newTagClass,
   hoverClass,
-  board,
   disableClick,
   disableNewTag,
   callBackOnOpen = () => {},
@@ -55,7 +54,7 @@ function DataTable({
                   {column?.render
                     ? column?.render(item[column.dataIndex], item)
                     : item[column.dataIndex]?.substring(0, column.maxLength || 20)}
-                  {item[column.dataIndex].length > 30 ? '...' : ''}
+                  {item[column.dataIndex]?.length > 30 ? '...' : ''}
                   {cindex === 0 && item.isNew && !disableNewTag ? <Flex justify="center" align="center" className={classNames(styles.newTag, newTagClass)}>{en.Cards.new}</Flex> : null}
                 </Flex>
               ))}
@@ -68,7 +67,6 @@ function DataTable({
           show={isModalOpen}
           handleClose={handleClose}
           leadId={selectedLeadId}
-          board={board}
         />
       ) : null}
     </Flex>

@@ -191,14 +191,19 @@ export function formatBytes(bytes) {
 
   return `${formattedBytes} ${sizes[i]}`;
 }
+
 export function convertToNumber(input) {
+  let value = input;
+  if (typeof value === 'string') {
+    value = value?.replace(/,/g, '');
+  }
   // Check if input is null, undefined, or a blank string
-  if (input === null || input === undefined || input.trim() === '') {
+  if (typeof value !== 'number' && (value === null || value === undefined || value?.trim() === '')) {
     return 0;
   }
 
   // Convert the input to a number
-  const number = Number(input);
+  const number = Number(value);
 
   // Check if the result is a valid number
   if (Number.isNaN(number)) {

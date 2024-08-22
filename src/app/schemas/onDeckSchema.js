@@ -47,8 +47,8 @@ export const onDeckSchema = Yup.object().shape({
     address: addressSchema,
   }),
   selfReported: Yup.object().shape({
-    revenue: Yup.number().required('Revenue is required').typeError('Revenue must be a number'),
-    averageBalance: Yup.number().required('Average Balance is required').typeError('Average Balance must be a number'),
+    revenue: Yup.number().required('QM Revenue is required').typeError('QM Revenue must be a number'),
+    averageBalance: Yup.number().required('QM Average Balance is required').typeError('QM Average Balance must be a number'),
   }),
   owners: Yup.array().of(ownerSchema).required('Owners are required').min(1, 'At least one owner is required'),
 });

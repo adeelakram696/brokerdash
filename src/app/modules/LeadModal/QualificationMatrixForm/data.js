@@ -9,7 +9,6 @@ export const bankActivityColumns = [
     key: 'startingBal',
     align: 'center',
     sumStartFrom: 1,
-    sumOfColumns: ['startingBal', 'totalCredit', 'totalDebit'],
   },
   {
     title: 'Total Credits',
@@ -65,6 +64,9 @@ export const activePositionsColumns = [
     align: 'center',
     totalCount: true,
     totalPrefix: '$',
+    disabled: true,
+    renderKey: 'daily',
+    renderCount: (daily) => (daily ? (daily * 5) : 0),
   },
   {
     title: 'Monthly',
@@ -72,6 +74,9 @@ export const activePositionsColumns = [
     align: 'center',
     totalCount: true,
     totalPrefix: '$',
+    disabled: true,
+    renderKey: 'daily',
+    renderCount: (daily) => (daily ? (daily * 21) : 0),
   },
   {
     title: 'Payoff',

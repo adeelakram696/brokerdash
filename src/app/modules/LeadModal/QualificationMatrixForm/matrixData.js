@@ -6,10 +6,18 @@ export const fundersIntakeCalc = (values, funders) => {
     ? funders.filter((funder) => funder.pastSettledDefaults)
     : funders;
   return (filtered || []).map((funder) => {
+    let minMonthRevenue = false;
+    if (funder.monthlyPriority) {
+      const monthsRevInd = [2, 3].filter((ind) => values[`totalCredit-${ind}`] > 0);
+      minMonthRevenue = [1, ...monthsRevInd].some((ind) => (
+        values[`totalCredit-${ind}`] <= funder.minimumRevenueMonthly()
+      ));
+    }
     const isAvgbalanceZero = funder.minAvgDailyBalance === 0;
     const funderCounts = {
       funder: funder.funder,
-      minAnnualRevenue: Number(funder.minimumRevenueAnnual <= values.annualRevenue),
+      minAnnualRevenue: funder.monthlyPriority
+        ? Number(!minMonthRevenue) : Number(funder.minimumRevenueAnnual <= values.annualRevenue),
       creditScoreSuitability: Number(funder.minimumCreditScore <= values.ficoScore),
       minimumMonthlyDeposits: Number(
         funder.minimumMonthlyDepositcount <= values.minMonthlyDepositCount,
@@ -59,4 +67,5 @@ export const transformFundersforQM = (funder, columns) => ({
   restrictedIndustries: columns[columnIds.funders.rest_industries]?.split(',') || [],
   tier: convertToNumber(columns[columnIds.funders.tier]),
   pastSettledDefaults: columns[columnIds.funders.past_settled_defaults] === 'v',
+  monthlyPriority: columns[columnIds.funders.monthly_priority] === 'v',
 });

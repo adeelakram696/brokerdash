@@ -19,6 +19,8 @@ function Content() {
     handleRenewal,
     getData,
   } = useContext(LeadContext);
+  const isDealFunded = details.group.id === 'closed';
+
   const handlePitched = async (checked) => {
     setLoadingData(true);
     const dataJson = { [columnIds[board].pitched]: { checked } };
@@ -81,7 +83,7 @@ function Content() {
     const pitchedVal = getColumnValue(details?.column_values, columnIds[board].pitched);
     readySubmissionBtn.right = (
       <Space align="center">
-        {RenewalBtn}
+        {isDealFunded ? RenewalBtn : null}
         <Switch
           onClick={handlePitched}
           checkedChildren="Pitched"

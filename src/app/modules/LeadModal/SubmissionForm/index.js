@@ -87,16 +87,14 @@ function SubmissionForm({
     // eslint-disable-next-line no-unreachable
     const linkedPulseIds = selectedFunders.map((id) => ({ linkedPulseId: Number(id) }));
     const docs = selectedDocs.join(',');
-    let cta = !inputPrevSubmission ? [columnIds[board].submit_offers] : null;
+    // let cta = !inputPrevSubmission ? [columnIds[board].submit_offers] : null;
+    let cta = null;
     let payload = {
       [columnIds[board].funders_dropdown]: { linkedPulseIds },
       [columnIds[board].additional_body_content]: textNote,
     };
     if (!inputPrevSubmission) {
       payload[columnIds[board].submit_offers_docs] = docs;
-    }
-    if (inputPrevSubmission) {
-      payload[columnIds[board].input_previous_submission] = 'Trigger';
     }
     if (isContract) {
       payload = {
@@ -114,12 +112,26 @@ function SubmissionForm({
     }
     setLoading(true);
     await sendSubmission(leadId, boardId, payload, cta);
+    if (!inputPrevSubmission && !isContract && !isResubmit) {
+      payload = {};
+      payload[columnIds[board].submit_offers_status] = 'Trigger';
+      await sendSubmission(leadId, boardId, payload, cta);
+    }
+    if (inputPrevSubmission) {
+      payload = {};
+      payload[columnIds[board].input_previous_submission] = 'Trigger';
+      await sendSubmission(leadId, boardId, payload, cta);
+    }
     if (isResubmit) {
       await sendSubmission(
         resubmiteId,
         env.boards.submissions,
         { [columnIds.subItem.status]: statuses.new },
+        null,
       );
+      payload = {};
+      payload[columnIds[board].submit_offers_status] = 'Trigger';
+      await sendSubmission(leadId, boardId, payload, cta);
       resendSubmissionApplication(
         resubmiteId,
         funderName,
@@ -209,11 +221,13 @@ function SubmissionForm({
           handleTextChange={setTextNote}
         />
       ) : null}
+      {showErrors && (
       <SubmissionErrors
         show={showErrors}
         errors={submissionErrors}
         handleClose={() => setShowErrors(false)}
       />
+      )}
     </Modal>
   );
 }

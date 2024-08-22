@@ -12,6 +12,7 @@ import SendSms from './SendSms';
 import Disqualified from './Disqualified';
 import DocsNeeded from './DocsNeeded';
 import GenerateApp from './GenerateApp';
+import ReAssignLead from './ReAssignLead';
 // import SendEmail from './SendEmail';
 
 const items = [
@@ -67,7 +68,12 @@ function ActionRow() {
     },
     {
       component: (
-        board === boardNames.leads ? <DocsNeeded /> : null
+        <DocsNeeded />
+      ),
+    },
+    {
+      component: (
+        board === boardNames.leads ? <ReAssignLead /> : null
       ),
     },
   ];
