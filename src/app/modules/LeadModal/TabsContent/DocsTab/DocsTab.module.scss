@@ -31,8 +31,13 @@
   color: #000;
 }
 .sorting {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 300;
+  cursor: pointer;
+  padding: 2px 9px;
+  background: #ebebeb;
+  border: 1px solid #b3b3b3;
+  border-radius: 8px;
 }
 .documentList {
   margin-top: 5px;

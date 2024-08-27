@@ -1,10 +1,11 @@
 import {
   Flex, Card, Button, Checkbox,
+  Dropdown,
 } from 'antd';
 import en from 'app/locales/en';
 import classNames from 'classnames';
 import { DownloadIcon } from 'app/images/icons';
-import { ArrowDownOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import FileIcon from 'app/components/FileIcon';
 import { useContext, useEffect, useState } from 'react';
 import { columnIds } from 'utils/constants';
@@ -14,14 +15,26 @@ import { formatBytes } from 'utils/helpers';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
+const sortingItems = [
+  {
+    label: 'Last Uploaded', key: 'lastUploaded', column: 'created_at', orderBy: 'asc',
+  },
+  {
+    label: 'A-Z', key: 'asc', column: 'name', orderBy: 'asc',
+  },
+  {
+    label: 'Z-A', key: 'desc', column: 'name', orderBy: 'desc',
+  },
+];
 function DocsTab() {
   const {
-    leadId, board, docs, getDocs, boardId,
+    leadId, board, docs, getDocs, boardId, sortDocs, details,
     currentTab,
   } = useContext(LeadContext);
   let intervalId;
   const [downloadDocs, setDownloadDocs] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
+  const [sortingBy, setSortingBy] = useState(sortingItems[0]);
 
   const uploadFile = async () => {
     await monday.execute('triggerFilesUpload', {
@@ -53,6 +66,12 @@ function DocsTab() {
       clearInterval(intervalId);
     };
   }, [leadId, currentTab]);
+
+  const handleSorting = ({ key }) => {
+    const sortBy = sortingItems.find((item) => item.key === key);
+    setSortingBy(sortBy);
+    sortDocs(sortBy.orderBy, sortBy.column);
+  };
   return (
     <Flex flex={1}>
       <Flex className={parentStyles.columnLeft} flex={1} vertical>
@@ -86,15 +105,23 @@ function DocsTab() {
           </Flex>
           <Flex justify="space-between" className={styles.breadcrumbRow}>
             <Flex>
-              <Flex className={styles.folderTitle}>{docs.name}</Flex>
+              <Flex className={styles.folderTitle}>{details.name}</Flex>
             </Flex>
             <Flex>
-              <Flex className={styles.sorting}>
-                {' '}
-                <ArrowDownOutlined />
-                {' '}
-                last uploaded
-              </Flex>
+              <Dropdown
+                menu={{
+                  items: sortingItems,
+                  onClick: handleSorting,
+                }}
+                trigger={['click']}
+              >
+                <Flex className={styles.sorting}>
+                  {' '}
+                  {sortingBy.orderBy === 'desc' ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                  {' '}
+                  {sortingBy.label}
+                </Flex>
+              </Dropdown>
             </Flex>
           </Flex>
           <Flex className={styles.documentList} vertical>

@@ -19,6 +19,7 @@ import { LeadContext } from 'utils/contexts';
 import { ctaBtn, updateStageToSubmission } from 'app/apis/mutation';
 import { getColumnValue, getQueryParams } from 'utils/helpers';
 import monday from 'utils/mondaySdk';
+import _ from 'lodash';
 import styles from './LeadModal.module.scss';
 import ModalHeader from './Header';
 import ActionRow from './ActionsRow';
@@ -58,6 +59,10 @@ function LeadModal({
   const getDocs = async () => {
     const res = await fetchLeadDocs(leadId);
     setDocs(res.data.docs[0]);
+  };
+  const sortDocs = (orderBy, column) => {
+    const sortedData = _.orderBy(docs.assets, [column], [orderBy]);
+    setDocs({ assets: sortedData });
   };
   const getFunders = async () => {
     const res = await fetchFunders(env.boards.funders);
@@ -236,6 +241,7 @@ function LeadModal({
           handleRenewal,
           setLoadingData,
           setCurrentTab,
+          sortDocs,
         }}
       >
         <Spin tip="Loading..." spinning={!details.id || loadingData}>

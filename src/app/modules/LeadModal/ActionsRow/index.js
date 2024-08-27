@@ -63,7 +63,7 @@ function ActionRow() {
     },
     {
       component: (
-        board === boardNames.deals ? <GenerateApp /> : null
+        <GenerateApp />
       ),
     },
     {

@@ -23,7 +23,7 @@ import { SubmissionErrors } from './SubmissionErrors';
 
 function SubmissionForm({
   show, handleClose, type = 'funder', inputPrevSubmission, resubmiteId,
-  funderName,
+  funderName, funderId,
 }) {
   const {
     leadId, boardId, board, details, getData,
@@ -77,6 +77,7 @@ function SubmissionForm({
         submittedFunders,
         details,
         isResubmit,
+        funderId,
       );
       if (validation.length > 0) {
         setSubmissionErrors(validation);
@@ -85,7 +86,8 @@ function SubmissionForm({
       }
     }
     // eslint-disable-next-line no-unreachable
-    const linkedPulseIds = selectedFunders.map((id) => ({ linkedPulseId: Number(id) }));
+    const linkedPulseIds = selectedFunders.map((id) => ({ linkedPulseId: Number(id) }))
+      .filter(({ linkedPulseId }) => linkedPulseId);
     const docs = selectedDocs.join(',');
     // let cta = !inputPrevSubmission ? [columnIds[board].submit_offers] : null;
     let cta = null;

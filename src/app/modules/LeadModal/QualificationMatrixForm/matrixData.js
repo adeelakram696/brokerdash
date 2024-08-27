@@ -10,7 +10,7 @@ export const fundersIntakeCalc = (values, funders) => {
     if (funder.monthlyPriority) {
       const monthsRevInd = [2, 3].filter((ind) => values[`totalCredit-${ind}`] > 0);
       minMonthRevenue = [1, ...monthsRevInd].some((ind) => (
-        values[`totalCredit-${ind}`] <= funder.minimumRevenueMonthly()
+        (values[`totalCredit-${ind}`] || 0) <= funder.minimumRevenueMonthly()
       ));
     }
     const isAvgbalanceZero = funder.minAvgDailyBalance === 0;

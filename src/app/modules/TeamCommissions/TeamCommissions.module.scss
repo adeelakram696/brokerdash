@@ -1,0 +1,64 @@
+.usersList{
+  min-width: 250px;
+  max-width: 300px;
+}
+.filterField {
+  margin: 0 10px;
+}
+.headerRow {
+  color: white;
+  background-color: rgba(117, 117, 117, 0.535);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.171);
+  border-start-end-radius: 15px;
+  border-start-start-radius: 15px;
+  font-size: 13px;
+  padding: 5px 10px;
+  font-weight: 600;
+}
+.itemRow {
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.171);
+  border-radius: 15px;
+  font-size: 13px;
+  padding: 5px 10px;
+}
+.rowPadding {
+  padding: 10px;
+}
+.clickable {
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.351);
+  }
+}
+.list {
+  padding: 0px 10px;
+  overflow-y: auto;
+  max-height: 91vh;
+}
+.bussinessName {
+  color:rgb(110, 247, 135);
+}
+.card {
+  border: 1px solid rgb(118, 118, 118);
+  border-radius: 15px;
+  margin: 10px;
+}
+.filterFieldDatePicker {
+  margin-top: 10px;
+  height: 30px;
+}
+.heading {
+  font-size: 16px;
+}
+
+.highlight {
+  font-size: 20px;
+  font-weight: bold;
+  color:rgb(110, 247, 135);
+}
+.selectedTier {
+  color:rgb(110, 247, 135);
+  font-weight: bold;
+  font-size: 15px;
+}

@@ -10,7 +10,7 @@ import styles from './ActionsRow.module.scss';
 
 function GenerateApp() {
   const {
-    details, setLoadingData,
+    details, setLoadingData, board,
   } = useContext(LeadContext);
   const handleAppGenClick = async (btnId) => {
     setLoadingData(true);
@@ -20,14 +20,14 @@ function GenerateApp() {
   const items = [
     {
       label: (
-        <div onClick={() => { handleAppGenClick(columnIds.deals.approvd_application); }}>
+        <div onClick={() => { handleAppGenClick(columnIds[board].approvd_application); }}>
           Approvd App
         </div>),
       key: '0',
     },
     {
       label: (
-        <div onClick={() => { handleAppGenClick(columnIds.deals.logic_application); }}>
+        <div onClick={() => { handleAppGenClick(columnIds[board].logic_application); }}>
           Logic App
         </div>),
       key: '1',

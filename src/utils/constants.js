@@ -12,6 +12,7 @@ export const env = {
     salesActivities2: process.env.REACT_APP_SALES_ACTIVITIES2_BOARD,
     metrics: process.env.REACT_APP_METRICS_BOARD,
     teamLeaderBoard: process.env.REACT_APP_TEAM_LEADERBOARD_BOARD,
+    commissionSettings: process.env.REACT_APP_COMMISSION_SETTINGS_BOARD,
     [process.env.REACT_APP_DEALS_BOARD_ID]: 'deals',
     [process.env.REACT_APP_LEADS_BOARD_ID]: 'leads',
   },
@@ -349,6 +350,8 @@ export const columnIds = {
     renewal: 'button__1',
     date_last_rotated: 'date_17__1',
     reassign_rep_btn: 'button6__1',
+    approvd_application: 'button64__1',
+    logic_application: 'button_1__1',
   },
   subItem: {
     funding_accounts: 'connect_boards5',
@@ -509,6 +512,14 @@ export const columnIds = {
     tier: 'tier_3',
     past_settled_defaults: 'checkbox7__1',
     monthly_priority: 'checkbox6__1',
+  },
+  commissionSettings: {
+    name: 'name',
+    person: 'person',
+    min_cgi: 'text__1',
+    max_cgi: 'text_1__1',
+    inbound: 'text_2__1',
+    outbound: 'text_3__1',
   },
 };
 export const actionsNeeded = [

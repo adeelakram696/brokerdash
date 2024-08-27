@@ -28,9 +28,18 @@ export const validateBeforeSubmission = async (item, funder) => {
   return { error: 'Function does not exist' };
 };
 
-export const validateSubmission = async (funders, alreadySubmitted, details, isResubmit) => {
+export const validateSubmission = async (
+  funders,
+  alreadySubmitted,
+  details,
+  isResubmit,
+  resubmitFunderId,
+) => {
   const filterdFunders = funders.filter(
-    (funder) => (!alreadySubmitted.includes(funder) || isResubmit)
+    (funder) => (
+      !alreadySubmitted.includes(funder)
+      || (isResubmit && allowedFunders.includes(Number(resubmitFunderId)))
+    )
     && allowedFunders.includes(Number(funder)),
   );
   const fundersValidations = await Promise.all(filterdFunders.map(async (funderId) => {
