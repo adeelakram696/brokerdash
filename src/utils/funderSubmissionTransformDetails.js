@@ -2,7 +2,7 @@ import {
   columnIds, dateFormat, onDeckEntityMapping,
 } from './constants';
 import {
-  cleanPhoneNumber, cleanStrToNum, formatDate,
+  cleanPhoneNumber, cleanStrToNum, convertToNumber, formatDate,
 } from './helpers';
 
 export const transformDealDetails = (item) => {
@@ -119,7 +119,7 @@ const OnDeckSubmissionPayload = (data) => {
         zipCode: data.client.zipCode,
       },
       homePhone: cleanPhoneNumber(data.client.phone),
-      ownershipPercentage: data.client.ownership,
+      ownershipPercentage: convertToNumber(data.client.ownership),
       ssn: cleanStrToNum(data.client.social_security), // required 9 chars
       name: data.client.name, // required first and last name
     },
