@@ -2,7 +2,7 @@ import { Flex, Dropdown } from 'antd';
 import {
   ThreeDotsIcon,
 } from 'app/images/icons';
-import { boardNames, columnIds } from 'utils/constants';
+import { columnIds } from 'utils/constants';
 import { updateClientInformation } from 'app/apis/mutation';
 import { LeadContext } from 'utils/contexts';
 import { useContext } from 'react';
@@ -73,7 +73,7 @@ function ActionRow() {
     },
     {
       component: (
-        board === boardNames.leads ? <ReAssignLead /> : null
+        <ReAssignLead />
       ),
     },
   ];

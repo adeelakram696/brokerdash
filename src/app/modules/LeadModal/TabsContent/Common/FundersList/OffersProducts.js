@@ -1,5 +1,7 @@
 import { CloseCircleFilled } from '@ant-design/icons';
-import { Button, Flex, Modal } from 'antd';
+import {
+  Button, Divider, Flex, Modal,
+} from 'antd';
 import { columnIds } from 'utils/constants';
 import { decodeJson } from 'utils/encrypt';
 import { numberWithCommas } from 'utils/helpers';
@@ -45,20 +47,23 @@ export function OffersProducts({
           <Flex flex={0.15} className={styles.offerProductsHeader}>Max Sale Rate</Flex>
           <Flex flex={0.2} className={styles.offerProductsHeader}>Collection Frequency</Flex>
         </Flex>
-        {products?.map((product) => (
-          product?.offers?.reverse().map((offer, index) => (
-            <Flex className={styles.offerProductsDataContainer} justify="space-between" flex={1}>
-              <Flex flex={0.2} className={styles.offerProductsData}>{index === 0 ? product.name : ' '}</Flex>
-              <Flex justify="center" flex={0.15} className={styles.offerProductsData}>{offer.term}</Flex>
-              <Flex justify="center" flex={0.2} className={styles.offerProductsData}>
-                $
-                {numberWithCommas(offer.loanAmount)}
+        {products?.map((product, i) => (
+          <>
+            {i > 0 ? <Divider /> : null}
+            {product?.offers?.reverse().map((offer, index) => (
+              <Flex className={styles.offerProductsDataContainer} justify="space-between" flex={1}>
+                <Flex flex={0.2} className={styles.offerProductsData}>{index === 0 ? product.name : ' '}</Flex>
+                <Flex justify="center" flex={0.15} className={styles.offerProductsData}>{offer.term}</Flex>
+                <Flex justify="center" flex={0.2} className={styles.offerProductsData}>
+                  $
+                  {numberWithCommas(offer.loanAmount)}
+                </Flex>
+                <Flex justify="center" flex={0.1} className={styles.offerProductsData}>{offer.buyRate || '-'}</Flex>
+                <Flex justify="center" flex={0.15} className={styles.offerProductsData}>{offer.sellRate || '-'}</Flex>
+                <Flex justify="center" flex={0.2} className={styles.offerProductsData}>{offer.paymentPlans.join(', ')}</Flex>
               </Flex>
-              <Flex justify="center" flex={0.1} className={styles.offerProductsData}>{offer.buyRate}</Flex>
-              <Flex justify="center" flex={0.15} className={styles.offerProductsData}>{offer.sellRate}</Flex>
-              <Flex justify="center" flex={0.2} className={styles.offerProductsData}>{offer.paymentPlans.join(', ')}</Flex>
-            </Flex>
-          ))
+            ))}
+          </>
         ))}
       </Flex>
     </Modal>

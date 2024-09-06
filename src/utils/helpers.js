@@ -81,7 +81,27 @@ function getCommisionAmt({
     result = fundingAmt
     * commissionPerc;
   }
-  return numberWithCommas(result);
+  return numberWithCommas(result?.toFixed(2));
+}
+export function convertToNumber(input) {
+  let value = input;
+  if (typeof value === 'string') {
+    value = value?.replace(/,/g, '');
+  }
+  // Check if input is null, undefined, or a blank string
+  if (typeof value !== 'number' && (value === null || value === undefined || value?.trim() === '')) {
+    return 0;
+  }
+
+  // Convert the input to a number
+  const number = Number(value);
+
+  // Check if the result is a valid number
+  if (Number.isNaN(number)) {
+    return 0;
+  }
+
+  return number;
 }
 
 export function getFormulaValues(values) {
@@ -96,17 +116,17 @@ export function getFormulaValues(values) {
   const paybackAmt = fundingAmt * Number(values[columnIds.subItem.factor_rate]);
   const paybackPeriod = paybackAmt / Number(values[columnIds.subItem.ach_amount]);
   return {
-    [columnIds.subItem.funder_fee]: numberWithCommas(funderFee),
-    [columnIds.subItem.net_funding_amt]: numberWithCommas(netFundingAmt),
+    [columnIds.subItem.funder_fee]: numberWithCommas(funderFee?.toFixed(2)),
+    [columnIds.subItem.net_funding_amt]: numberWithCommas(netFundingAmt?.toFixed(2)),
     [columnIds.subItem.payback_amount]: numberWithCommas(paybackAmt.toFixed(2)),
-    [columnIds.subItem.payback_period]: paybackPeriod?.toFixed(3),
+    [columnIds.subItem.payback_period]: convertToNumber(paybackPeriod)?.toFixed(2),
     [columnIds.subItem.comission_amt]: getCommisionAmt({
       paybackAmt,
       fundingAmt,
       commissionPerc: Number(values[columnIds.subItem.commission_perc]) / 100,
       commisionCalcOn: values[columnIds.subItem.commission_calc_on],
     }),
-    [columnIds.subItem.professional_service_fee]: ProfessionalServFee,
+    [columnIds.subItem.professional_service_fee]: ProfessionalServFee?.toFixed(2),
   };
 }
 
@@ -190,27 +210,6 @@ export function formatBytes(bytes) {
   const formattedBytes = parseFloat((bytes / k ** i).toFixed(2));
 
   return `${formattedBytes} ${sizes[i]}`;
-}
-
-export function convertToNumber(input) {
-  let value = input;
-  if (typeof value === 'string') {
-    value = value?.replace(/,/g, '');
-  }
-  // Check if input is null, undefined, or a blank string
-  if (typeof value !== 'number' && (value === null || value === undefined || value?.trim() === '')) {
-    return 0;
-  }
-
-  // Convert the input to a number
-  const number = Number(value);
-
-  // Check if the result is a valid number
-  if (Number.isNaN(number)) {
-    return 0;
-  }
-
-  return number;
 }
 export function getMostValue(obj, status) {
   return Object.values(obj).reduce((prev, curr) => {

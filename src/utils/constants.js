@@ -10,6 +10,7 @@ export const env = {
     employees: process.env.REACT_APP_EMPLOYEES_BOARD,
     salesActivities: process.env.REACT_APP_SALES_ACTIVITIES_BOARD,
     salesActivities2: process.env.REACT_APP_SALES_ACTIVITIES2_BOARD,
+    salesActivities3: process.env.REACT_APP_SALES_ACTIVITIES3_BOARD,
     metrics: process.env.REACT_APP_METRICS_BOARD,
     teamLeaderBoard: process.env.REACT_APP_TEAM_LEADERBOARD_BOARD,
     commissionSettings: process.env.REACT_APP_COMMISSION_SETTINGS_BOARD,
@@ -200,6 +201,9 @@ export const columnIds = {
     docs_needed: 'dropdown9__1',
     custom_docs: 'text68__1',
     date_last_rotated: 'date_107__1',
+    date_submitted: 'date_19__1',
+    date_offer_recieved: 'date_193__1',
+    reassign_rep_btn: 'button0__1',
   },
   leads: {
     name: 'name',

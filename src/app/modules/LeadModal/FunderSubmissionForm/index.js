@@ -55,7 +55,7 @@ function FunderSubmissionForm({
     if (!data.name) return;
     setFieldsValues();
     handleChange('', data);
-  }, [data]);
+  }, []);
   const handleUpdate = async (values) => {
     setLoading(true);
     await updateClientInformation(data.id, data.board.id, values);

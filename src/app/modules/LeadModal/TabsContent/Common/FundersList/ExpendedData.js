@@ -145,7 +145,7 @@ function ExpendedData({ isExpended = false, data }) {
 
         {isSelected && details[columnIds[board].intent_letter_link_pandadoc] ? <Flex style={{ marginBottom: 10 }}><Button onClick={handleIntentLetterClick} shape="round" size="small">Send Intent Letter</Button></Flex> : null}
 
-        {isSelected && data[columnIds.subItem.create_psf_only] !== 'Create!' ? <Flex style={{ marginBottom: 10 }}><Button onClick={handlePSFClick} shape="round" size="small">Send PSF</Button></Flex> : null}
+        {isSelected && data[columnIds.subItem.create_psf_only] !== 'Create!' ? <Flex style={{ marginBottom: 10 }}><Button onClick={handlePSFClick} shape="round" size="small">Create PSF</Button></Flex> : null}
         {details[columnIds[board].psf_link] ? <Flex style={{ marginBottom: 10 }}><Button onClick={handlePSFLinkClick} shape="round" size="small">Open PSF</Button></Flex> : null}
       </Flex>
       <SubmissionForm

@@ -15,6 +15,7 @@ import {
 } from 'utils/helpers';
 import SelectField from 'app/components/Forms/SelectField';
 import InputField from 'app/components/Forms/InputField';
+import classNames from 'classnames';
 import styles from './QualificationMatrixForm.module.scss';
 import {
   activePositionKeys,
@@ -239,25 +240,57 @@ function QualificationMatrixForm({ show, handleClose }) {
       >
         <Flex vertical style={{ marginTop: 20 }}>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
-            <Flex flex={0.4} className={styles.label}>Business Name</Flex>
+            <Flex
+              flex={0.4}
+              className={classNames(
+                styles.label,
+                { [styles.required]: !details.name },
+              )}
+            >
+              Business Name
+            </Flex>
             <Flex flex={0.6} className={styles.value}>
               {details.name}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
-            <Flex flex={0.4} className={styles.label}>Type of Business</Flex>
+            <Flex
+              flex={0.4}
+              className={classNames(
+                styles.label,
+                { [styles.required]: !industry },
+              )}
+            >
+              Type of Business
+            </Flex>
             <Flex flex={0.6} className={styles.value}>
               {industry}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
-            <Flex flex={0.4} className={styles.label}>State Of Business</Flex>
+            <Flex
+              flex={0.4}
+              className={classNames(
+                styles.label,
+                { [styles.required]: !state },
+              )}
+            >
+              State Of Business
+            </Flex>
             <Flex flex={0.6} className={styles.value}>
               {state}
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
-            <Flex flex={0.4} className={styles.label}>Date Business Established</Flex>
+            <Flex
+              flex={0.4}
+              className={classNames(
+                styles.label,
+                { [styles.required]: !matrixValues.business_start_date },
+              )}
+            >
+              Date Business Established
+            </Flex>
             <Flex flex={0.6} className={styles.value}>
               <Form.Item
                 noStyle
@@ -274,7 +307,15 @@ function QualificationMatrixForm({ show, handleClose }) {
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
-            <Flex flex={0.4} className={styles.label}>Fico Score</Flex>
+            <Flex
+              flex={0.4}
+              className={classNames(
+                styles.label,
+                { [styles.required]: !extractLeastNumber(creditScore) },
+              )}
+            >
+              Fico Score
+            </Flex>
             <Flex flex={0.6} className={styles.value}>
               {extractLeastNumber(creditScore)}
             </Flex>

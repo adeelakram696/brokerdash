@@ -608,7 +608,7 @@ export const fetchLeadClientDetails = async (leadId) => {
     }
   }`;
   const res = await monday.api(query);
-  const columns = normalizeColumnValues(res.data.details[0].column_values);
+  const columns = normalizeColumnValues(res.data.details[0]?.column_values);
   const subitems = res.data.details[0]?.subitems?.map((item) => {
     const subItemcolumns = normalizeColumnValues(item.column_values);
     return {
@@ -914,6 +914,15 @@ export const getTotalActivities = async (dates) => {
     );
     itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
   } while (res.data.boards[0].items_page.cursor);
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchSaleActivities(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dates,
+      env.boards.salesActivities3,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
   const activities = itemsList.reduce((prev, curr) => {
     const type = curr?.column_values?.find((col) => col.id === 'status');
     const owner = getColumnValue(curr.column_values || [], 'person');
@@ -1133,6 +1142,18 @@ export const getTeamTotalActivities = async (duration, actionIds, employees) => 
       actionIds,
       empIds,
       env.boards.salesActivities2,
+    );
+    itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
+  } while (res.data.saleActivities[0].items_page.cursor);
+  res = null;
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchUTeamSaleActivities(
+      res ? res.data.saleActivities[0].items_page.cursor : null,
+      duration,
+      actionIds,
+      empIds,
+      env.boards.salesActivities3,
     );
     itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
   } while (res.data.saleActivities[0].items_page.cursor);

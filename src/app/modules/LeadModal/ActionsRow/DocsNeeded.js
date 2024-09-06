@@ -41,7 +41,22 @@ function DocsNeeded() {
         ? values.customText : selectedDoc,
     };
     await updateClientInformation(leadId, details.board.id, dataJson);
-    await updateStage(leadId, board === boardNames.leads ? 'new_group7612' : 'new_group1842__1');
+    const groupId = board === boardNames.leads ? 'new_group7612' : 'new_group1842__1';
+    let payload;
+    if (details.group.id === groupId) {
+      if (details[columnIds[board].sequence_additional_docs_needed] === 'Step 1: Immediate') {
+        payload = {
+          [[columnIds[board].sequence_additional_docs_needed]]: '',
+        };
+        await updateClientInformation(leadId, details.board.id, payload);
+      }
+      payload = {
+        [[columnIds[board].sequence_additional_docs_needed]]: 'Step 1: Immediate',
+      };
+      await updateClientInformation(leadId, details.board.id, payload);
+    } else {
+      await updateStage(leadId, groupId);
+    }
     setIsCustom(false);
     setLoading(false);
     hideModal();

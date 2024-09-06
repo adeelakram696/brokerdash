@@ -100,11 +100,13 @@ function DataRow({
           </Tooltip>
         </Flex>
       </Flex>
-      <FunderSubmissionForm
-        show={showFunderForm}
-        handleClose={handleClose}
-        data={data}
-      />
+      {showFunderForm ? (
+        <FunderSubmissionForm
+          show={showFunderForm}
+          handleClose={handleClose}
+          data={data}
+        />
+      ) : null}
       <Modal
         title="Confirmation of Status Change"
         open={confirmation}
