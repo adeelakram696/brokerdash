@@ -50,7 +50,7 @@ export const transformFundersforQM = (funder, columns) => ({
   minimumCreditScore: convertToNumber(columns[columnIds.funders.min_credit_score]),
   maxPosition: convertToNumber(columns[columnIds.funders.max_position]),
   position1st: columns[columnIds.funders.first_position],
-  stateRestrictions: columns[columnIds.funders.state_restrictions]?.split(',') || [],
+  stateRestrictions: columns[columnIds.funders.state_restrictions]?.split(', ') || [],
   insuffientFundsNSF: [
     convertToNumber(columns[columnIds.funders.insuffient_funds_30]),
     convertToNumber(columns[columnIds.funders.insuffient_funds_90]),
@@ -64,7 +64,7 @@ export const transformFundersforQM = (funder, columns) => ({
   minAvgDailyBalance: convertToNumber(columns[columnIds.funders.min_avg_daily_balance]),
   minFundingAmount$: convertToNumber(columns[columnIds.funders.min_funding_amount]),
   maxFundingAmount$: convertToNumber(columns[columnIds.funders.max_funding_amount]),
-  restrictedIndustries: columns[columnIds.funders.rest_industries]?.split(',') || [],
+  restrictedIndustries: columns[columnIds.funders.rest_industries]?.split(', ') || [],
   tier: convertToNumber(columns[columnIds.funders.tier]),
   pastSettledDefaults: columns[columnIds.funders.past_settled_defaults] === 'v',
   monthlyPriority: columns[columnIds.funders.monthly_priority] === 'v',
