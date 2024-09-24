@@ -2,9 +2,12 @@ import { columnIds } from 'utils/constants';
 import { convertToNumber } from 'utils/helpers';
 
 export const fundersIntakeCalc = (values, funders) => {
-  const filtered = values.isPastSetttled
+  let filtered = values.isPastSetttled
     ? funders.filter((funder) => funder.pastSettledDefaults)
     : funders;
+  filtered = values.acceptOnlineBank
+    ? filtered.filter((funder) => funder.acceptOnlineBanking)
+    : filtered;
   return (filtered || []).map((funder) => {
     let minMonthRevenue = false;
     if (funder.monthlyPriority) {
@@ -67,5 +70,6 @@ export const transformFundersforQM = (funder, columns) => ({
   restrictedIndustries: columns[columnIds.funders.rest_industries]?.split(', ') || [],
   tier: convertToNumber(columns[columnIds.funders.tier]),
   pastSettledDefaults: columns[columnIds.funders.past_settled_defaults] === 'v',
+  acceptOnlineBanking: columns[columnIds.funders.accept_online_banking] === 'v',
   monthlyPriority: columns[columnIds.funders.monthly_priority] === 'v',
 });

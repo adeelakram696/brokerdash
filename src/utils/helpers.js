@@ -2,7 +2,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { commissionOnValues } from 'app/modules/LeadModal/TabsContent/Common/FundersList/data';
-import { columnIds, env } from './constants';
+import { columnIds, env, stateSOS } from './constants';
 
 export const removeBoardHeader = () => {
   const header = document.getElementById('mf-header');
@@ -181,16 +181,19 @@ export function getAvgTimeColor(avgTime, goalTime) {
   if (avgTime + 15 >= goalTime) return 'orange';
   return 'green';
 }
-export function customSort(array, customOrder) {
+export function customSort(array, customOrder, exclude = false) {
   const orderMap = new Map();
-
+  let data = array;
+  if (exclude) {
+    data = array.filter((val) => customOrder.includes(val));
+  }
   // Create a map of custom order
   customOrder.forEach((item, index) => {
     orderMap.set(item, index);
   });
 
   // Sort the array based on the custom order
-  return array.sort((a, b) => {
+  return data.sort((a, b) => {
     const indexA = orderMap.has(a) ? orderMap.get(a) : customOrder.length;
     const indexB = orderMap.has(b) ? orderMap.get(b) : customOrder.length;
     return indexA - indexB;
@@ -326,3 +329,8 @@ export function cleanPhoneNumber(phoneNumber) {
   }
   return cleanStrToNum(phoneNumber);
 }
+
+export const openStateUrl = (st) => {
+  const url = stateSOS[st];
+  window.open(url, '_blank');
+};

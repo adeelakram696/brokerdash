@@ -63,6 +63,9 @@ function PartnerInformationCard({
         text: values[columnIds[board][getFieldName('email')]],
       },
     };
+    if (board === boardNames.clients) {
+      updatedJson.name = `${values[columnIds[board].first_name]} ${values[columnIds[board].last_name]}`;
+    }
     setLoading(true);
     if (itemId) {
       await updateClientInformation(itemId, boardId, updatedJson);

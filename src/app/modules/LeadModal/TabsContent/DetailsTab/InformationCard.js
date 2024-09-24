@@ -67,6 +67,9 @@ function InformationCard({
         text: values[columnIds[board].email],
       },
     };
+    if (board === boardNames.clients) {
+      updatedJson.name = `${values[columnIds[board].first_name]} ${values[columnIds[board].last_name]}`;
+    }
     setLoading(true);
     await updateClientInformation(itemId, boardId, updatedJson);
     await updateInfo();

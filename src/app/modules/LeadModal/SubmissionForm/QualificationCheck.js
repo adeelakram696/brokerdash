@@ -2,29 +2,37 @@
 import {
   Flex,
 } from 'antd';
-import { StarIcon } from 'app/images/icons/StarIcon';
 import classNames from 'classnames';
+import { useContext } from 'react';
+import { LeadContext } from 'utils/contexts';
+import { boardNames, columnIds } from 'utils/constants';
 import styles from './SubmissionForm.module.scss';
 
 function QualificationCheck({ data }) {
+  const {
+    board, details,
+  } = useContext(LeadContext);
+  const isDeal = board === boardNames.deals;
+  const state = isDeal ? details.clientAccount[columnIds
+    .clientAccount.state_incorporated] : details[columnIds[board].state_incorporated];
   return (
     <Flex vertical>
       <Flex className={styles.listContainer} vertical>
         {data.map(({
-          name, isStar, status, key,
+          name, key, handleClick,
         }) => (
           <Flex
             key={key}
             className={classNames(
               styles.listItemRow,
+              styles.qualityCheckListItem,
             )}
             justify="space-between"
+            onClick={() => { handleClick({ state }); }}
           >
-            <Flex className={styles.listTitle}>
-              <Flex className={styles.listIcon} align="center" style={{ visibility: isStar ? 'visible' : 'hidden' }}><StarIcon /></Flex>
+            <Flex>
               {name}
             </Flex>
-            <Flex className={styles.listStatus}>{status}</Flex>
           </Flex>
         ))}
       </Flex>

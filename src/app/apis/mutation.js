@@ -106,7 +106,7 @@ export const addFilesToLead = async (leadId, column, file) => {
 
 export const sendSmsToClient = async (leadId, boardId, smsBtncolumnId, textColumnId, text) => {
   const setTextMutation = `mutation {
-    change_simple_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${textColumnId}", value: "${text}") {
+    change_simple_column_value(item_id: ${leadId}, board_id: ${boardId}, column_id: "${textColumnId}", value: "${text.replace(/"/g, '\\"')}") {
       id
     }
   }`;

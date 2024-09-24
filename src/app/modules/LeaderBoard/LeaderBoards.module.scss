@@ -19,14 +19,14 @@
 }
 .headerColumnTitle, .dataColumnTitle {
   width: 300px;
+  padding: 10px;
 }
 .headerColumnPerson {
-  padding: 6px 10px;
-  width: 80px;
+  padding: 0px 10px;
+  width: 135px;
 }
 .dataColumnPerson {
-  width: 80px;
-  height: 30px;
+  width: 135px;
   font-size: 14px;
   padding: 6px 10px;
   border-right: 0.5px solid rgb(209, 208, 208);
@@ -49,4 +49,7 @@
 }
 .alternateColor {
   background-color: rgba(201, 201, 201, 0.3);
+}
+.percentage {
+  font-size: 11px;
 }

@@ -1,11 +1,17 @@
+import { openStateUrl } from 'utils/helpers';
+
 export const qualifications = [
   {
     key: 'NYSCEF',
     name: 'NYSCEF',
+    handleClick: () => {
+      window.open('https://iapps.courts.state.ny.us/nyscef/CaseSearch?TAB=name', '_blank');
+    },
   },
   {
     key: 'Secretary of State',
     name: 'Secretary of State',
+    handleClick: ({ state }) => { openStateUrl(state); },
   },
 ];
 export const docs = [

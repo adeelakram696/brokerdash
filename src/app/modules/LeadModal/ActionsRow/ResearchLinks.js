@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { Flex, Dropdown } from 'antd';
-import { boardNames, columnIds, stateSOS } from 'utils/constants';
+import { boardNames, columnIds } from 'utils/constants';
 import { TelescopeIcon } from 'app/images/icons';
 import { LeadContext } from 'utils/contexts';
 import { useContext } from 'react';
+import { openStateUrl } from 'utils/helpers';
 import styles from './ActionsRow.module.scss';
 
 function ResearchLinks() {
@@ -14,11 +15,6 @@ function ResearchLinks() {
   const isDeal = board === boardNames.deals;
   const state = isDeal ? details.clientAccount[columnIds
     .clientAccount.state_incorporated] : details[columnIds[board].state_incorporated];
-
-  const openStateUrl = (st) => {
-    const url = stateSOS[st];
-    window.open(url, '_blank');
-  };
 
   const items = [
     {

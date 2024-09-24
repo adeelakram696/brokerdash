@@ -516,6 +516,7 @@ export const columnIds = {
     tier: 'tier_3',
     past_settled_defaults: 'checkbox7__1',
     monthly_priority: 'checkbox6__1',
+    accept_online_banking: 'check__1',
   },
   commissionSettings: {
     name: 'name',
@@ -867,25 +868,6 @@ export const legendColors = [
   '#FF9F40', // Orange
   '#E7E9ED', // Light Gray
   '#7BDCB5', // Green
-];
-
-export const actionTypesList = [
-  'New Leads Spoken To',
-  'Follow Up Call',
-  'Follow Up Clients Spoken To',
-  'Docs Collected',
-  'Deal Submitted',
-  'Offer Received Back',
-  'Offers pitched to client',
-  'Offer Merchant Accepted',
-  'Contract out',
-  'Contract signed',
-  'Fully funded',
-  'Rejected at funding call',
-  'Contract lost (signed w/competitor)',
-  'Client Rejected',
-  'Declined',
-  'Disqualified',
 ];
 
 export const submissionFunders = {

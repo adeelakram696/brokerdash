@@ -6,14 +6,16 @@ import {
 } from 'antd';
 import {
   fetchLeadersBoardEmployees, fetchBoardColorColumnStrings, getTotalActivities, fetchAllUsers,
+  getAllLeadsAssigned,
 } from 'app/apis/query';
 import { useEffect, useRef, useState } from 'react';
-import { actionTypesList, env } from 'utils/constants';
+import { env } from 'utils/constants';
 import monday from 'utils/mondaySdk';
 import SelectField from 'app/components/Forms/SelectField';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
-import { customSort, toSentenceCase } from 'utils/helpers';
+import { customSort } from 'utils/helpers';
+import { actionTypesList, actionTypesTitles, conversions } from './data';
 import styles from './LeaderBoards.module.scss';
 
 const { RangePicker } = DatePicker;
@@ -22,6 +24,7 @@ function LeaderBoardModule({ withFilter }) {
   let unsubscribe;
   let timeoutId;
   const [loading, setLoading] = useState(false);
+  const [assingedLoading, setAssignedLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [users, setUsers] = useState([]);
   const [usersOptions, setUsersOptions] = useState([]);
@@ -30,6 +33,7 @@ function LeaderBoardModule({ withFilter }) {
   const dateR = useRef();
   const [actionTypes, setActionTypes] = useState([]);
   const [saleActivities, setSalesActivities] = useState([]);
+  const [assingedLeads, setAssingedLeads] = useState([]);
   const getActionTypes = async () => {
     const res = await fetchBoardColorColumnStrings(env.boards.salesActivities, 'status');
     const actions = Object.values(res).reduce((prev, curr) => {
@@ -38,7 +42,7 @@ function LeaderBoardModule({ withFilter }) {
       return prev;
     }, {});
     const lowercaseActionsList = actionTypesList.map((t) => t.toLowerCase());
-    const sortedList = customSort(Object.keys(actions), lowercaseActionsList);
+    const sortedList = customSort(Object.keys(actions), lowercaseActionsList, true);
     setActionTypes(sortedList);
   };
   const getEmployeeList = async () => {
@@ -54,6 +58,12 @@ function LeaderBoardModule({ withFilter }) {
     const res = await getTotalActivities(dates);
     setSalesActivities(res);
     setLoading(false);
+  };
+  const getAllAssingedLeads = async (dates, employeesList, isLoading = true) => {
+    setAssignedLoading(true && isLoading);
+    const res = await getAllLeadsAssigned(dates, employeesList);
+    setAssingedLeads(res);
+    setAssignedLoading(false);
   };
   const getUsers = async () => {
     const res = await fetchAllUsers();
@@ -74,11 +84,13 @@ function LeaderBoardModule({ withFilter }) {
   useEffect(() => {
     if (employees.length === 0) return;
     getSaleActivities(dateRange);
+    getAllAssingedLeads(dateRange, employees);
   }, [employees, dateRange]);
 
   const refetchData = (dates) => {
     getActionTypes();
     getSaleActivities(dates, false);
+    getAllAssingedLeads(dateRange, employees, false);
   };
   const refetchEmployee = ({ data }) => {
     if (data.itemIds.includes(Number(env.leaderEmployeeItemId))) {
@@ -118,7 +130,7 @@ function LeaderBoardModule({ withFilter }) {
   };
   return (
     <Flex vertical flex={1}>
-      <Spin tip="Loading..." spinning={loading} fullscreen />
+      <Spin tip="Loading..." spinning={loading || assingedLoading} fullscreen />
       {!withFilter ? null : (
         <Flex className={styles.filterbar} align="center">
           <Flex>Filters: </Flex>
@@ -148,25 +160,40 @@ function LeaderBoardModule({ withFilter }) {
       <Flex vertical className={styles.table}>
         <Flex className={styles.headerRow} align="center">
           <Flex className={styles.headerColumnTitle}>Performance Leaderboard</Flex>
-          {employees.map((emp) => (
+          <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
+            <Flex>{actionTypesTitles['leads assigned']}</Flex>
+          </Flex>
+          {actionTypes.map((actions) => (
             <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
-              <Flex>
+              <Flex>{actionTypesTitles[actions]}</Flex>
+            </Flex>
+          ))}
+        </Flex>
+        {employees.map((emp, index) => (
+          <Flex className={classNames(styles.dataRow, { [styles.alternateColor]: index % 2 })}>
+            <Flex className={styles.dataColumnTitle} align="center">
+              <Flex style={{ marginRight: 10 }}>
                 {emp.photo_thumb
                   ? <Avatar src={emp.photo_thumb} />
                   : <Avatar>{emp.name[0]}</Avatar>}
               </Flex>
               <Flex>{emp.name.split(' ')[0]}</Flex>
             </Flex>
-          ))}
-        </Flex>
-        {actionTypes.map((actions, index) => (
-          <Flex className={classNames(styles.dataRow, { [styles.alternateColor]: index % 2 })}>
-            <Flex className={styles.dataColumnTitle} align="center">{toSentenceCase(actions)}</Flex>
-            {employees.map((emp) => (
-              <Flex className={styles.dataColumnPerson} justify="center" align="center">
-                {(saleActivities[actions] || {})[emp.id] || ' '}
-              </Flex>
-            ))}
+            <Flex className={styles.dataColumnPerson} justify="center" align="center">
+              {(assingedLeads[emp.id] || {}).count || ' '}
+            </Flex>
+            {actionTypes.map((actions) => {
+              const prevAction = conversions[actions];
+              const prev = prevAction === 'leads assigned' ? (assingedLeads[emp.id] || {}).count : (saleActivities[prevAction] || {})[emp.id];
+              const curr = (saleActivities[actions] || {})[emp.id];
+              const percentage = (prev && curr) ? ((curr / prev) * 100).toFixed(0) : '';
+              return (
+                <Flex className={styles.dataColumnPerson} justify="center" align="center" vertical>
+                  <Flex>{(saleActivities[actions] || {})[emp.id] || ' '}</Flex>
+                  <Flex className={styles.percentage}>{percentage ? `${percentage}%` : ''}</Flex>
+                </Flex>
+              );
+            })}
           </Flex>
         ))}
 

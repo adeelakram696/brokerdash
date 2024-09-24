@@ -39,9 +39,6 @@
 .listIcon {
   margin-right: 10px;
 }
-.listTitle {
-
-}
 .listStatus {
   color: #9F9F9F;
 }
@@ -79,4 +76,9 @@
 }
 .errorList {
   margin: 10px;
+}
+.qualityCheckListItem {
+  &:hover {
+    background-color: #E1EFF2;
+  }
 }

@@ -1,6 +1,7 @@
 import {
   Modal, Flex, Button, Divider, Form,
   DatePicker,
+  Checkbox,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -52,6 +53,7 @@ function QualificationMatrixForm({ show, handleClose }) {
     const totalCredits = getColumnSum('totalCredit', sampleRow, values);
     const monthCashFlow = Math.round(totalCredits / monthsCount);
     const isPastSetttled = values.past_settled_defaults === 'yes';
+    const acceptOnlineBank = values.has_online_bank;
     const totalBankActivityCounts = bankActivityColumns.reduce((prev, current) => {
       if (!current.totalCount) return prev;
       const val = { [current.key]: _.sumBy(sampleRow, (r) => (values[`${current.key}-${r.id}`] ? convertToNumber(values[`${current.key}-${r.id}`]) : 0)) };
@@ -116,7 +118,13 @@ function QualificationMatrixForm({ show, handleClose }) {
     const timeInBusiness = dayjs().diff(values.business_start_date, 'month');
     const ficoScore = extractLeastNumber(creditScore);
     const fundersData = fundersIntakeCalc({
-      ficoScore, industry, state, timeInBusiness, ...matrixData, isPastSetttled,
+      ficoScore,
+      industry,
+      state,
+      timeInBusiness,
+      ...matrixData,
+      isPastSetttled,
+      acceptOnlineBank,
     }, funders);
     const sortedData = _.sortBy(fundersData, ['tier'], ['asc']);
     matrixData.fundersPriority = sortedData.slice(0, 7).map((i) => i.funder);
@@ -141,6 +149,7 @@ function QualificationMatrixForm({ show, handleClose }) {
       fundersPriority: suggestedFunders,
       business_start_date: estDateValue,
     };
+    form.resetFields();
     handleUpdate({}, combined);
     form.setFieldsValue(combined);
   };
@@ -334,6 +343,18 @@ function QualificationMatrixForm({ show, handleClose }) {
                     { value: 'yes', label: 'Yes' },
                   ]}
                 />
+              </Form.Item>
+            </Flex>
+          </Flex>
+          <Flex flex={1} className={styles.inputRow} justify="space-between">
+            <Flex flex={0.4} className={styles.label}>Has Online Bank</Flex>
+            <Flex flex={0.6} className={styles.value}>
+              <Form.Item
+                noStyle
+                valuePropName="checked"
+                name="has_online_bank"
+              >
+                <Checkbox />
               </Form.Item>
             </Flex>
           </Flex>
