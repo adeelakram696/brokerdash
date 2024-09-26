@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/brokerdash/static/css/main.698dc9bc.css",
-    "main.js": "/brokerdash/static/js/main.5a6462b5.js",
+    "main.css": "/brokerdash/static/css/main.3006d4f1.css",
+    "main.js": "/brokerdash/static/js/main.77f5659e.js",
     "static/css/586.8b8a8734.chunk.css": "/brokerdash/static/css/586.8b8a8734.chunk.css",
-    "static/js/586.35828167.chunk.js": "/brokerdash/static/js/586.35828167.chunk.js",
-    "static/js/328.9e70031b.chunk.js": "/brokerdash/static/js/328.9e70031b.chunk.js",
+    "static/js/586.7d9f8d5b.chunk.js": "/brokerdash/static/js/586.7d9f8d5b.chunk.js",
+    "static/js/328.917625cd.chunk.js": "/brokerdash/static/js/328.917625cd.chunk.js",
     "static/css/99.af190936.chunk.css": "/brokerdash/static/css/99.af190936.chunk.css",
     "static/js/99.56841980.chunk.js": "/brokerdash/static/js/99.56841980.chunk.js",
     "static/css/9.686df0a5.chunk.css": "/brokerdash/static/css/9.686df0a5.chunk.css",
-    "static/js/9.25c6ba3e.chunk.js": "/brokerdash/static/js/9.25c6ba3e.chunk.js",
+    "static/js/9.b0a8a21c.chunk.js": "/brokerdash/static/js/9.b0a8a21c.chunk.js",
     "static/media/approvalTick.svg": "/brokerdash/static/media/approvalTick.053bb133bcb2cfa179fbb48e4d3b484d.svg",
     "static/media/runingShoe.svg": "/brokerdash/static/media/runingShoe.abddc61641fd401b32a0de46fc33d303.svg",
     "static/media/signature.svg": "/brokerdash/static/media/signature.b5b95111e363c8e72be3996f037c2f12.svg",
@@ -16,7 +16,7 @@
     "index.html": "/brokerdash/index.html"
   },
   "entrypoints": [
-    "static/css/main.698dc9bc.css",
-    "static/js/main.5a6462b5.js"
+    "static/css/main.3006d4f1.css",
+    "static/js/main.77f5659e.js"
   ]
 }
