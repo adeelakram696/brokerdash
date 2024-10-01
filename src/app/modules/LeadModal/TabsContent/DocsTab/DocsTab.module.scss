@@ -40,7 +40,7 @@
   border-radius: 8px;
 }
 .documentList {
-  margin-top: 5px;
+  margin-top: 15px;
 }
 .documentItem {
   margin-top: 15px;
@@ -55,17 +55,18 @@
 .docName {
   font-size: 12px;
   font-weight: 300;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: 'pointer';
+  max-width: 550px;
+  cursor: pointer;
 }
 .breadcrumbRow {
   margin-top: 10px;
 }
 .fileSize {
   font-size: 11px;
-  margin: 0 10px;
   color: #6f7274;
+  font-weight: bold;
+}
+.headerContainer {
+  border-bottom: 1px solid #d1cfcf;
   font-weight: bold;
 }

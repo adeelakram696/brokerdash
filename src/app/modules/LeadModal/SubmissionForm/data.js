@@ -120,3 +120,19 @@ export const stepData = {
     prevStep: steps.funders,
   },
 };
+
+export const disqualificationReasosns = {
+  minAnnualRevenue: 'Minimum annual revenue is less then funder requirement',
+  creditScoreSuitability: 'Fico score is less the funder minimum credit score ',
+  minimumMonthlyDeposits: 'Minimum monthly deposit is less then funder requirement',
+  nSFLast30Days: 'Too many NSFS’s for last 30 days',
+  nSFLast90Days: 'Too many NSFS’s for last 90 days',
+  negativeDaysLast30: 'Too many negative days for last 30 days',
+  negativeDaysLast90: 'Too many negative days for last 30 days',
+  maximumPositions: 'Too many positions',
+  firstPosition: 'First Position',
+  industryType: 'Restricted Industry',
+  state: 'Restricted State',
+  timeInBusiness: 'Minimum time in business not fulfilled',
+  minDailybalnce: 'Minimum daily balance is not sufficient',
+};

@@ -7,6 +7,7 @@ import { ThumbsUpIcon } from 'app/images/icons';
 import { useContext, useState } from 'react';
 import { LeadContext } from 'utils/contexts';
 import { columnIds } from 'utils/constants';
+import { decodeJson } from 'utils/encrypt';
 import styles from './DetailsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 import QualificationMatrixForm from '../../QualificationMatrixForm';
@@ -20,6 +21,11 @@ function QualificationMatrix() {
     setOpenForm(false);
   };
   const getDetails = () => {
+    const qmDataEncoded = details[columnIds[board].qualification_matrix_data];
+    if (qmDataEncoded) {
+      const decodedData = decodeJson(qmDataEncoded);
+      return decodedData.matrixValues;
+    }
     const bankActivity = JSON.parse(details[columnIds[board].qm_bank_activity] || '{}');
     const activePosition = JSON.parse(details[columnIds[board].qm_active_position] || '{}');
     const combined = {

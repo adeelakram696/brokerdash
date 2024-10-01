@@ -1,19 +1,35 @@
 import {
   columnIds, dateFormat, onDeckEntityMapping,
 } from './constants';
+import { decodeJson } from './encrypt';
 import {
   cleanPhoneNumber, cleanStrToNum, convertToNumber, formatDate,
 } from './helpers';
 
 export const transformDealDetails = (item) => {
-  const qmBankActivity = item.column_values.find((c) => c.id === columnIds.deals.qm_bank_activity);
-  const qmActivePositions = item.column_values.find(
-    (c) => c.id === columnIds.deals.qm_active_position,
+  const qmDataEncoded = item.column_values.find(
+    (c) => c.id === columnIds.deals.qualification_matrix_data,
   );
-  const bankActivityObj = qmBankActivity?.text ? JSON.parse(qmBankActivity.text) : {};
-  const activePositionObj = qmActivePositions?.text ? JSON.parse(qmActivePositions.text) : {};
-  const avgBalance = bankActivityObj?.min_daily_balnc ? bankActivityObj?.min_daily_balnc : '';
-  const annualRevenue = activePositionObj?.annualRevenue ? activePositionObj?.annualRevenue : '';
+  let qmData = {};
+  if (qmDataEncoded.text) {
+    const decodedData = decodeJson(qmDataEncoded.text);
+    qmData = decodedData.matrixValues;
+  } else {
+    const qmBankActivity = item.column_values.find(
+      (c) => c.id === columnIds.deals.qm_bank_activity,
+    );
+    const qmActivePositions = item.column_values.find(
+      (c) => c.id === columnIds.deals.qm_active_position,
+    );
+    const bankActivityObj = qmBankActivity?.text ? JSON.parse(qmBankActivity.text) : {};
+    const activePositionObj = qmActivePositions?.text ? JSON.parse(qmActivePositions.text) : {};
+    qmData = {
+      ...bankActivityObj,
+      ...activePositionObj,
+    };
+  }
+  const avgBalance = qmData?.min_daily_balnc ? qmData?.min_daily_balnc : '';
+  const annualRevenue = qmData?.annualRevenue ? qmData?.annualRevenue : '';
   return ({
     id: item.id,
     name: item.name,

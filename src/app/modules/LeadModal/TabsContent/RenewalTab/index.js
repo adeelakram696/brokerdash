@@ -15,7 +15,24 @@ function RenewalTab() {
   } = useContext(LeadContext);
   const filtered = details.subitems.filter(
     (subitem) => subitem[columnIds.subItem.renewal] === renewalTags.renewal,
-  );
+  ).sort((subItemA, subItemB) => {
+    const statusPriority = {
+      Selected: 1,
+      Approved: 2,
+      New: 3,
+      'Response Received': 4,
+      'Contract Requested': 5,
+      'Waiting for Admin to Submit': 6,
+      Submitted: 7,
+      'Killed at Funding call': 8,
+      Declined: 9,
+    };
+
+    const statusA = statusPriority[subItemA.status]; // Defaults to 3 for undefined statuses
+    const statusB = statusPriority[subItemB.status];
+
+    return statusA - statusB;
+  });
   return (
     <Flex vertical>
       <Flex>

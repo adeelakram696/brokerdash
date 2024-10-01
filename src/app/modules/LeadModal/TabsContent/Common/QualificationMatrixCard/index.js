@@ -8,6 +8,7 @@ import QualificationMatrixForm from 'app/modules/LeadModal/QualificationMatrixFo
 import { useContext, useState } from 'react';
 import { LeadContext } from 'utils/contexts';
 import { columnIds } from 'utils/constants';
+import { decodeJson } from 'utils/encrypt';
 import styles from './style.module.scss';
 
 export function QualificationToolTip() {
@@ -27,8 +28,16 @@ function QualificationMatrixCard() {
   const onClose = () => {
     setOpenForm(false);
   };
+  const qmDataEncoded = details[columnIds[board].qualification_matrix_data];
+  let qmData;
+  if (qmDataEncoded) {
+    const qmDecoded = decodeJson(qmDataEncoded);
+    qmData = qmDecoded.matrixValues?.fundersPriority;
+  } else {
+    qmData = JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]');
+  }
   const suggestedFunders = details?.name
-    ? JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]')
+    ? qmData
     : [];
   return (
     <Flex flex={0.6} className={styles.qualificationCard}>

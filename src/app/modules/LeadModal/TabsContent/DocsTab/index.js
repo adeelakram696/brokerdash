@@ -1,6 +1,7 @@
 import {
   Flex, Card, Button, Checkbox,
   Dropdown,
+  Typography,
 } from 'antd';
 import en from 'app/locales/en';
 import classNames from 'classnames';
@@ -12,8 +13,11 @@ import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import monday from 'utils/mondaySdk';
 import { formatBytes } from 'utils/helpers';
+import dayjs from 'dayjs';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
+
+const { Text } = Typography;
 
 const sortingItems = [
   {
@@ -125,36 +129,49 @@ function DocsTab() {
             </Flex>
           </Flex>
           <Flex className={styles.documentList} vertical>
-            {
-              docs.assets?.map((doc) => (
-                <Flex key={doc.id} className={styles.documentItem} align="center">
-                  <Flex className={styles.tickBox}>
-                    <Checkbox onClick={() => {
-                      let docsList = [...selectedDocs, doc.id];
-                      const index = selectedDocs.indexOf(doc.id);
-                      if (selectedDocs.indexOf(doc.id) >= 0) {
-                        docsList = [...selectedDocs];
-                        docsList.splice(index, 1);
-                      }
+            <Flex vertical>
+              <Flex flex={1} className={styles.headerContainer}>
+                <Flex flex={0.7}>Name</Flex>
+                <Flex flex={0.2}>Date Uploaded</Flex>
+                <Flex flex={0.1}>Size</Flex>
+              </Flex>
+              <Flex vertical>
+                {
+                  docs.assets?.map((doc) => (
+                    <Flex flex={1} key={doc.id} className={styles.documentItem} align="center">
+                      <Flex flex={0.7} className={styles.documentNameContainer}>
+                        <Flex className={styles.tickBox}>
+                          <Checkbox onClick={() => {
+                            let docsList = [...selectedDocs, doc.id];
+                            const index = selectedDocs.indexOf(doc.id);
+                            if (selectedDocs.indexOf(doc.id) >= 0) {
+                              docsList = [...selectedDocs];
+                              docsList.splice(index, 1);
+                            }
 
-                      setSelectedDocs(docsList);
-                    }}
-                    />
-                  </Flex>
-                  <Flex className={styles.fileIcon}><FileIcon extension={doc.file_extension.replace('.', '')} /></Flex>
-                  <Flex
-                    onClick={() => { handleDocClick(doc.id); }}
-                    className={styles.docName}
-                  >
-                    {doc.name}
-                    {' '}
-                    <span className={styles.fileSize}>
-                      {formatBytes(doc.file_size)}
-                    </span>
-                  </Flex>
-                </Flex>
-              ))
-            }
+                            setSelectedDocs(docsList);
+                          }}
+                          />
+                        </Flex>
+                        <Flex className={styles.fileIcon}><FileIcon extension={doc.file_extension.replace('.', '')} /></Flex>
+                        <Flex
+                          onClick={() => { handleDocClick(doc.id); }}
+                          className={styles.docName}
+                        >
+                          <Text style={{ fontSize: 12 }} ellipsis>{doc.name}</Text>
+                        </Flex>
+                      </Flex>
+                      <Flex className={styles.fileSize} flex={0.2}>
+                        {dayjs(doc.created_at).format('DD MMM YY')}
+                      </Flex>
+                      <Flex className={styles.fileSize} flex={0.1}>
+                        {formatBytes(doc.file_size)}
+                      </Flex>
+                    </Flex>
+                  ))
+                }
+              </Flex>
+            </Flex>
           </Flex>
         </Card>
       </Flex>

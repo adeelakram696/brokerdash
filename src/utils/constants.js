@@ -181,6 +181,7 @@ export const columnIds = {
     qm_bank_activity: 'long_text__1',
     qm_active_position: 'long_text4__1',
     qm_suggested_funders: 'long_text_1__1',
+    qualification_matrix_data: 'long_text49__1',
     last_lead_assigned: 'hour__1',
     sequence_welcome_wo_docs_w_application: 'status50__1',
     sequence_welcome_w_docs_w_application: 'color2__1',
@@ -344,6 +345,7 @@ export const columnIds = {
     qm_bank_activity: 'long_text__1',
     qm_active_position: 'long_text5__1',
     qm_suggested_funders: 'long_text_1__1',
+    qualification_matrix_data: 'long_text8__1',
     last_lead_assigned: 'hour5__1',
     phone_burner: 'status54__1',
     lead_rotation_date: 'date_1__1',
@@ -517,6 +519,7 @@ export const columnIds = {
     past_settled_defaults: 'checkbox7__1',
     monthly_priority: 'checkbox6__1',
     accept_online_banking: 'check__1',
+    testing_funder: 'checkbox3__1',
   },
   commissionSettings: {
     name: 'name',

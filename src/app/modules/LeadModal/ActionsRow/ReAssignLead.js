@@ -10,7 +10,7 @@ import styles from './ActionsRow.module.scss';
 
 function ReAssignLead() {
   const {
-    board, details, leadId, getData,
+    board, details, leadId,
   } = useContext(LeadContext);
   const [confirm, setConfirm] = useState(false);
   const [showLoading, setLoading] = useState(false);
@@ -20,9 +20,11 @@ function ReAssignLead() {
   const handleReassign = async () => {
     setLoading(true);
     await ctaBtn(leadId, details.board.id, columnIds[board].reassign_rep_btn);
-    setLoading(false);
-    hideModal();
-    getData();
+    setTimeout(() => {
+      setLoading(false);
+      hideModal();
+      window.location.reload();
+    }, 4000);
   };
   return (
     <>

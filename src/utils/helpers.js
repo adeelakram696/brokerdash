@@ -83,8 +83,9 @@ function getCommisionAmt({
   }
   return numberWithCommas(result?.toFixed(2));
 }
-export function convertToNumber(input) {
+export function convertToNumber(input, returnIfBlank = false) {
   let value = input;
+  if (returnIfBlank && value === '') return value;
   if (typeof value === 'string') {
     value = value?.replace(/,/g, '');
   }

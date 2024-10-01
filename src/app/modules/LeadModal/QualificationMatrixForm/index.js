@@ -17,10 +17,10 @@ import {
 import SelectField from 'app/components/Forms/SelectField';
 import InputField from 'app/components/Forms/InputField';
 import classNames from 'classnames';
+import { decodeJson, encodeJson } from 'utils/encrypt';
 import styles from './QualificationMatrixForm.module.scss';
 import {
-  activePositionKeys,
-  activePositionsColumns, bankActivityColumns, bankActivityKeys, sampleRow, sampleRowFunders,
+  activePositionsColumns, bankActivityColumns, sampleRow, sampleRowFunders,
 } from './data';
 import { fundersIntakeCalc } from './matrixData';
 
@@ -126,7 +126,7 @@ function QualificationMatrixForm({ show, handleClose }) {
       isPastSetttled,
       acceptOnlineBank,
     }, funders);
-    const sortedData = _.sortBy(fundersData, ['tier'], ['asc']);
+    const sortedData = _.sortBy(fundersData.qualified, ['tier'], ['asc']);
     matrixData.fundersPriority = sortedData.slice(0, 7).map((i) => i.funder);
     setMatrixValues(matrixData);
   };
@@ -136,19 +136,33 @@ function QualificationMatrixForm({ show, handleClose }) {
       .business_start_date] : details[columnIds[board]
       .business_start_date];
     const estDateFormat = verifyDateFormat(estDate);
-    const bankActivity = qmValues?.bankActivity ? qmValues.bankActivity : JSON.parse(details[columnIds[board].qm_bank_activity] || '{}');
-    const activePosition = qmValues?.activePositions ? qmValues.activePositions : JSON.parse(details[columnIds[board].qm_active_position] || '{}');
-    const suggestedFunders = qmValues?.suggestedFunders ? qmValues.suggestedFunders : JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]');
-    // eslint-disable-next-line no-nested-ternary
-    const estDateValue = estDateFormat
-      ? dayjs(estDate, estDateFormat)
-      : (bankActivity.business_start_date ? dayjs(bankActivity.business_start_date) : '');
-    const combined = {
-      ...bankActivity,
-      ...activePosition,
-      fundersPriority: suggestedFunders,
-      business_start_date: estDateValue,
-    };
+    const qmDataEncoded = details[columnIds[board].qualification_matrix_data];
+    let combined = {};
+    if (qmDataEncoded || qmValues) {
+      const data = qmValues || decodeJson(qmDataEncoded);
+      // eslint-disable-next-line no-nested-ternary
+      const estDateValue = estDateFormat
+        ? dayjs(estDate, estDateFormat)
+        : (data.matrixValues.business_start_date ? dayjs(data.matrixValues.business_start_date) : '');
+      combined = {
+        ...data.matrixValues,
+        business_start_date: estDateValue,
+      };
+    } else {
+      const bankActivity = JSON.parse(details[columnIds[board].qm_bank_activity] || '{}');
+      const activePosition = JSON.parse(details[columnIds[board].qm_active_position] || '{}');
+      const suggestedFunders = JSON.parse(details[columnIds[board].qm_suggested_funders] || '[]');
+      // eslint-disable-next-line no-nested-ternary
+      const estDateValue = estDateFormat
+        ? dayjs(estDate, estDateFormat)
+        : (bankActivity.business_start_date ? dayjs(bankActivity.business_start_date) : '');
+      combined = {
+        ...bankActivity,
+        ...activePosition,
+        fundersPriority: suggestedFunders,
+        business_start_date: estDateValue,
+      };
+    }
     form.resetFields();
     handleUpdate({}, combined);
     form.setFieldsValue(combined);
@@ -159,43 +173,21 @@ function QualificationMatrixForm({ show, handleClose }) {
   };
   const handleSubmit = async () => {
     setLoading(true);
-    const bankActivity = bankActivityKeys.reduce((
-      prev,
-      key,
-    ) => ({ ...prev, [key]: matrixValues[key] }), {});
-    const activePositions = activePositionKeys.reduce((
-      prev,
-      key,
-    ) => ({ ...prev, [key]: matrixValues[key] }), {});
+    const encoded = encodeJson({ matrixValues });
     await updateSimpleColumnValue(
       leadId,
       boardId,
-      JSON.stringify(bankActivity).replace(/\\/g, '\\\\').replace(/"/g, '\\"'),
-      columnIds[board].qm_bank_activity,
-    );
-    await updateSimpleColumnValue(
-      leadId,
-      boardId,
-      JSON.stringify(activePositions).replace(/\\/g, '\\\\').replace(/"/g, '\\"'),
-      columnIds[board].qm_active_position,
-    );
-    await updateSimpleColumnValue(
-      leadId,
-      boardId,
-      JSON.stringify(matrixValues.fundersPriority).replace(/\\/g, '\\\\').replace(/"/g, '\\"'),
-      columnIds[board].qm_suggested_funders,
+      JSON.stringify(encoded).replace(/\\/g, '\\\\').replace(/"/g, '\\"'),
+      columnIds[board].qualification_matrix_data,
     );
     await getData();
     setLoading(false);
-    onClose({
-      bankActivity,
-      activePositions,
-      suggestedFunders: matrixValues.fundersPriority,
-    });
+    onClose({ matrixValues });
   };
   useEffect(() => {
     setDefaultValues();
   }, [details.name]);
+
   const businessTimeMonth = matrixValues.business_start_date ? dayjs().diff(matrixValues.business_start_date, 'month') : 0;
   const businessTimeYear = matrixValues.business_start_date ? dayjs().diff(matrixValues.business_start_date, 'year') : 0;
   const getLastModified = () => {
@@ -226,7 +218,7 @@ function QualificationMatrixForm({ show, handleClose }) {
           </Button>
         </Flex>
 )}
-      onCancel={onClose}
+      onCancel={() => { onClose(); }}
       className="qualificationMatrix"
       style={{ top: 20 }}
       width="664px"
