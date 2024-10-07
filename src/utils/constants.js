@@ -205,6 +205,7 @@ export const columnIds = {
     date_submitted: 'date_19__1',
     date_offer_recieved: 'date_193__1',
     reassign_rep_btn: 'button0__1',
+    application_doc_id: 'text2__1',
   },
   leads: {
     name: 'name',
@@ -875,6 +876,7 @@ export const legendColors = [
 
 export const submissionFunders = {
   onDeck: 'OnDeck',
+  cfgms: 'CFGMS',
 };
 
 export const allowedFunders = [
@@ -885,13 +887,13 @@ export const allowedFunders = [
 ];
 
 export const fundersServices = {
-  6976521906: submissionFunders.onDeck,
+  6976521906: submissionFunders.cfgms,
   6948733727: submissionFunders.onDeck,
   6765205008: submissionFunders.onDeck,
   6765205031: submissionFunders.onDeck,
 };
 
-export const onDeckEntityMapping = {
+export const entityMapping = {
   'sole proprietorship': 'SP',
   llc: 'LLC',
   corporation: 'CORP',

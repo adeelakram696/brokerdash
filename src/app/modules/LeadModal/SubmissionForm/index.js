@@ -34,6 +34,7 @@ function SubmissionForm({
   const [submittedFunders, setSubmittedFunders] = useState([]);
   const [selectedFunders, setSelectedFunders] = useState([]);
   const [selectedDocs, setSelectedDoucments] = useState([]);
+  const [applicationDoc, setApplicationDoc] = useState();
   const [submissionErrors, setSubmissionErrors] = useState([]);
   const [showErrors, setShowErrors] = useState(false);
   const [showText, setShowText] = useState(false);
@@ -97,6 +98,7 @@ function SubmissionForm({
     };
     if (!inputPrevSubmission) {
       payload[columnIds[board].submit_offers_docs] = docs;
+      payload[columnIds[board].application_doc_id] = applicationDoc;
     }
     if (isContract) {
       payload = {
@@ -108,6 +110,7 @@ function SubmissionForm({
     if (isResubmit) {
       payload = {
         [columnIds[board].submit_offers_docs]: docs,
+        [columnIds[board].application_doc_id]: applicationDoc,
         [columnIds[board].additional_body_content]: textNote,
       };
       cta = null;
@@ -153,7 +156,9 @@ function SubmissionForm({
     [steps.funders]: selectedFunders,
     [steps.documents]: selectedDocs,
   };
-  const isNextEnabled = selectedValues[step]?.length > 0;
+  const isNextEnabled = selectedValues[step]?.length > 0 && (
+    step === steps.documents ? applicationDoc : true
+  );
   let ctaText = 'Submit';
   if ((stepData[step].nextStep && !inputPrevSubmission)) {
     ctaText = 'Next Step';
@@ -221,6 +226,8 @@ function SubmissionForm({
           handleShowText={setShowText}
           text={textNote}
           handleTextChange={setTextNote}
+          applicationDoc={applicationDoc}
+          setApplicationDoc={setApplicationDoc}
         />
       ) : null}
       {showErrors && (

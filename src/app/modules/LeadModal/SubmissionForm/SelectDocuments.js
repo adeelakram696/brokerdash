@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import {
+  Checkbox,
   Flex,
 } from 'antd';
 import classNames from 'classnames';
@@ -12,6 +13,7 @@ import styles from './SubmissionForm.module.scss';
 
 function SelectDocuments({
   selectedItems, handleSelect, showText, text, handleShowText, handleTextChange,
+  setApplicationDoc, applicationDoc,
 }) {
   const {
     docs,
@@ -22,27 +24,51 @@ function SelectDocuments({
         {docs.assets?.map(({
           name, file_extension, id, file_size,
         }) => (
-          <Flex
-            key={id}
-            className={classNames(
-              styles.listItemRow,
-              { [styles.selectedItem]: selectedItems.includes(id) },
-            )}
-            onClick={() => {
-              handleSelect(id);
-            }}
-            justify="space-between"
-          >
-            <Flex className={styles.listTitle}>
-              <Flex className={styles.listIcon} align="center"><FileIcon extension={file_extension.replace('.', '')} /></Flex>
-              <Flex vertical>
-                <Flex className={styles.fileName}>
-                  {name}
-                </Flex>
-                <Flex className={styles.fileSize}>
-                  {formatBytes(file_size)}
+          <Flex>
+            <Flex
+              flex={0.9}
+              key={id}
+              className={classNames(
+                styles.listItemRow,
+                { [styles.selectedItem]: selectedItems.includes(id) },
+              )}
+              onClick={() => {
+                handleSelect(id);
+              }}
+            >
+              <Flex className={styles.listTitle}>
+                <Flex className={styles.listIcon} align="center"><FileIcon extension={file_extension.replace('.', '')} /></Flex>
+                <Flex vertical>
+                  <Flex className={styles.fileName}>
+                    {name}
+                  </Flex>
+                  <Flex className={styles.fileSize}>
+                    {formatBytes(file_size)}
+                  </Flex>
                 </Flex>
               </Flex>
+            </Flex>
+            <Flex
+              className={classNames(
+                { [styles.selectedItem]: selectedItems.includes(id) },
+              )}
+              flex={0.1}
+              align="center"
+            >
+              <Checkbox
+                value={id}
+                checked={id === applicationDoc}
+                onChange={() => {
+                  if (applicationDoc) setApplicationDoc('');
+                  else setApplicationDoc(id);
+                }}
+                style={{
+                  fontSize: 10,
+                  visibility: id === applicationDoc || !applicationDoc ? 'visible' : 'hidden',
+                }}
+              >
+                Application
+              </Checkbox>
             </Flex>
           </Flex>
         ))}
