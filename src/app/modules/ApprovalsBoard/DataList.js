@@ -15,11 +15,11 @@ function SortedIcon({ sorting, column }) {
   return sorting[column] !== undefined
     ? (sorting[column]
       ? (
-        <SortDescendingOutlined
+        <SortAscendingOutlined
           className={styles.sortingIcon}
         />
       ) : (
-        <SortAscendingOutlined
+        <SortDescendingOutlined
           className={styles.sortingIcon}
         />
       )) : null;

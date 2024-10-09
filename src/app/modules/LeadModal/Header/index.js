@@ -1,4 +1,5 @@
 import {
+  Dropdown,
   Flex,
   Steps,
   Tooltip,
@@ -10,6 +11,7 @@ import { useContext } from 'react';
 import { LeadContext } from 'utils/contexts';
 import { SyncOutlined } from '@ant-design/icons';
 import { convertSequenceNameToKey } from 'utils/helpers';
+import { updateSimpleColumnValue } from 'app/apis/mutation';
 import styles from '../LeadModal.module.scss';
 import SubRow from './SubRow';
 import StageSelect from './StageSelect';
@@ -17,7 +19,15 @@ import StageSelect from './StageSelect';
 function ModalHeader() {
   const {
     board, details, loadingData, refetchAllData,
+    setLoadingData, boardId, leadId, messageApi, getData,
   } = useContext(LeadContext);
+  const handleUpdateTemperature = async ({ key }) => {
+    setLoadingData(true);
+    const res = await updateSimpleColumnValue(leadId, boardId, key, columnIds[board].temperature);
+    setLoadingData(false);
+    if (res) messageApi.success('Successfully updated');
+    getData();
+  };
   const sequenceKey = details[columnIds[board].sequence_name] ? convertSequenceNameToKey(details[columnIds[board].sequence_name]) : '';
   const currentStep = details[columnIds[board][sequenceKey]];
   const stepIndex = sequenceSteps[board][sequenceKey]?.findIndex(
@@ -35,11 +45,57 @@ function ModalHeader() {
   const dataBoard = isDeal ? boardNames.clients : board;
   const data = isDeal ? details.client : details;
   const clientName = `${data[columnIds[dataBoard].first_name]} ${data[columnIds[dataBoard].last_name]}`;
+  const temperature = {
+    Hot: '#df2f4a',
+    Warm: '#fdab3d',
+    Cold: '#579bfc',
+  };
   return (
     <>
       <Flex justify="space-between" flex={0.65}>
         <Flex>
-          <Flex className={classNames(styles.logo, styles.marginRight)} align="center"><FireFilledIcon /></Flex>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'Hot',
+                  label: (
+                    <Flex align="center">
+                      <FireFilledIcon color={temperature.Hot} />
+                      {' '}
+                      <span className={styles.temperatureName}>Hot</span>
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'Warm',
+                  label: (
+                    <Flex align="center">
+                      <FireFilledIcon color={temperature.Warm} />
+                      {' '}
+                      <span className={styles.temperatureName}>Warm</span>
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'Cold',
+                  label: (
+                    <Flex align="center">
+                      <FireFilledIcon color={temperature.Cold} />
+                      {' '}
+                      <span className={styles.temperatureName}>Cold</span>
+                    </Flex>
+                  ),
+                },
+              ],
+              onClick: handleUpdateTemperature,
+            }}
+            trigger={['click']}
+          >
+            <Flex className={classNames(styles.logo, styles.marginRight)} align="center">
+              <FireFilledIcon color={temperature[details[columnIds[board].temperature]]} />
+            </Flex>
+          </Dropdown>
           <Flex className={classNames(styles.marginRight)} align="left" vertical>
             <Flex className={styles.title}>{details.name}</Flex>
             <Flex>{clientName}</Flex>
