@@ -6,8 +6,8 @@ export const findApprovals = (data) => {
     const maxValue = curr.subitems?.reduce((maxPrev, subitem) => {
       const subitemColumns = normalizeColumnValues(subitem.column_values);
       if (
-        subitemColumns[columnIds.subItem.funding_amount]
-          >= maxPrev[columnIds.subItem.funding_amount]
+        Number(subitemColumns[columnIds.subItem.funding_amount])
+          >= Number(maxPrev[columnIds.subItem.funding_amount])
       ) return { ...subitem, ...subitemColumns };
       return maxPrev;
     }, { [columnIds.subItem.funding_amount]: 0 });

@@ -3,6 +3,7 @@
 .modalBody {
 }
 .logo {
+  cursor: pointer;
 }
 .cardContainer {
   & > div {
@@ -164,4 +165,8 @@
 }
 .shareText {
   font-size: 12px;
+}
+.temperatureName {
+  margin-left: 5px;
+  font-size: 16px;
 }

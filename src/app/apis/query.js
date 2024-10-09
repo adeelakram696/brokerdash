@@ -1508,7 +1508,7 @@ export const fetchApprovals = async (cursor, dates) => {
 };
 
 export const getAllApprovals = async () => {
-  const dateArray = [`"${dayjs().subtract(30, 'days').format('YYYY-MM-DD')}"`, `"${dayjs().format('YYYY-MM-DD')}"`];
+  const dateArray = [`"${dayjs().subtract(31, 'days').format('YYYY-MM-DD')}"`, `"${dayjs().add(1, 'day').format('YYYY-MM-DD')}"`];
   let res = null;
   let itemsList = [];
   do {
@@ -1553,6 +1553,7 @@ export const fetchDealFunded = async (cursor, user, dates) => {
         rules: [
           { column_id: "${columnIds.deals.funded__date}", compare_value: [${dates}], operator: between}
           { column_id: "${columnIds.deals.assginee}", compare_value: ["person-${user}"], operator: any_of}
+          { column_id: "${columnIds.deals.stage}", compare_value: [1], operator: any_of}
        ]
        }` : ''}
         limit: 500
