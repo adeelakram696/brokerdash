@@ -16,7 +16,7 @@ export const findApprovals = (data) => {
       name: curr.name,
       agent: curr[columnIds.deals.assginee] || '-',
       maxApproved: maxValue[columnIds.subItem.funding_amount],
-      stage: curr[columnIds.deals.stage],
+      stage: curr.group.title,
       approvalDate: maxValue.updated_at,
       lastTouched: curr[columnIds.deals.last_touched],
     };

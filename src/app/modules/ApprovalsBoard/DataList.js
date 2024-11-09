@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import {
   Flex,
+  Select,
 } from 'antd';
 import { boardNames } from 'utils/constants';
 import classNames from 'classnames';
@@ -8,8 +9,12 @@ import { numberWithCommas } from 'utils/helpers';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons';
+import InputField from 'app/components/Forms/InputField';
 import styles from './ApprovalsBoard.module.scss';
 import LeadModal from '../LeadModal';
+import {
+  dateDurations,
+} from './data';
 
 function SortedIcon({ sorting, column }) {
   return sorting[column] !== undefined
@@ -24,7 +29,10 @@ function SortedIcon({ sorting, column }) {
         />
       )) : null;
 }
-function DataList({ data, sortBy, sorting }) {
+function DataList({
+  data, sortBy, sorting, handleFilter, filter,
+  usersList, stages,
+}) {
   const [isModalOpen, setIsModalOpen] = useState();
   const [selectedLeadId, setSelectedLeadId] = useState();
   const handleRowClick = (id) => {
@@ -87,6 +95,95 @@ function DataList({ data, sortBy, sorting }) {
             >
               Last Touched
               <SortedIcon sorting={sorting} column="lastTouched" />
+            </Flex>
+          </Flex>
+          <Flex justify="space-between" className={classNames(styles.itemRow, styles.header)}>
+            <Flex
+              className={styles.headerItem}
+              flex={0.4}
+              onClick={() => { sortBy(data, 'name', 'string'); }}
+            >
+              {' '}
+            </Flex>
+            <Flex
+              className={styles.headerItem}
+              flex={0.2}
+            >
+              <Flex>
+                <Select
+                  value={filter.broker}
+                  style={{ maxWidth: '250px', minWidth: '200px' }}
+                  onChange={(val) => { handleFilter({ broker: val }); }}
+                  options={usersList}
+                  mode="multiple"
+                  maxTagCount={1}
+                  allowClear
+                />
+              </Flex>
+            </Flex>
+            <Flex
+              className={styles.headerItem}
+              flex={0.2}
+            >
+              <Flex style={{ width: '200px' }} alignItems="center">
+                <InputField
+                  onChange={(e) => { handleFilter({ amountMin: e.target.value }); }}
+                  style={{ maxHeight: '35px' }}
+                  placeholder="Min"
+                />
+                {' - '}
+                <InputField
+                  onChange={(e) => { handleFilter({ amountMax: e.target.value }); }}
+                  style={{ maxHeight: '35px' }}
+                  placeholder="Max"
+                />
+              </Flex>
+            </Flex>
+            <Flex
+              className={styles.headerItem}
+              flex={0.2}
+            >
+              <Flex>
+                <Select
+                  style={{ maxWidth: '250px', minWidth: '200px' }}
+                  value={filter.stage}
+                  onChange={(_, arr) => {
+                    handleFilter({ stage: arr });
+                  }}
+                  options={stages.deals}
+                  maxTagCount={1}
+                  mode="multiple"
+                  allowClear
+                />
+              </Flex>
+            </Flex>
+            <Flex
+              className={styles.headerItem}
+              flex={0.1}
+            >
+              <Flex style={{ width: '100px' }}>
+                <Select
+                  value={filter.approvalDate}
+                  style={{ width: 200 }}
+                  onChange={(val) => { handleFilter({ approvalDate: val }); }}
+                  options={dateDurations}
+                  allowClear
+                />
+              </Flex>
+            </Flex>
+            <Flex
+              className={styles.headerItem}
+              flex={0.1}
+            >
+              <Flex style={{ width: '100px' }}>
+                <Select
+                  value={filter.lastTouchedDate}
+                  style={{ width: 200 }}
+                  onChange={(val) => { handleFilter({ lastTouchedDate: val }); }}
+                  options={dateDurations}
+                  allowClear
+                />
+              </Flex>
             </Flex>
           </Flex>
           {data?.map((d) => (

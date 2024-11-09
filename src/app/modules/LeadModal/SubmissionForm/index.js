@@ -59,11 +59,12 @@ function SubmissionForm({
     }
     setSelectedFunders(updated);
   };
-  const handleDocSelect = (key) => {
+  const handleDocSelect = (key, docSelectId) => {
     let updated = [];
-    if (selectedDocs.includes(key)) {
+    if (selectedDocs.includes(key) && !(key === (applicationDoc || docSelectId))) {
       updated = selectedDocs.filter((item) => item !== key);
     } else {
+      if (selectedDocs.includes(key)) return;
       updated = [...selectedDocs, key];
     }
     setSelectedDoucments(updated);
@@ -72,14 +73,15 @@ function SubmissionForm({
     setStep(nextStep);
   };
   const handleSubmit = async () => {
-    if (!isContract || inputPrevSubmission) {
-      const validation = await validateSubmission(
-        selectedFunders,
-        submittedFunders,
+    if (!isContract && !inputPrevSubmission) {
+      const validation = await validateSubmission({
+        funders: selectedFunders,
+        alreadySubmitted: submittedFunders,
         details,
         isResubmit,
-        funderId,
-      );
+        resubmitFunderId: funderId,
+        selectedDocs,
+      });
       if (validation.length > 0) {
         setSubmissionErrors(validation);
         setShowErrors(true);

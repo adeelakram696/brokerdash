@@ -188,7 +188,7 @@ function ActivityLog() {
             <ThreadBox
               key={update.id}
               id={update.id}
-              creator={update.creator.name}
+              creator={update.creator?.name || 'N/A'}
               handleMarkImportant={handleMarkImportant}
               text={actions.text}
               time={dayjs(update.created_at).format('MMM DD [@] hh:mm A')}

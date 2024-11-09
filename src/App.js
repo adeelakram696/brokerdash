@@ -19,6 +19,8 @@ import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import weekday from 'dayjs/plugin/weekday';
 import isBetween from 'dayjs/plugin/isBetween';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import './App.scss';
 import TeamLeaderBoard from 'app/pages/TeamLeaderBoard';
 import ManagerFunnelBoard from 'app/pages/ManagerFunnelBoard';
@@ -37,6 +39,8 @@ dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(weekday);
 dayjs.extend(isBetween);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 const { Content } = Layout;
 function App() {
   const {

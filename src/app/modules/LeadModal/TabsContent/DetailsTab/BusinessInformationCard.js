@@ -61,6 +61,9 @@ function BusinessInformationCard({
       );
       await businessAddPostFunc(resp.data?.create_item?.id);
     }
+    await updateClientInformation(details.id, details.board.id, {
+      [columnIds.deals.company_name]: values.name,
+    });
     await updateInfo();
     setIsEdit(false);
     setLoading(false);

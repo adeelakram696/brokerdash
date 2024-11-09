@@ -1,5 +1,7 @@
+import { dateFormat } from 'utils/constants';
 import {
   cleanStrToNum,
+  formatDate,
 } from 'utils/helpers';
 
 export const CFGMSSubmissionPayload = (data) => {
@@ -47,7 +49,7 @@ export const CFGMSSubmissionPayload = (data) => {
       // homePhone: '123-555-1212',
       // email: 'owner@email.com',
       ssn: cleanStrToNum(data.client.social_security), // required
-      // dob: '1980-05-28',
+      dob: formatDate(data.client.dob, dateFormat.YYYYMMDD),
       // title: 'President',
       ownerPercent: data.client.ownership || null,
     },
@@ -69,7 +71,7 @@ export const CFGMSSubmissionPayload = (data) => {
       // homePhone: '123-555-1212',
       // email: 'owner@email.com',
       ssn: cleanStrToNum(data.partner.social_security), // required
-      // dob: '1980-05-28',
+      dob: formatDate(data.partner.dob, dateFormat.YYYYMMDD),
       // title: 'President',
       ownerPercent: data.partner.ownership || null,
     };

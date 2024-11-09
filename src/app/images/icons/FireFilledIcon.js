@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 export function FireFilledIcon({
-  color = '#df2f4a', color2 = 'white', width = '36', height = '36',
+  color = '#8c8c8c', color2 = 'white', width = '36', height = '36',
 }) {
   return (
     <svg width={width} height={height} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">

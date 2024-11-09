@@ -13,9 +13,9 @@ export const fundersIntakeCalc = (values, funders) => {
   return (filtered || []).map((funder) => {
     let minMonthRevenue = false;
     if (funder.monthlyPriority) {
-      const monthsRevInd = [2, 3].filter((ind) => values[`totalCredit-${ind}`] > 0);
+      const monthsRevInd = [2, 3].filter((ind) => convertToNumber(values[`totalCredit-${ind}`]) > 0);
       minMonthRevenue = [1, ...monthsRevInd].some((ind) => (
-        (values[`totalCredit-${ind}`] || 0) <= funder.minimumRevenueMonthly()
+        (convertToNumber(values[`totalCredit-${ind}`]) || 0) <= funder.minimumRevenueMonthly()
       ));
     }
     const isAvgbalanceZero = funder.minAvgDailyBalance === 0;

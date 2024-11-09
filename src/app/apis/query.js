@@ -720,7 +720,7 @@ export const fetchLeadUpdates = async (leadId) => {
         created_at
         body
         text_body
-        creator{
+        creator {
           name
         }
       }
@@ -1488,6 +1488,9 @@ export const fetchApprovals = async (cursor, dates) => {
           parent_item {
             id
             name
+            group {
+              title
+            }
             column_values(ids: ["${columnIds.deals.agent}", "${columnIds.deals.stage}", "${columnIds.deals.last_touched}"]){
               id
               text

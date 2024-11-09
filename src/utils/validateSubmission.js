@@ -128,13 +128,14 @@ export const validateBeforeSubmission = async (item, funder) => {
   return { error: 'Function does not exist' };
 };
 
-export const validateSubmission = async (
+export const validateSubmission = async ({
   funders,
   alreadySubmitted,
   details,
   isResubmit,
   resubmitFunderId,
-) => {
+  selectedDocs,
+}) => {
   const filterdFunders = funders.filter(
     (funder) => (
       !alreadySubmitted.includes(funder)
@@ -145,7 +146,10 @@ export const validateSubmission = async (
   const fundersValidations = await Promise.all(filterdFunders.map(async (funderId) => {
     const transformed = transformDealDetails(details);
     const submissionData = transformIntoSubmission(transformed, fundersServices[funderId]);
-    const validation = await validateBeforeSubmission(submissionData, fundersServices[funderId]);
+    const validation = await validateBeforeSubmission(
+      { ...submissionData, selectedDocs },
+      fundersServices[funderId],
+    );
     return {
       funder: fundersServices[funderId],
       errors: validation,

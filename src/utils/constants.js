@@ -105,7 +105,8 @@ export const columnIds = {
     creation_log: 'creation_log',
     deal_poc: 'email4',
     deal_partner: 'email',
-    company_name: 'text97',
+    company_nam: 'text97',
+    company_name: 'text3',
     source: 'text59',
     contract_out: 'date6',
     contract_signed: 'date7',
@@ -883,14 +884,16 @@ export const allowedFunders = [
   6976521906,
   6948733727,
   6765205008,
-  6765205031,
+  // 6765205031,
+  6765204931,
 ];
 
 export const fundersServices = {
-  6976521906: submissionFunders.cfgms,
-  6948733727: submissionFunders.onDeck,
-  6765205008: submissionFunders.onDeck,
-  6765205031: submissionFunders.onDeck,
+  6948733727: submissionFunders.onDeck, // CW TEST
+  6765205008: submissionFunders.onDeck, // ONDECK
+  // 6765205031: submissionFunders.onDeck, // ONDECK canada
+  6976521906: submissionFunders.cfgms, // API TEST
+  6765204931: submissionFunders.cfgms, // CFGMS
 };
 
 export const entityMapping = {
@@ -904,6 +907,7 @@ export const entityMapping = {
 
 export const dateFormat = {
   YYYYMD: 'YYYY-M-D',
+  YYYYMMDD: 'YYYY-MM-DD',
 };
 
 export const stateSOS = {

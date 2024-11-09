@@ -1,13 +1,5 @@
 import * as Yup from 'yup';
-
-// Helper to validate past dates
-const isPastDate = (date) => {
-  const today = new Date();
-  const inputDate = new Date(date);
-  return inputDate < today;
-};
-
-const dateRegex = /^\d{4}-\d{1,2}-\d{1,2}$/;
+import { dateRegex, isPastDate } from './shared';
 
 // Address Schema
 const addressSchema = (Prefix) => (Yup.object().shape({

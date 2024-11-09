@@ -61,6 +61,7 @@ function SelectDocuments({
                 onChange={() => {
                   if (applicationDoc) setApplicationDoc('');
                   else setApplicationDoc(id);
+                  handleSelect(id, id);
                 }}
                 style={{
                   fontSize: 10,
