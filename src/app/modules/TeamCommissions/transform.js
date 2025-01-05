@@ -16,10 +16,12 @@ export const transformData = (deals) => (
         Become: 0.5,
         'RJ Leads': 0.4,
       };
+      const isDefault = dealColumns[columnIds.deals.default] === 'Yes';
       const dealInfo = {
         id: deal.id,
         funded_date: dealColumns[columnIds.deals.funded__date],
         source: dealColumns[columnIds.deals.channel],
+        default: isDefault,
         name: deal.name,
         product: submissionColumns[columnIds.subItem.product_type],
         funding_amount: submissionColumns[columnIds.subItem.funding_amount],
@@ -30,8 +32,9 @@ export const transformData = (deals) => (
         professional_fee: submissionColumns[columnIds.subItem.professional_fee_perc],
       };
       const payback_amount = dealInfo.funding_amount * dealInfo.factor_rate;
-      const commission = dealInfo.isPayback ? payback_amount * (dealInfo.pts / 100)
-        : Number(dealInfo.funding_amount) * (dealInfo.pts / 100);
+      const commisionAmt = (dealInfo.isPayback ? payback_amount * (dealInfo.pts / 100)
+        : Number(dealInfo.funding_amount) * (dealInfo.pts / 100));
+      const commission = isDefault ? 0 : commisionAmt;
       const psf = (dealInfo.funding_amount * (dealInfo.professional_fee / 100)).toFixed(0);
       const marketing_partner_split = marketingSplit[dealInfo.source] || 0;
       const comission_with_psf = Number(commission) + Number(psf);

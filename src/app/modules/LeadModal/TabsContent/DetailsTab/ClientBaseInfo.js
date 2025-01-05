@@ -245,11 +245,6 @@ function ClientBaseInfo({
                     <Form.Item
                       noStyle
                       name={columnIds[board].most_important}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
                     >
                       <SelectField options={importantToYou} />
                     </Form.Item>
@@ -265,11 +260,6 @@ function ClientBaseInfo({
                     <Form.Item
                       noStyle
                       name={columnIds[board].needs_money_for}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
                     >
                       <SelectField options={loanPurpose} />
                     </Form.Item>

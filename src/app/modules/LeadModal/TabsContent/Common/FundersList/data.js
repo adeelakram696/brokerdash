@@ -43,6 +43,9 @@ export const productTypes = [
   {
     value: 'Business Term', label: 'Business Term', color: '#892A8B', color2: '#6C0A6E',
   },
+  {
+    value: 'Reverse Consolidation', label: 'Reverse Consolidation', color: '#76b52d', color2: '#0f4d05',
+  },
 ];
 
 export const commissionOnValues = {

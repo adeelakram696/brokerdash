@@ -102,7 +102,7 @@ function DataTableComissions({ data }) {
           {data?.map((d) => {
             totalGCI += Number(d.total_gross);
             return (
-              <Flex justify="space-between" className={classNames(styles.itemRow, styles.clickable, styles.rowPadding)} onClick={() => { handleRowClick(d); }}>
+              <Flex justify="space-between" className={classNames(styles.itemRow, styles.clickable, styles.rowPadding, { [styles.defaultRow]: d.default })} onClick={() => { handleRowClick(d); }}>
                 <Flex className={styles.bussinessName} flex={0.4}>{d.name}</Flex>
                 <Flex
                   flex={0.1}

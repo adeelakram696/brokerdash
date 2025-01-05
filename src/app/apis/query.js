@@ -1566,7 +1566,7 @@ export const fetchDealFunded = async (cursor, user, dates) => {
         items {
           id
           name
-          column_values(ids: ["${columnIds.deals.assginee}", "${columnIds.deals.channel}", "${columnIds.deals.funded__date}"]) {
+          column_values(ids: ["${columnIds.deals.assginee}", "${columnIds.deals.channel}", "${columnIds.deals.funded__date}","${columnIds.deals.default}"]) {
             id
             text
             value
@@ -1639,10 +1639,10 @@ export const getCommissionSettings = async (userId) => {
   }`;
   const res = await monday.api(query);
   const items = res.data.comissionSettings[0]?.items_page?.items;
-  const itemsWithCols = items.map((item) => {
+  const itemsWithCols = items?.map((item) => {
     const columnValues = normalizeColumnValues(item.column_values || {});
     return { ...item, ...columnValues };
-  });
+  }) || [];
 
   return itemsWithCols;
 };
