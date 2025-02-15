@@ -7,6 +7,8 @@ import {
 import { useState } from 'react';
 import InputField from 'app/components/Forms/InputField';
 import { columnIds } from 'utils/constants';
+import { safeJsonParse } from 'utils/helpers';
+import classNames from 'classnames';
 import styles from './FundersList.module.scss';
 import ExpendedData from './ExpendedData';
 import DataRow from './DataRow';
@@ -19,6 +21,8 @@ function FundingOffer({
   const typeColor = productTypes.find(
     (item) => (item.value === data[columnIds.subItem.product_type]),
   );
+  const apiResponse = safeJsonParse(data[columnIds.subItem.api_submission_response]);
+  console.log(apiResponse?.errorMsg);
   return (
     <Flex style={{ marginBottom: 10, paddingRight: 10 }}>
       <Flex style={{ background: typeColor?.color }} className={styles.dndContainer} vertical justify="space-between">
@@ -26,7 +30,7 @@ function FundingOffer({
         <Flex style={{ color: typeColor.fontColor || '#FFF' }} className={styles.typeText}>{data[columnIds.subItem.product_type] || '-'}</Flex>
         <Flex className={styles.draggingIconEnd}><DragingIcon color={typeColor.color2} /></Flex>
       </Flex>
-      <Flex className={styles.contentContainer}>
+      <Flex className={classNames(styles.contentContainer, { [styles.failed]: apiResponse?.errorMsg === 'Submission Failed' })}>
         <Flex vertical flex={1}>
           <DataRow
             data={data}

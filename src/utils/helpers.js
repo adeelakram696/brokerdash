@@ -335,3 +335,12 @@ export const openStateUrl = (st) => {
   const url = stateSOS[st];
   window.open(url, '_blank');
 };
+
+export function safeJsonParse(input) {
+  try {
+    return JSON.parse(input);
+  } catch (error) {
+    console.error('Invalid JSON string:', error);
+    return null; // Return null or a fallback value
+  }
+}
