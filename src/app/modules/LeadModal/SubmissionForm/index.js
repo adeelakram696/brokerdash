@@ -1,8 +1,11 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
-import { useContext, useEffect, useState } from 'react';
+import {
+  useContext, useEffect, useState,
+} from 'react';
 import {
   Modal, Flex, Button,
+  Spin,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
 import { columnIds, env } from 'utils/constants';
@@ -10,7 +13,8 @@ import { LeadContext } from 'utils/contexts';
 import { sendSubmission } from 'app/apis/mutation';
 import { getColumnValue } from 'utils/helpers';
 import { validateSubmission } from 'utils/validateSubmission';
-import { resendSubmissionApplication } from 'app/apis/reSubmitSubmission';
+import { resendSubmissionApplication, submissionApplication } from 'app/apis/reSubmitSubmission';
+import monday from 'utils/mondaySdk';
 import styles from './SubmissionForm.module.scss';
 import {
   qualifications, stepData, steps,
@@ -25,8 +29,9 @@ function SubmissionForm({
   show, handleClose, type = 'funder', inputPrevSubmission, resubmiteId,
   funderName, funderId,
 }) {
+  let newItemEventUnSubs;
   const {
-    leadId, boardId, board, details, getData,
+    leadId, boardId, board, details, getData, setLoadingData,
   } = useContext(LeadContext);
   const isContract = type === 'contract';
   const isResubmit = type === 'renew';
@@ -71,6 +76,22 @@ function SubmissionForm({
   };
   const handleNextStep = (nextStep) => {
     setStep(nextStep);
+  };
+  const submitDeal = ({ data }) => {
+    if (((data?.itemIds || [])[0] || '').toString() === leadId && data.columnId === 'subitems') {
+      const pulseId = (data?.columnValue?.added_pulse || [])[0]?.linkedPulseId;
+      submissionApplication(pulseId);
+      getData();
+      setSelectedFunders([]);
+      setSelectedDoucments([]);
+      setTextNote('');
+      setStep((isContract || isResubmit) ? steps.documents
+        : (inputPrevSubmission ? steps.funders : steps.qualification));
+      setLoading(false);
+      setLoadingData(false);
+      newItemEventUnSubs();
+      handleClose();
+    }
   };
   const handleSubmit = async () => {
     if (!isContract && !inputPrevSubmission) {
@@ -123,6 +144,8 @@ function SubmissionForm({
       payload = {};
       payload[columnIds[board].submit_offers_status] = 'Trigger';
       await sendSubmission(leadId, boardId, payload, cta);
+      setLoadingData(true);
+      newItemEventUnSubs = monday.listen(['change_column_values'], submitDeal);
     }
     if (inputPrevSubmission) {
       payload = {};
@@ -144,15 +167,21 @@ function SubmissionForm({
         funderName,
       );
     }
-    getData();
-    setSelectedFunders([]);
-    setSelectedDoucments([]);
-    setTextNote('');
-    setStep((isContract || isResubmit) ? steps.documents
-      : (inputPrevSubmission ? steps.funders : steps.qualification));
-    setLoading(false);
-    handleClose();
+    if (inputPrevSubmission || isResubmit || isContract) {
+      getData();
+      setSelectedFunders([]);
+      setSelectedDoucments([]);
+      setTextNote('');
+      setStep((isContract || isResubmit) ? steps.documents
+        : (inputPrevSubmission ? steps.funders : steps.qualification));
+      setLoading(false);
+      handleClose();
+    }
   };
+  useEffect(() => () => {
+    if (!newItemEventUnSubs) return;
+    newItemEventUnSubs();
+  }, []);
   const selectedValues = {
     [steps.qualification]: [1],
     [steps.funders]: selectedFunders,
@@ -174,6 +203,7 @@ function SubmissionForm({
   return (
     <Modal
       open={show}
+      loading={loading}
       footer={(
         <Flex justify="flex-end">
           {stepData[step].prevStep && !(isContract || isResubmit) && !inputPrevSubmission
@@ -208,6 +238,7 @@ function SubmissionForm({
         </Flex>
 )}
     >
+      <Spin tip="Loading..." spinning={loading} fullscreen />
       {step === steps.qualification ? (
         <QualificationCheck
           data={qualifications}

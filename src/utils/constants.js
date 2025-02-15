@@ -500,6 +500,7 @@ export const columnIds = {
     approvals: 'numbers5__1',
     dealsFunded: 'numbers59__1',
     totalFunded: 'numbers34__1',
+    showTotal: 'checkbox_mkm0t0pa',
   },
   funders: {
     paper_type: 'paper_type_3',

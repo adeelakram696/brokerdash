@@ -12,7 +12,7 @@ import {
   fetchTeamGoals,
 } from 'app/apis/query';
 import { useEffect, useRef, useState } from 'react';
-import { env } from 'utils/constants';
+import { columnIds, env } from 'utils/constants';
 import monday from 'utils/mondaySdk';
 import { logo } from 'app/images';
 import IconImg from 'app/components/IconImg';
@@ -119,16 +119,17 @@ function TeamLeaderBoard() {
   useEffect(() => {
     const intervalId = setInterval(
       () => { refetchData(); }
-      , (1000 * env.performanceRefetchTime),
+      , (1000 * env.intervalTime),
     );
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
   }, []);
+  const showTotals = goals[columnIds.teamLeaderBaord.showTotal] === 'v';
   return (
     <Flex flex={1}>
       <Spin tip="Loading..." spinning={loading} fullscreen />
-      <MainDataTable saleActivities={saleActivities} />
+      <MainDataTable saleActivities={saleActivities} showTotals={showTotals} />
       <Flex flex={0.4} vertical>
         <Flex className={styles.logo} justify="center">
           <div
@@ -139,8 +140,9 @@ function TeamLeaderBoard() {
         </Flex>
         <AgentLeaderBoard
           saleActivities={saleActivities}
+          showTotals={showTotals}
         />
-        <TeamLeaderboardGoal saleActivities={saleActivities} goals={goals} />
+        <TeamLeaderboardGoal saleActivities={saleActivities} goals={goals} showTotals={showTotals} />
       </Flex>
     </Flex>
   );

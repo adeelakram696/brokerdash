@@ -48,8 +48,6 @@ function DataRow({
   const hideModal = () => {
     setConfirmation(false);
   };
-  // const offer = data[columnIds.subItem.offers_response];
-  // console.log(offer ? decodeJson(offer) : '');
   const funderAccount = getColumnValue(data.column_values, columnIds.subItem.funding_accounts);
   return (
     <Flex flex={1}>

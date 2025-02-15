@@ -1207,41 +1207,18 @@ export const getTeamTotalActivities = async (duration, actionIds, employees) => 
   const empIds = employees.map((emp) => (`"person-${emp.id}"`));
   let res = null;
   let itemsList = [];
-  do {
-    // eslint-disable-next-line no-await-in-loop
-    res = await fetchUTeamSaleActivities(
-      res ? res.data.saleActivities[0].items_page.cursor : null,
-      duration,
-      actionIds,
-      empIds,
-      env.boards.salesActivities,
-    );
-    itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
-  } while (res.data.saleActivities[0].items_page.cursor);
   res = null;
   do {
     // eslint-disable-next-line no-await-in-loop
     res = await fetchUTeamSaleActivities(
-      res ? res.data.saleActivities[0].items_page.cursor : null,
-      duration,
-      actionIds,
-      empIds,
-      env.boards.salesActivities2,
-    );
-    itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
-  } while (res.data.saleActivities[0].items_page.cursor);
-  res = null;
-  do {
-    // eslint-disable-next-line no-await-in-loop
-    res = await fetchUTeamSaleActivities(
-      res ? res.data.saleActivities[0].items_page.cursor : null,
+      res ? res.data.saleActivities[0]?.items_page?.cursor : null,
       duration,
       actionIds,
       empIds,
       env.boards.salesActivities3,
     );
-    itemsList = [...itemsList, ...res.data.saleActivities[0].items_page.items];
-  } while (res.data.saleActivities[0].items_page.cursor);
+    itemsList = [...itemsList, ...((res.data?.saleActivities || [])[0]?.items_page?.items || [])];
+  } while ((res.data?.saleActivities || [])[0]?.items_page?.cursor);
   const activities = itemsList.reduce((prev, curr) => {
     const type = curr?.column_values?.find((col) => col.id === 'status');
     const owner = getColumnValue(curr.column_values || [], 'person');
@@ -1310,11 +1287,11 @@ export const getDealFunds = async (employees) => {
   do {
     // eslint-disable-next-line no-await-in-loop
     res = await fetchDealFunds(
-      res ? res.data.totalFunds[0].items_page.cursor : null,
+      res ? (res.data?.totalFunds || [])[0].items_page.cursor : null,
       employees,
     );
-    itemsList = [...itemsList, ...res.data.totalFunds[0].items_page.items];
-  } while (res.data.totalFunds[0].items_page.cursor);
+    itemsList = [...itemsList, ...(res.data?.totalFunds || [])[0].items_page.items];
+  } while ((res.data?.totalFunds || [])[0].items_page.cursor);
   const funds = itemsList.reduce((prev, curr) => {
     const obj = prev;
     const selected = curr.subitems.find(

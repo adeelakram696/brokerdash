@@ -6,13 +6,13 @@ import { numberWithCommas } from 'utils/helpers';
 import styles from './TeamLeaderBoard.module.scss';
 import { statuses } from './data';
 
-function MainDataTable({ saleActivities }) {
+function MainDataTable({ saleActivities, showTotals }) {
   const sorted = Object.values(saleActivities).sort((a, b) => (b['fully funded'] || 0) - (a['fully funded'] || 0));
   return (
     <Flex flex={0.6} vertical className={styles.table} justify="space-between">
       <Flex className={styles.headerRow} align="center" justify="space-between">
         <Flex flex={0.25} className={styles.headerColumnTitle}>Name</Flex>
-        {statuses.map((status) => (
+        {statuses.filter((st) => !(st.actionName === 'totalFunds' && !showTotals)).map((status) => (
           <Flex flex={0.13} className={styles.headerColumnPerson} style={{ minWidth: status.width }} vertical justify="center" align="center">
             <Flex className={styles.rowStatusTitleText}>{status.title}</Flex>
             <Flex className={styles.rowStatusDurationText}>
@@ -30,7 +30,7 @@ function MainDataTable({ saleActivities }) {
             {' '}
             {activity?.person?.name.split(' ')[1][0].toUpperCase()}
           </Flex>
-          {statuses.map((status) => (
+          {statuses.filter((st) => !(st.actionName === 'totalFunds' && !showTotals)).map((status) => (
             <Flex flex={0.13} className={styles.dataColumnPerson} style={{ minWidth: status.width }} justify="center" align="center">
               {activity[status.actionName.toLowerCase()] ? status.preFix : ''}
               {(numberWithCommas(activity[status.actionName.toLowerCase()]) || ' ')}

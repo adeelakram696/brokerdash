@@ -2,8 +2,9 @@ import {
   Flex, Spin, DatePicker,
 } from 'antd';
 import {
-  fetchUser, fetchUsers, getCommissionSettings, getDealsFundedByMonth,
+  fetchUser, fetchUsers, getDealsFundedByMonth,
 } from 'app/apis/query';
+import { fetchCommissionSettings } from 'app/apis/apis';
 import { useEffect, useRef, useState } from 'react';
 import SelectField from 'app/components/Forms/SelectField';
 import classNames from 'classnames';
@@ -35,7 +36,7 @@ function TeamCommissions({ isUser }) {
     setData(transformed);
   };
   const fetchCommisionTier = async (user) => {
-    const res = await getCommissionSettings(user);
+    const res = await fetchCommissionSettings(user);
     setCommissionTier(res);
   };
 

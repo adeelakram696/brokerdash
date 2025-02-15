@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import styles from './TeamLeaderBoard.module.scss';
 import { statuses } from './data';
 
-function TeamLeaderboardGoal({ saleActivities, goals }) {
+function TeamLeaderboardGoal({ saleActivities, goals, showTotals }) {
   return (
     <Flex vertical className={styles.table}>
       <Flex className={styles.tableTitle}>
@@ -21,7 +21,7 @@ function TeamLeaderboardGoal({ saleActivities, goals }) {
           <Flex flex={0.13}>Amount</Flex>
           <Flex flex={0.13}>Goal</Flex>
         </Flex>
-        {statuses.map((status, index) => {
+        {statuses.filter((st) => !(st.actionName === 'totalFunds' && !showTotals)).map((status, index) => {
           const totalSum = getTotalSum(saleActivities || {}, status.actionName.toLowerCase());
           const preSign = totalSum ? status.preFix : '';
           return (

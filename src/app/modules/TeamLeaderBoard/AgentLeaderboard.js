@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import styles from './TeamLeaderBoard.module.scss';
 import { statuses } from './data';
 
-function AgentLeaderBoard({ saleActivities }) {
+function AgentLeaderBoard({ saleActivities, showTotals }) {
   return (
     <Flex vertical className={styles.table}>
       <Flex className={styles.tableTitle}>
@@ -17,7 +17,7 @@ function AgentLeaderBoard({ saleActivities }) {
         </Flex>
       </Flex>
       <Flex className={styles.rightTableData} vertical>
-        {statuses.map((status, index) => {
+        {statuses.filter((st) => !(st.actionName === 'totalFunds' && !showTotals)).map((status, index) => {
           const activity = getMostValue(saleActivities || {}, status.actionName.toLowerCase());
           const preSign = activity.person ? status.preFix : '';
           return (

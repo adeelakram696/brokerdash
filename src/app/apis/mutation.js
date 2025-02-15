@@ -128,7 +128,7 @@ export const sendSubmission = async (leadId, boardId, data, emailOfferBtnId) => 
       board_id: ${boardId}
       column_values: "${JSON.stringify(data).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"
     ) {
-    id    
+    id
     }
   }`;
   await monday.api(updateMutation);
