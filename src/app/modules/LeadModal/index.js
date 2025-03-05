@@ -88,7 +88,7 @@ function LeadModal({
   };
   const getUpdates = async () => {
     const res = await fetchLeadUpdates(leadId);
-    setUpdates(res.data.items[0]?.updates);
+    setUpdates((res.data?.items || [])[0]?.updates);
     setUsers(res.data.users);
   };
   const getChannels = async () => {

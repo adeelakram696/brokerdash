@@ -22,7 +22,6 @@ function FundingOffer({
     (item) => (item.value === data[columnIds.subItem.product_type]),
   );
   const apiResponse = safeJsonParse(data[columnIds.subItem.api_submission_response]);
-  console.log(apiResponse?.errorMsg);
   return (
     <Flex style={{ marginBottom: 10, paddingRight: 10 }}>
       <Flex style={{ background: typeColor?.color }} className={styles.dndContainer} vertical justify="space-between">

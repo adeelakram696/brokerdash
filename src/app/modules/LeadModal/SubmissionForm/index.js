@@ -1,3 +1,4 @@
+/* eslint-disable react/function-component-definition */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
 import {
@@ -8,7 +9,7 @@ import {
   Spin,
 } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
-import { columnIds, env } from 'utils/constants';
+import { allowedFunders, columnIds, env } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import { sendSubmission } from 'app/apis/mutation';
 import { getColumnValue } from 'utils/helpers';
@@ -25,17 +26,20 @@ import QualificationCheck from './QualificationCheck';
 import { statuses } from '../TabsContent/Common/FundersList/data';
 import { SubmissionErrors } from './SubmissionErrors';
 
-function SubmissionForm({
+let totalSubitems;
+let processedSubitems;
+const SubmissionForm = ({
   show, handleClose, type = 'funder', inputPrevSubmission, resubmiteId,
   funderName, funderId,
-}) {
+}) => {
   let newItemEventUnSubs;
   const {
-    leadId, boardId, board, details, getData, setLoadingData,
+    leadId, boardId, board, details, getData,
   } = useContext(LeadContext);
   const isContract = type === 'contract';
   const isResubmit = type === 'renew';
   const [loading, setLoading] = useState(false);
+  const [eventLoading, setEventLoading] = useState(false);
   const [submittedFunders, setSubmittedFunders] = useState([]);
   const [selectedFunders, setSelectedFunders] = useState([]);
   const [selectedDocs, setSelectedDoucments] = useState([]);
@@ -81,16 +85,21 @@ function SubmissionForm({
     if (((data?.itemIds || [])[0] || '').toString() === leadId && data.columnId === 'subitems') {
       const pulseId = (data?.columnValue?.added_pulse || [])[0]?.linkedPulseId;
       submissionApplication(pulseId);
-      getData();
-      setSelectedFunders([]);
-      setSelectedDoucments([]);
-      setTextNote('');
-      setStep((isContract || isResubmit) ? steps.documents
-        : (inputPrevSubmission ? steps.funders : steps.qualification));
-      setLoading(false);
-      setLoadingData(false);
-      newItemEventUnSubs();
-      handleClose();
+      processedSubitems.add(pulseId);
+      if (processedSubitems?.size === totalSubitems) {
+        totalSubitems = 0;
+        processedSubitems = new Set();
+        getData();
+        setSelectedFunders([]);
+        setSelectedDoucments([]);
+        setTextNote('');
+        setStep((isContract || isResubmit) ? steps.documents
+          : (inputPrevSubmission ? steps.funders : steps.qualification));
+        setLoading(false);
+        setEventLoading(false);
+        newItemEventUnSubs();
+        handleClose();
+      }
     }
   };
   const handleSubmit = async () => {
@@ -144,8 +153,20 @@ function SubmissionForm({
       payload = {};
       payload[columnIds[board].submit_offers_status] = 'Trigger';
       await sendSubmission(leadId, boardId, payload, cta);
-      setLoadingData(true);
-      newItemEventUnSubs = monday.listen(['change_column_values'], submitDeal);
+      const uniqueValues = [
+        ...submittedFunders.filter((id) => !selectedFunders.includes(id)),
+        ...selectedFunders.filter((id) => !submittedFunders.includes(id)),
+      ];
+      totalSubitems = uniqueValues.length;
+      processedSubitems = new Set();
+      const hasAllowedFunders = uniqueValues.some(
+        (id) => allowedFunders.includes(Number(id)),
+      );
+      if (hasAllowedFunders) {
+        setEventLoading(true);
+        newItemEventUnSubs = monday.listen(['change_column_values'], submitDeal);
+        return;
+      }
     }
     if (inputPrevSubmission) {
       payload = {};
@@ -167,16 +188,14 @@ function SubmissionForm({
         funderName,
       );
     }
-    if (inputPrevSubmission || isResubmit || isContract) {
-      getData();
-      setSelectedFunders([]);
-      setSelectedDoucments([]);
-      setTextNote('');
-      setStep((isContract || isResubmit) ? steps.documents
-        : (inputPrevSubmission ? steps.funders : steps.qualification));
-      setLoading(false);
-      handleClose();
-    }
+    getData();
+    setSelectedFunders([]);
+    setSelectedDoucments([]);
+    setTextNote('');
+    setStep((isContract || isResubmit) ? steps.documents
+      : (inputPrevSubmission ? steps.funders : steps.qualification));
+    setLoading(false);
+    handleClose();
   };
   useEffect(() => () => {
     if (!newItemEventUnSubs) return;
@@ -238,7 +257,7 @@ function SubmissionForm({
         </Flex>
 )}
     >
-      <Spin tip="Loading..." spinning={loading} fullscreen />
+      <Spin tip="DO NOT CLOSE THIS WINDOW UNTIL IT SAYS SUBMITTED" style={{ fontWeight: 'bold', textShadow: '1px 1px #000' }} spinning={eventLoading} fullscreen />
       {step === steps.qualification ? (
         <QualificationCheck
           data={qualifications}
@@ -272,5 +291,5 @@ function SubmissionForm({
       )}
     </Modal>
   );
-}
+};
 export default SubmissionForm;

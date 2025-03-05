@@ -32,6 +32,13 @@ function GenerateApp() {
         </div>),
       key: '1',
     },
+    {
+      label: (
+        <div onClick={() => { handleAppGenClick(columnIds[board].midway_application); }}>
+          Midway App
+        </div>),
+      key: '2',
+    },
   ];
   return (
     <Dropdown

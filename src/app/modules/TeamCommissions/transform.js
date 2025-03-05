@@ -41,7 +41,7 @@ export const transformData = (deals) => (
       const total_gross = dealInfo.source === 'Become' ? comission_with_psf - (commission * marketing_partner_split) : comission_with_psf - (marketing_partner_split * comission_with_psf);
       return {
         ...dealInfo,
-        isOutbound: dealInfo.source === 'Phoneburner',
+        isOutbound: dealInfo.source === 'Phoneburner' || dealInfo.source === 'Referral',
         payback_amount: payback_amount.toFixed(0),
         commission: commission.toFixed(0),
         psf,

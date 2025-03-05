@@ -208,6 +208,7 @@ export const columnIds = {
     reassign_rep_btn: 'button0__1',
     application_doc_id: 'text2__1',
     default: 'status_mkkkkyzh',
+    midway_application: 'button_mkngazn1',
   },
   leads: {
     name: 'name',
@@ -362,6 +363,7 @@ export const columnIds = {
     reassign_rep_btn: 'button6__1',
     approvd_application: 'button64__1',
     logic_application: 'button_1__1',
+    midway_application: 'button_mknfn59g',
   },
   subItem: {
     funding_accounts: 'connect_boards5',
