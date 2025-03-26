@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/brokerdash/static/css/main.a15bd22f.css",
-    "main.js": "/brokerdash/static/js/main.b9c66e67.js",
+    "main.js": "/brokerdash/static/js/main.36389bf1.js",
     "static/css/586.8b8a8734.chunk.css": "/brokerdash/static/css/586.8b8a8734.chunk.css",
     "static/js/586.f712983b.chunk.js": "/brokerdash/static/js/586.f712983b.chunk.js",
     "static/js/328.bd1ccf0e.chunk.js": "/brokerdash/static/js/328.bd1ccf0e.chunk.js",
     "static/css/464.af190936.chunk.css": "/brokerdash/static/css/464.af190936.chunk.css",
-    "static/js/464.f8cf6e99.chunk.js": "/brokerdash/static/js/464.f8cf6e99.chunk.js",
+    "static/js/464.0405a905.chunk.js": "/brokerdash/static/js/464.0405a905.chunk.js",
     "static/css/9.686df0a5.chunk.css": "/brokerdash/static/css/9.686df0a5.chunk.css",
     "static/js/9.2d9ad993.chunk.js": "/brokerdash/static/js/9.2d9ad993.chunk.js",
     "static/media/approvalTick.svg": "/brokerdash/static/media/approvalTick.053bb133bcb2cfa179fbb48e4d3b484d.svg",
@@ -17,6 +17,6 @@
   },
   "entrypoints": [
     "static/css/main.a15bd22f.css",
-    "static/js/main.b9c66e67.js"
+    "static/js/main.36389bf1.js"
   ]
 }
