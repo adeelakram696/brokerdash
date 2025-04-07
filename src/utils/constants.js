@@ -209,6 +209,8 @@ export const columnIds = {
     application_doc_id: 'text2__1',
     default: 'status_mkkkkyzh',
     midway_application: 'button_mkngazn1',
+    assginee_gci: 'numeric_mkpsr85w',
+    shared_gci: 'numeric_mkps34w1',
   },
   leads: {
     name: 'name',

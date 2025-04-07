@@ -84,7 +84,7 @@ function LeadModal({
   };
   const getMarkAsImportant = async () => {
     const importantUpdate = await fetchMarkAsImportant(leadId, columnIds[board].mark_as_important);
-    setImportantMsg(importantUpdate?.text_body);
+    setImportantMsg(importantUpdate);
   };
   const getUpdates = async () => {
     const res = await fetchLeadUpdates(leadId);

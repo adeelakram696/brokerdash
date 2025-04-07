@@ -74,6 +74,11 @@ function DataTableComissions({ data }) {
             <Flex
               flex={0.1}
             >
+              Commission %
+            </Flex>
+            <Flex
+              flex={0.1}
+            >
               Commission
             </Flex>
             <Flex
@@ -103,7 +108,11 @@ function DataTableComissions({ data }) {
             totalGCI += Number(d.total_gross);
             return (
               <Flex justify="space-between" className={classNames(styles.itemRow, styles.clickable, styles.rowPadding, { [styles.defaultRow]: d.default })} onClick={() => { handleRowClick(d); }}>
-                <Flex className={styles.bussinessName} flex={0.4}>{d.name}</Flex>
+                <Flex className={styles.bussinessName} flex={0.4}>
+                  {d.name}
+                  {' '}
+                  {d.commissionPercent < 100 ? '(Split)' : ''}
+                </Flex>
                 <Flex
                   flex={0.1}
                 >
@@ -152,6 +161,14 @@ function DataTableComissions({ data }) {
                   flex={0.1}
                 >
                   {d.pts ? `${d.pts}%` : '-'}
+                </Flex>
+                <Flex
+                  flex={0.1}
+                >
+                  {
+                   d.commissionPercent
+                  }
+                  %
                 </Flex>
                 <Flex
                   flex={0.1}

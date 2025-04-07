@@ -5,7 +5,7 @@ import {
   Spin,
 } from 'antd';
 import {
-  fetchLeadersBoardEmployees, fetchBoardColorColumnStrings, getTotalActivities, fetchAllUsers,
+  fetchLeadersBoardEmployees, fetchBoardColorColumnStrings, fetchAllUsers,
   getAllLeadsAssigned,
 } from 'app/apis/query';
 import { useEffect, useRef, useState } from 'react';
@@ -14,9 +14,14 @@ import monday from 'utils/mondaySdk';
 import SelectField from 'app/components/Forms/SelectField';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
-import { customSort } from 'utils/helpers';
-import { actionTypesList, actionTypesTitles, conversions } from './data';
+import { customSort, numberWithCommas } from 'utils/helpers';
+import {
+  actionTypesList, actionTypesTitles, conversions, mergeTeamData,
+} from './data';
 import styles from './LeaderBoards.module.scss';
+import {
+  getAllAssignedLeadsDeals, getDealFunds, getDisqualifiedLeadsDeals, getTeamTotalActivities,
+} from './queries';
 
 const { RangePicker } = DatePicker;
 
@@ -24,7 +29,6 @@ function LeaderBoardModule({ withFilter }) {
   let unsubscribe;
   let timeoutId;
   const [loading, setLoading] = useState(false);
-  const [assingedLoading, setAssignedLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [users, setUsers] = useState([]);
   const [usersOptions, setUsersOptions] = useState([]);
@@ -32,9 +36,25 @@ function LeaderBoardModule({ withFilter }) {
   const [dateRange, setDateRange] = useState([dayjs(), dayjs()]);
   const dateR = useRef();
   const [actionTypes, setActionTypes] = useState([]);
-  const [saleActivities, setSalesActivities] = useState([]);
-  const [assingedLeads, setAssingedLeads] = useState([]);
-  const getActionTypes = async () => {
+  // const [saleActivities, setSalesActivities] = useState([]);
+  const [leadsData, setleadsData] = useState([]);
+  const getEmployeeList = async () => {
+    const res = await fetchLeadersBoardEmployees();
+    setEmployees(res);
+    if (withFilter) {
+      const mapUsers = res?.map((u) => (u.id));
+      setSelectedUsers(mapUsers);
+    }
+  };
+  // const getSaleActivities = async (dates, isLoading = true) => {
+  //   setLoading(true && isLoading);
+  //   const res = await getTotalActivities(dates);
+  //   console.log(res);
+  //   setSalesActivities(res);
+  //   setLoading(false);
+  // };
+  const getAllAssingedLeads = async (dates, employeesList, isLoading = true) => {
+    setLoading(true && isLoading);
     const res = await fetchBoardColorColumnStrings(env.boards.salesActivities, 'status');
     const actions = Object.values(res).reduce((prev, curr) => {
       // eslint-disable-next-line no-param-reassign
@@ -44,26 +64,23 @@ function LeaderBoardModule({ withFilter }) {
     const lowercaseActionsList = actionTypesList.map((t) => t.toLowerCase());
     const sortedList = customSort(Object.keys(actions), lowercaseActionsList, true);
     setActionTypes(sortedList);
-  };
-  const getEmployeeList = async () => {
-    const res = await fetchLeadersBoardEmployees();
-    setEmployees(res);
-    if (withFilter) {
-      const mapUsers = res?.map((u) => (u.id));
-      setSelectedUsers(mapUsers);
-    }
-  };
-  const getSaleActivities = async (dates, isLoading = true) => {
-    setLoading(true && isLoading);
-    const res = await getTotalActivities(dates);
-    setSalesActivities(res);
+    const actionIds = Object.keys(res)
+      .filter((key) => (actionTypesList.includes(res[key])));
+    const saleActivties = await getTeamTotalActivities(dates, actionIds, employeesList);
+    const leadsAssigned = await getAllLeadsAssigned(dates, employeesList);
+    const dealsFunded = await getDealFunds(employeesList, dates);
+    const allLeadsAssigned = await getAllAssignedLeadsDeals(employeesList);
+    const allLeadsDisqualified = await getDisqualifiedLeadsDeals(employeesList, dates);
+    const mergedData = mergeTeamData(
+      leadsAssigned,
+      dealsFunded,
+      allLeadsAssigned,
+      allLeadsDisqualified,
+      saleActivties,
+      employeesList,
+    );
+    setleadsData(mergedData);
     setLoading(false);
-  };
-  const getAllAssingedLeads = async (dates, employeesList, isLoading = true) => {
-    setAssignedLoading(true && isLoading);
-    const res = await getAllLeadsAssigned(dates, employeesList);
-    setAssingedLeads(res);
-    setAssignedLoading(false);
   };
   const getUsers = async () => {
     const res = await fetchAllUsers();
@@ -76,20 +93,18 @@ function LeaderBoardModule({ withFilter }) {
   };
   useEffect(() => {
     getEmployeeList();
-    getActionTypes();
     dateR.current = [dayjs(), dayjs()];
     if (withFilter) getUsers();
   }, []);
 
   useEffect(() => {
     if (employees.length === 0) return;
-    getSaleActivities(dateRange);
+    // getSaleActivities(dateRange);
     getAllAssingedLeads(dateRange, employees);
   }, [employees, dateRange]);
 
-  const refetchData = (dates) => {
-    getActionTypes();
-    getSaleActivities(dates, false);
+  const refetchData = () => {
+    // getSaleActivities(dates, false);
     getAllAssingedLeads(dateRange, employees, false);
   };
   const refetchEmployee = ({ data }) => {
@@ -130,7 +145,7 @@ function LeaderBoardModule({ withFilter }) {
   };
   return (
     <Flex vertical flex={1}>
-      <Spin tip="Loading..." spinning={loading || assingedLoading} fullscreen />
+      <Spin tip="Loading..." spinning={loading} fullscreen />
       {!withFilter ? null : (
         <Flex className={styles.filterbar} align="center">
           <Flex>Filters: </Flex>
@@ -161,13 +176,28 @@ function LeaderBoardModule({ withFilter }) {
         <Flex className={styles.headerRow} align="center">
           <Flex className={styles.headerColumnTitle}>Performance Leaderboard</Flex>
           <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
+            <Flex>{actionTypesTitles['total leads assigned']}</Flex>
+          </Flex>
+          <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
             <Flex>{actionTypesTitles['leads assigned']}</Flex>
+          </Flex>
+          <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
+            <Flex>{actionTypesTitles['disqualified leads']}</Flex>
           </Flex>
           {actionTypes.map((actions) => (
             <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
               <Flex>{actionTypesTitles[actions]}</Flex>
             </Flex>
           ))}
+          <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
+            <Flex>{actionTypesTitles['conversion ratio']}</Flex>
+          </Flex>
+          <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
+            <Flex>{actionTypesTitles['avg deal size']}</Flex>
+          </Flex>
+          <Flex className={styles.headerColumnPerson} vertical justify="center" align="center">
+            <Flex>{actionTypesTitles['avg time to fund']}</Flex>
+          </Flex>
         </Flex>
         {employees.map((emp, index) => (
           <Flex className={classNames(styles.dataRow, { [styles.alternateColor]: index % 2 })}>
@@ -180,23 +210,38 @@ function LeaderBoardModule({ withFilter }) {
               <Flex>{emp.name.split(' ')[0]}</Flex>
             </Flex>
             <Flex className={styles.dataColumnPerson} justify="center" align="center">
-              {(assingedLeads[emp.id] || {}).count || ' '}
+              {(leadsData[emp.id] || {}).allLeadsAssigned || ' '}
+            </Flex>
+            <Flex className={styles.dataColumnPerson} justify="center" align="center">
+              {(leadsData[emp.id] || {}).leadsAssigned || ' '}
+            </Flex>
+            <Flex className={styles.dataColumnPerson} justify="center" align="center">
+              {(leadsData[emp.id] || {}).allLeadsDisqualified || ' '}
             </Flex>
             {actionTypes.map((actions) => {
               const prevAction = conversions[actions];
-              const prev = prevAction === 'leads assigned' ? (assingedLeads[emp.id] || {}).count : (saleActivities[prevAction] || {})[emp.id];
-              const curr = (saleActivities[actions] || {})[emp.id];
+              const prev = prevAction === 'leads assigned' ? (leadsData[emp.id] || {}).leadsAssigned : (leadsData[emp.id] || {})[prevAction];
+              const curr = (leadsData[emp.id] || {})[actions];
               const percentage = (prev && curr) ? ((curr / prev) * 100).toFixed(0) : '';
               return (
                 <Flex className={styles.dataColumnPerson} justify="center" align="center" vertical>
-                  <Flex>{(saleActivities[actions] || {})[emp.id] || ' '}</Flex>
+                  <Flex>{(leadsData[emp.id] || {})[actions] || ' '}</Flex>
                   <Flex className={styles.percentage}>{percentage ? `${percentage}%` : ''}</Flex>
                 </Flex>
               );
             })}
+            <Flex className={styles.dataColumnPerson} justify="center" align="center">
+              {(leadsData[emp.id] || {}).conversionRatio || ' '}
+            </Flex>
+            <Flex className={styles.dataColumnPerson} justify="center" align="center">
+              $
+              {numberWithCommas((leadsData[emp.id] || {}).averageFunds || '0')}
+            </Flex>
+            <Flex className={styles.dataColumnPerson} justify="center" align="center">
+              {(leadsData[emp.id] || {}).averageDaysDifference || '0'}
+            </Flex>
           </Flex>
         ))}
-
       </Flex>
     </Flex>
   );

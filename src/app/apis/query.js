@@ -757,6 +757,7 @@ export const fetchMarkAsImportant = async (leadId, column) => {
     updates(ids: [${updateId}]) {
       id
       text_body
+      created_at
     }
   }`;
   const res2 = await monday.api(query2);
@@ -1500,11 +1501,13 @@ export const getAllApprovals = async () => {
     itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
   } while (res.data.boards[0].items_page.cursor);
   const reduced = itemsList.reduce((prev, curr) => {
-    const isFunded = curr.parent_item.column_values.find((c) => c.id === columnIds.deals.stage && (
-      c.text === 'Funded'
+    const isFunded = curr.parent_item?.column_values?.find(
+      (c) => c.id === columnIds.deals.stage && (
+        c.text === 'Funded'
     || c.text === 'DQ'
     || c.text === 'Lost Deals'
-    ));
+      ),
+    );
     if (isFunded) return prev;
     const obj = prev;
     const item = { ...curr.parent_item, subitems: [_.omit(curr, 'parent_item')] };
@@ -1543,7 +1546,7 @@ export const fetchDealFunded = async (cursor, user, dates) => {
         items {
           id
           name
-          column_values(ids: ["${columnIds.deals.assginee}", "${columnIds.deals.channel}", "${columnIds.deals.funded__date}","${columnIds.deals.default}"]) {
+          column_values(ids: ["${columnIds.deals.assginee}", "${columnIds.deals.channel}", "${columnIds.deals.funded__date}","${columnIds.deals.default}","${columnIds.deals.assginee_gci}","${columnIds.deals.shared_gci}"]) {
             id
             text
             value
@@ -1587,7 +1590,12 @@ export const getDealsFundedByMonth = async (employee, month) => {
     if (!selected) return false;
     const owner = getColumnValue(item.column_values || [], columnIds.deals.assginee);
     if (_.isEmpty(owner)) return false;
-    return owner.personsAndTeams[0].id === Number(employee);
+    // eslint-disable-next-line no-param-reassign
+    if (owner.personsAndTeams[0]?.id === Number(employee)) item.isOwner = true;
+    // eslint-disable-next-line no-param-reassign
+    if (owner.personsAndTeams[1]?.id === Number(employee)) item.isShared = true;
+    return owner.personsAndTeams[0]?.id === Number(employee)
+    || owner.personsAndTeams[1]?.id === Number(employee);
   });
   return filteredDeals;
 };

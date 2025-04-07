@@ -46,15 +46,15 @@ export const checkDateFilter = (inputDate, duration) => {
 };
 
 export const matchBroker = (brokers, selected) => {
-  const stringArray = brokers.split(', ').map((item) => item.toLowerCase());
+  const stringArray = brokers.split(', ').map((item) => item?.toLowerCase());
 
-  const anyPresent = selected.some((item) => stringArray.includes(item.toLowerCase()));
+  const anyPresent = selected.some((item) => stringArray.includes(item?.toLowerCase()));
 
   return anyPresent;
 };
 export const matchStages = (stage, selected) => {
   const stageLabels = selected.map((data) => data.label);
-  const anyPresent = stageLabels.some((item) => stage.toLowerCase() === item.toLowerCase());
+  const anyPresent = stageLabels.some((item) => stage?.toLowerCase() === item?.toLowerCase());
 
   return anyPresent;
 };

@@ -5,6 +5,9 @@ import { normalizeColumnValues } from 'utils/helpers';
 export const transformData = (deals) => (
   deals.map((deal) => {
     const dealColumns = normalizeColumnValues(deal.column_values);
+    const assgineeGCI = dealColumns[columnIds.deals.assginee_gci] || 100;
+    const sharedGCI = dealColumns[columnIds.deals.shared_gci] || 0;
+    const commissionPercent = deal.isShared ? sharedGCI : assgineeGCI;
     const selectedSubmissions = deal.subitems.filter(
       (subItem) => subItem.column_values.find(
         (col) => (col.id === columnIds.subItem.status && col.text === 'Selected'),
@@ -18,10 +21,11 @@ export const transformData = (deals) => (
       };
       const isDefault = dealColumns[columnIds.deals.default] === 'Yes';
       const dealInfo = {
+        show: commissionPercent !== 0,
         id: deal.id,
         funded_date: dealColumns[columnIds.deals.funded__date],
         source: dealColumns[columnIds.deals.channel],
-        default: isDefault,
+        default: false,
         name: deal.name,
         product: submissionColumns[columnIds.subItem.product_type],
         funding_amount: submissionColumns[columnIds.subItem.funding_amount],
@@ -30,10 +34,14 @@ export const transformData = (deals) => (
         isPayback: submissionColumns[columnIds.subItem.commission_calc_on] === 'On Payback',
         pts: submissionColumns[columnIds.subItem.commission_perc],
         professional_fee: submissionColumns[columnIds.subItem.professional_fee_perc],
+        commissionPercent,
       };
       const payback_amount = dealInfo.funding_amount * dealInfo.factor_rate;
-      const commisionAmt = (dealInfo.isPayback ? payback_amount * (dealInfo.pts / 100)
-        : Number(dealInfo.funding_amount) * (dealInfo.pts / 100));
+      const baseAmount = dealInfo.isPayback
+        ? payback_amount
+        : Number(dealInfo.funding_amount);
+
+      const commisionAmt = (baseAmount * (dealInfo.pts / 100)) * (commissionPercent / 100);
       const commission = isDefault ? 0 : commisionAmt;
       const psf = (dealInfo.funding_amount * (dealInfo.professional_fee / 100)).toFixed(0);
       const marketing_partner_split = marketingSplit[dealInfo.source] || 0;
@@ -50,6 +58,7 @@ export const transformData = (deals) => (
       };
     });
   }).reduce((acc, curr) => acc.concat(curr), [])
+    .filter((deal) => (deal.show))
     .sort((a, b) => {
       const dateA = dayjs(a.funded_date, 'YYYY-DD-MM');
       const dateB = dayjs(b.funded_date, 'YYYY-DD-MM');

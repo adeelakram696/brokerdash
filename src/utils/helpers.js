@@ -344,3 +344,15 @@ export function safeJsonParse(input) {
     return null; // Return null or a fallback value
   }
 }
+
+export const calculateDateDifference = (startDate, endDate) => {
+  if (!startDate || !endDate) return 0;
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 0;
+
+  const diffTime = end.getTime() - start.getTime();
+  return Math.round(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+};
