@@ -182,13 +182,14 @@ function ActivityLog() {
       <Flex className={styles.threadList} vertical>
         {loading ? <Skeleton title={false} /> : null}
         {updates?.map((update) => {
-          const actions = splitActionFromUpdate((update || {}).body || '');
+          const isAutomation = !update.creator?.name;
+          const actions = splitActionFromUpdate((update || {}).body || '', isAutomation);
           const type = actions.action ? 'activity' : 'comment';
           return (
             <ThreadBox
               key={update.id}
               id={update.id}
-              creator={update.creator?.name || 'N/A'}
+              creator={update.creator?.name || 'Automation'}
               handleMarkImportant={handleMarkImportant}
               text={actions.text}
               time={dayjs(update.created_at).format('MMM DD [@] hh:mm A')}

@@ -1,7 +1,7 @@
 import mondaySdk from 'monday-sdk-js';
 
 const monday = mondaySdk();
-monday.setApiVersion('2025-01');
+monday.setApiVersion('2025-04');
 const queryParams = new URLSearchParams(window.location.hash.split('?')[1]);
 const params = {};
 // eslint-disable-next-line no-restricted-syntax
