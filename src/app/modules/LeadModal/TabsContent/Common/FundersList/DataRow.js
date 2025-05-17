@@ -12,7 +12,7 @@ import { LeadContext } from 'utils/contexts';
 import { EditOutlined, RedoOutlined } from '@ant-design/icons';
 import SubmissionForm from 'app/modules/LeadModal/SubmissionForm';
 // import { decodeJson } from 'utils/encrypt';
-import { getColumnValue } from 'utils/helpers';
+import { getColumnLinkedIds } from 'utils/helpers';
 import styles from './FundersList.module.scss';
 import { columns } from './data';
 
@@ -48,7 +48,7 @@ function DataRow({
   const hideModal = () => {
     setConfirmation(false);
   };
-  const funderAccount = getColumnValue(data.column_values, columnIds.subItem.funding_accounts);
+  const funderAccount = getColumnLinkedIds(data.column_values, columnIds.subItem.funding_accounts);
   return (
     <Flex flex={1}>
       <Flex vertical flex={0.97}>
@@ -128,7 +128,7 @@ function DataRow({
         type="renew"
         resubmiteId={resubmitedFunder}
         funderName={data.name}
-        funderId={(funderAccount?.linkedPulseIds || [])[0]?.linkedPulseId}
+        funderId={(funderAccount || [])[0]}
       />
     </Flex>
   );

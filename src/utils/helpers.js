@@ -135,14 +135,17 @@ export function getQueryParams(location) {
   return Object.fromEntries(new URLSearchParams(location.search));
 }
 
-export function splitActionFromUpdate(str) {
-  const regex = /^\[(.*?)\]\s*(.*)$/;
+export function splitActionFromUpdate(str, isAutomation) {
+  const regex = /\[(.*?)\](.*)/s; // "s" flag allows dot to match newlines too
   const match = str.match(regex);
+
   if (match) {
-    const text = match[2].replace(/<br><br>/g, '');
-    return { action: match[1], text };
+    const action = isAutomation ? 'System Action' : match[1];
+    const text = match[2].replace(/<br><br>/g, '').trim();
+    return { action, text };
   }
-  return { action: '', text: str };
+
+  return { action: isAutomation ? 'System Action' : '', text: str };
 }
 
 export function extractUrl(str) {
@@ -160,6 +163,10 @@ export const getColumnValue = (obj, col) => {
   const objCol = obj?.find((c) => c.id === col);
   const objVal = JSON.parse(objCol.value || '{}');
   return objVal;
+};
+export const getColumnLinkedIds = (obj, col) => {
+  const objCol = obj?.find((c) => c.id === col);
+  return objCol.linked_item_ids;
 };
 
 export function isNineAMPassed() {

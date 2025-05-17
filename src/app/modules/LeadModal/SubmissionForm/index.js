@@ -12,7 +12,7 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { allowedFunders, columnIds, env } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import { sendSubmission } from 'app/apis/mutation';
-import { getColumnValue } from 'utils/helpers';
+import { getColumnLinkedIds } from 'utils/helpers';
 import { validateSubmission } from 'utils/validateSubmission';
 import { resendSubmissionApplication, submissionApplication } from 'app/apis/reSubmitSubmission';
 import monday from 'utils/mondaySdk';
@@ -52,8 +52,11 @@ const SubmissionForm = ({
     : (inputPrevSubmission ? steps.funders : steps.qualification));
   useEffect(() => {
     const ids = details?.subitems?.map((item) => {
-      const preSelected = getColumnValue(item?.column_values, columnIds.subItem.funding_accounts);
-      const id = preSelected?.linkedPulseIds?.map((v) => v.linkedPulseId.toString());
+      const preSelected = getColumnLinkedIds(
+        item?.column_values,
+        columnIds.subItem.funding_accounts,
+      );
+      const id = preSelected?.map((v) => v.toString());
       return (id || [])[0];
     });
     setSelectedFunders(ids || []);

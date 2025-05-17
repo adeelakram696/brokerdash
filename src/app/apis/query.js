@@ -567,6 +567,9 @@ export const fetchItem = async (clientId) => {
         id
         text
         value
+         ... on BoardRelationValue {  
+            linked_item_ids  
+          }
       }
     }
   }`;
@@ -590,6 +593,9 @@ export const fetchLeadClientDetails = async (leadId) => {
         id
         text
         value
+        ... on BoardRelationValue {  
+            linked_item_ids  
+          }  
       }
       subitems {
         id
@@ -603,6 +609,9 @@ export const fetchLeadClientDetails = async (leadId) => {
           id
           text
           value
+          ... on BoardRelationValue {  
+            linked_item_ids  
+          }  
         }
       }
     }
@@ -623,23 +632,23 @@ export const fetchLeadClientDetails = async (leadId) => {
     const clientCol = res.data.details[0].column_values.find(
       (c) => c.id === columnIds.deals.client_name,
     );
-    const clientObj = JSON.parse(clientCol.value);
-    if (clientObj?.linkedPulseIds?.length > 0) {
-      client = await fetchItem(clientObj.linkedPulseIds[0].linkedPulseId);
+    const clientObj = clientCol.linked_item_ids;
+    if (clientObj?.length > 0) {
+      client = await fetchItem(clientObj[0]);
     }
     const partnerCol = res.data.details[0].column_values.find(
       (c) => c.id === columnIds.deals.partner,
     );
-    const partnerObj = JSON.parse(partnerCol.value);
-    if (partnerObj?.linkedPulseIds?.length > 0) {
-      partner = await fetchItem(partnerObj?.linkedPulseIds[0].linkedPulseId);
+    const partnerObj = partnerCol.linked_item_ids;
+    if (partnerObj?.length > 0) {
+      partner = await fetchItem(partnerObj[0]);
     }
     const clientAccountCol = client?.column_values?.find(
       (c) => c.id === columnIds.clients.account,
     );
-    const clientAccountObj = JSON.parse(clientAccountCol?.value || '{}');
-    if (clientAccountObj?.linkedPulseIds?.length > 0) {
-      clientAccount = await fetchItem(clientAccountObj?.linkedPulseIds[0].linkedPulseId);
+    const clientAccountObj = clientAccountCol?.linked_item_ids;
+    if (clientAccountObj?.length > 0) {
+      clientAccount = await fetchItem(clientAccountObj[0]);
     }
   }
   return {
