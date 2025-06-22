@@ -20,7 +20,7 @@ function OpenApprovalsBoardModule() {
   const [filter, setFilter] = useState({
   });
   const [loading, setLoading] = useState(false);
-  const [sorting, setSorting] = useState({ maxApproved: false, type: 'number' });
+  const [sorting, setSorting] = useState({ approvalDate: false, type: 'date' });
   const sortBy = (currentData, column, type, forced = false) => {
     const sortingKey = forced ? sortingRef.current : sorting;
     const sortingData = { [column]: forced ? sortingKey[column] : !sortingKey[column], type };
