@@ -25,6 +25,7 @@ import './App.scss';
 import TeamLeaderBoard from 'app/pages/TeamLeaderBoard';
 import ManagerFunnelBoard from 'app/pages/ManagerFunnelBoard';
 import ApprovalsBoard from 'app/pages/ApprovalsBoard';
+import OpenApprovalsBoard from 'app/pages/OpenApprovalsBoard';
 import TeamCommissions from 'app/pages/TeamCommissions';
 
 const Dashboard = lazy(() => import('./app/pages/dashboard'));
@@ -110,6 +111,11 @@ function App() {
           <Route exact path="/approvals-board">
             <Suspense fallback={<div>Loading...</div>}>
               <ApprovalsBoard />
+            </Suspense>
+          </Route>
+          <Route exact path="/open-approvals-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <OpenApprovalsBoard />
             </Suspense>
           </Route>
           <Route exact path="/team-commissions">

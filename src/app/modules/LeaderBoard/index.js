@@ -38,6 +38,7 @@ function LeaderBoardModule({ withFilter }) {
   const [actionTypes, setActionTypes] = useState([]);
   // const [saleActivities, setSalesActivities] = useState([]);
   const [leadsData, setleadsData] = useState([]);
+  const [totalLeadsData, setTotalleadsData] = useState({});
   const getEmployeeList = async () => {
     const res = await fetchLeadersBoardEmployees();
     setEmployees(res);
@@ -143,6 +144,47 @@ function LeaderBoardModule({ withFilter }) {
     setDateRange(val);
     dateR.current = val;
   };
+  const getTotalLeadsData = () => {
+    const totalLeads = employees.reduce((acc, emp) => {
+      const empData = leadsData[emp.id] || {};
+      acc.allLeadsAssigned += empData.allLeadsAssigned || 0;
+      acc.leadsAssigned += empData.leadsAssigned || 0;
+      acc.allLeadsDisqualified += empData.allLeadsDisqualified || 0;
+      for (let i = 0; i < actionTypes.length; i += 1) {
+        const action = actionTypes[i];
+        if (!acc[action]) acc[action] = 0;
+        acc[action] += empData[action] ? Number(empData[action]) : 0;
+      }
+      acc.conversionRatio += Number(empData.conversionRatio) || 0;
+      acc.averageFunds += Number(empData.averageFunds) || 0;
+      acc.averageDaysDifference += empData.averageDaysDifference || 0;
+      return acc;
+    }, {
+      allLeadsAssigned: 0,
+      leadsAssigned: 0,
+      allLeadsDisqualified: 0,
+      conversionRatio: 0,
+      averageFunds: 0,
+      averageDaysDifference: 0,
+    });
+    const totalCount = employees.length;
+    const totalLeadsDataObj = {
+      ...totalLeads,
+      allLeadsAssigned: totalLeads.allLeadsAssigned,
+      leadsAssigned: totalLeads.leadsAssigned,
+      allLeadsDisqualified: totalLeads.allLeadsDisqualified,
+      conversionRatio: totalLeads.conversionRatio
+        ? (totalLeads.conversionRatio / totalCount).toFixed(2) : 0,
+      averageFunds: (totalLeads.averageFunds / totalCount).toFixed(2),
+      averageDaysDifference: (totalLeads.averageDaysDifference / totalCount).toFixed(2),
+    };
+    setTotalleadsData(totalLeadsDataObj);
+  };
+  useEffect(() => {
+    if (employees.length === 0) { setTotalleadsData({}); return; }
+    getTotalLeadsData();
+  }, [employees, leadsData]);
+
   return (
     <Flex vertical flex={1}>
       <Spin tip="Loading..." spinning={loading} fullscreen />
@@ -199,6 +241,39 @@ function LeaderBoardModule({ withFilter }) {
             <Flex>{actionTypesTitles['avg time to fund']}</Flex>
           </Flex>
         </Flex>
+        <Flex className={classNames(styles.dataRow)} style={{ backgroundColor: '#1a4049', color: 'white' }}>
+          <Flex className={styles.dataColumnTitle} align="center">
+            <Flex style={{ marginRight: 10 }}>
+              <Avatar>T</Avatar>
+            </Flex>
+            <Flex>Totals</Flex>
+          </Flex>
+          <Flex className={styles.dataColumnPerson} justify="center" align="center">
+            {totalLeadsData.allLeadsAssigned || ' '}
+          </Flex>
+          <Flex className={styles.dataColumnPerson} justify="center" align="center">
+            {totalLeadsData.leadsAssigned || ' '}
+          </Flex>
+          <Flex className={styles.dataColumnPerson} justify="center" align="center">
+            {totalLeadsData.allLeadsDisqualified || ' '}
+          </Flex>
+          {actionTypes.map((action) => (
+            <Flex className={styles.dataColumnPerson} justify="center" align="center" vertical>
+              <Flex>{totalLeadsData[action] || ' '}</Flex>
+            </Flex>
+          ))}
+          <Flex className={styles.dataColumnPerson} justify="center" align="center">
+            {totalLeadsData.conversionRatio || ' '}
+            {totalLeadsData.conversionRatio ? '%' : ''}
+          </Flex>
+          <Flex className={styles.dataColumnPerson} justify="center" align="center">
+            $
+            {numberWithCommas(totalLeadsData.averageFunds || '0')}
+          </Flex>
+          <Flex className={styles.dataColumnPerson} justify="center" align="center">
+            {totalLeadsData.averageDaysDifference || '0'}
+          </Flex>
+        </Flex>
         {employees.map((emp, index) => (
           <Flex className={classNames(styles.dataRow, { [styles.alternateColor]: index % 2 })}>
             <Flex className={styles.dataColumnTitle} align="center">
@@ -232,6 +307,7 @@ function LeaderBoardModule({ withFilter }) {
             })}
             <Flex className={styles.dataColumnPerson} justify="center" align="center">
               {(leadsData[emp.id] || {}).conversionRatio || ' '}
+              {(leadsData[emp.id] || {}).conversionRatio ? '%' : ''}
             </Flex>
             <Flex className={styles.dataColumnPerson} justify="center" align="center">
               $

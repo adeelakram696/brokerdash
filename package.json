@@ -2,7 +2,7 @@
   "name": "broker-dashboard",
   "version": "0.0.1",
   "private": false,
-  "homepage": "https://adeelakram696.github.io/brokerdash",
+  "homepage": "https://adeelakram696.github.io/",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",

@@ -85,7 +85,8 @@ export const mergeTeamData = (
     const fullyFunded = broker['fully funded'] || 0;
 
     // Avoid division by zero
-    broker.conversionRatio = offerReceived > 0 ? `${((fullyFunded / offerReceived) * 100).toFixed(2)}%` : '0%';
+    broker.conversionRatio = offerReceived > 0
+      ? ((fullyFunded / offerReceived) * 100).toFixed(2) : 0;
   });
   return mergedData;
 };

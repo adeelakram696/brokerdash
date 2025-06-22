@@ -1478,10 +1478,13 @@ export const fetchApprovals = async (cursor, dates) => {
             group {
               title
             }
-            column_values(ids: ["${columnIds.deals.agent}", "${columnIds.deals.stage}", "${columnIds.deals.last_touched}"]){
+            column_values(ids: ["${columnIds.deals.agent}","${columnIds.deals.client_name}","${columnIds.deals.phone_local}","${columnIds.deals.phone}", "${columnIds.deals.stage}", "${columnIds.deals.last_touched}","${columnIds.deals.approval_date}","${columnIds.deals.channel}"]){
               id
               text
               value
+              ... on BoardRelationValue {  
+                display_value
+              } 
             }
           }
           column_values{
@@ -1530,6 +1533,56 @@ export const getAllApprovals = async () => {
     return {
       ...item,
       ...columns,
+    };
+  });
+  return data;
+};
+export const getAllOpenApprovals = async () => {
+  const dateArray = [`"${dayjs().subtract(7, 'days').format('YYYY-MM-DD')}"`, `"${dayjs().format('YYYY-MM-DD')}"`];
+  let res = null;
+  let itemsList = [];
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchApprovals(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dateArray,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  const reduced = itemsList.reduce((prev, curr) => {
+    const approvalDateTime = getColumnValue(
+      curr.parent_item.column_values,
+      columnIds.deals.approval_date,
+    );
+    const channel = curr.parent_item.column_values.find(
+      (col) => col.id === columnIds.deals.channel,
+    )?.text;
+    const isOutBound = channel === 'Phoneburner' || channel === 'Referral';
+    // if its outbound then check approvalDateTime.changed_at to exclude if its under 48hr
+    if (isOutBound && approvalDateTime && dayjs(approvalDateTime.changed_at).isAfter(dayjs().subtract(48, 'hour'))) return prev;
+    // exclude if approvalDateTime.changed_at(e.g format 2025-06-20T15:09:49.694Z) is under 24hr
+    if (approvalDateTime && dayjs(approvalDateTime.changed_at).isAfter(dayjs().subtract(24, 'hour'))) return prev;
+    const group = curr.parent_item.group.title;
+    const isFunded = group === 'Funded' || group === 'Approved Expired'
+    || group === 'Client Rejected Expired' || group === 'Contracts Requested'
+    || group === 'Contracts Out' || group === 'Contracts Signed'
+    || group === 'Declined' || group === 'Lost Deals' || group === 'DQ'
+    || group === 'DNC';
+    if (isFunded) return prev;
+    const obj = prev;
+    const item = { ...curr.parent_item, subitems: [_.omit(curr, 'parent_item')] };
+    if (obj[item.id]) {
+      obj[item.id] = { ...item, subitems: [...obj[item.id].subitems, ...item.subitems] };
+    } else obj[item.id] = item;
+    return obj;
+  }, {});
+  const data = Object.values(reduced).map((item) => {
+    const columns = normalizeColumnValues(item.column_values);
+    const approvalDateTime = getColumnValue(item.column_values, columnIds.deals.approval_date);
+    return {
+      ...item,
+      ...columns,
+      approvalDateTime,
     };
   });
   return data;

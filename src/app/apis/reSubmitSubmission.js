@@ -6,6 +6,7 @@ export const resendSubmissionApplication = async (pulseId, pulseName) => {
     event: {
       pulseId,
       pulseName,
+      action: 'resubmit',
     },
   };
   const res = await axios.post(`${env.apiBaseURL}/resubmit`, payload);
@@ -17,6 +18,7 @@ export const submissionApplication = async (pulseId, pulseName) => {
     event: {
       pulseId,
       pulseName,
+      action: 'submission',
     },
   };
   const res = await axios.post(`${env.apiBaseURL}/webhook/subItemCreated`, payload);

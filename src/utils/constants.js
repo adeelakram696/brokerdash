@@ -211,6 +211,7 @@ export const columnIds = {
     midway_application: 'button_mkngazn1',
     assginee_gci: 'numeric_mkpsr85w',
     shared_gci: 'numeric_mkps34w1',
+    approval_date: 'date_15__1',
   },
   leads: {
     name: 'name',
