@@ -363,3 +363,9 @@ export const calculateDateDifference = (startDate, endDate) => {
   const diffTime = end.getTime() - start.getTime();
   return Math.round(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 };
+
+export function containsDate(str) {
+  // Regex to match YYYY-MM-DD
+  const datePattern = /\b\d{4}-\d{2}-\d{2}\b/;
+  return datePattern.test(str);
+}

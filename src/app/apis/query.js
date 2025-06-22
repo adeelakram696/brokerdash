@@ -3,7 +3,12 @@ import dayjs from 'dayjs';
 import drawer from 'drawerjs';
 import _ from 'lodash';
 import { boardNames, columnIds, env } from 'utils/constants';
-import { convertToNumber, getColumnValue, normalizeColumnValues } from 'utils/helpers';
+import {
+  containsDate,
+  convertToNumber,
+  getColumnValue,
+  normalizeColumnValues,
+} from 'utils/helpers';
 import monday from 'utils/mondaySdk';
 
 export const fetchUser = () => drawer.get('user');
@@ -1568,7 +1573,8 @@ export const getAllOpenApprovals = async () => {
     || group === 'Contracts Out' || group === 'Contracts Signed'
     || group === 'Declined' || group === 'Lost Deals' || group === 'DQ'
     || group === 'DNC';
-    if (isFunded) return prev;
+    const isRenew = containsDate(curr.parent_item.name);
+    if (isFunded || isRenew) return prev;
     const obj = prev;
     const item = { ...curr.parent_item, subitems: [_.omit(curr, 'parent_item')] };
     if (obj[item.id]) {

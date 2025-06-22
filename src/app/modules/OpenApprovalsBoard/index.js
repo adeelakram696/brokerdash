@@ -35,7 +35,7 @@ function OpenApprovalsBoardModule() {
     const transformed = findApprovals(res);
     setLoading(false);
     const sortKeys = Object.keys(sortingRef.current || {});
-    sortBy(transformed, (sortKeys || [])[0] || 'maxApproved', sortingRef.current?.type || 'number', !isLoading);
+    sortBy(transformed, (sortKeys || [])[0] || 'approvalDate', sortingRef.current?.type || 'date', !isLoading);
   };
   const handleFilter = (filterValue) => {
     setFilter({ ...filter, ...filterValue });
