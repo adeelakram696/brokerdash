@@ -175,7 +175,7 @@ function LeaderBoardModule({ withFilter }) {
       allLeadsDisqualified: totalLeads.allLeadsDisqualified,
       conversionRatio: totalLeads.conversionRatio
         ? (totalLeads.conversionRatio / totalCount).toFixed(2) : 0,
-      averageFunds: (totalLeads.averageFunds / totalCount).toFixed(2),
+      averageFunds: (totalLeads.averageFunds).toFixed(2),
       averageDaysDifference: (totalLeads.averageDaysDifference / totalCount).toFixed(2),
     };
     setTotalleadsData(totalLeadsDataObj);

@@ -1568,9 +1568,9 @@ export const getAllOpenApprovals = async () => {
     // exclude if approvalDateTime.changed_at(e.g format 2025-06-20T15:09:49.694Z) is under 24hr
     if (approvalDateTime && dayjs(approvalDateTime.changed_at).isAfter(dayjs().subtract(24, 'hour'))) return prev;
     const group = curr.parent_item.group.title;
-    const isFunded = group === 'Funded' || group === 'Approved Expired'
-    || group === 'Client Rejected Expired' || group === 'Contracts Requested'
-    || group === 'Contracts Out' || group === 'Contracts Signed'
+    const isFunded = group === 'Funded' || group === 'Offers Ready/Approved (Expired)'
+    || group === 'Client Rejected - Expired' || group === 'Contracts Requested'
+    || group === 'Contract Out' || group === 'Contract Signed'
     || group === 'Declined' || group === 'Lost Deals' || group === 'DQ'
     || group === 'DNC';
     const isRenew = containsDate(curr.parent_item.name);

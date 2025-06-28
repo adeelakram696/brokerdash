@@ -23,7 +23,7 @@ export const actionTypesTitles = {
   declined: 'Declined',
   disqualified: 'Disqualified',
   'conversion ratio': 'Conversion Ratio (Funded/Approvals)',
-  'avg deal size': 'Avg Funded Deal Size',
+  'avg deal size': 'Total Funded Deal Size',
   'avg time to fund': 'Avg Time from Application to Funded',
 };
 
