@@ -15,6 +15,7 @@ import { sendSubmission } from 'app/apis/mutation';
 import { getColumnLinkedIds } from 'utils/helpers';
 import { validateSubmission } from 'utils/validateSubmission';
 import { resendSubmissionApplication, submissionApplication } from 'app/apis/reSubmitSubmission';
+import { fetchLeadClientDetails } from 'app/apis/query';
 import monday from 'utils/mondaySdk';
 import styles from './SubmissionForm.module.scss';
 import {
@@ -28,6 +29,7 @@ import { SubmissionErrors } from './SubmissionErrors';
 
 let totalSubitems;
 let processedSubitems;
+let timeoutHandler;
 const SubmissionForm = ({
   show, handleClose, type = 'funder', inputPrevSubmission, resubmiteId,
   funderName, funderId,
@@ -84,12 +86,93 @@ const SubmissionForm = ({
   const handleNextStep = (nextStep) => {
     setStep(nextStep);
   };
+
+  const handleSubmissionTimeout = async () => {
+    // Clear the timeout handler
+    if (timeoutHandler) {
+      clearTimeout(timeoutHandler);
+      timeoutHandler = null;
+    }
+
+    try {
+      // Fetch the updated data to check for new subitems
+      await getData();
+
+      // We need to fetch the updated lead details directly since state might not be updated yet
+      const updatedDetails = await fetchLeadClientDetails(leadId);
+
+      // Get all current subitems from the updated details
+      const currentSubitems = updatedDetails?.subitems || [];
+
+      // Find only newly selected funders (not already submitted)
+      const selectedFunderIds = [
+        ...submittedFunders.filter((id) => !selectedFunders.includes(id)),
+        ...selectedFunders.filter((id) => !submittedFunders.includes(id)),
+      ];
+      // Check each subitem to see if it needs to be submitted
+      // eslint-disable-next-line no-restricted-syntax
+      for (const subitem of currentSubitems) {
+        const linkedFunders = getColumnLinkedIds(
+          subitem?.column_values,
+          columnIds.subItem.funding_accounts,
+        );
+        const linkedFunderId = linkedFunders?.[0]?.toString();
+
+        // If this subitem is for a selected funder and hasn't been processed
+        if (linkedFunderId && selectedFunderIds.includes(linkedFunderId)
+          && !processedSubitems.has(subitem.id)) {
+          // Submit this subitem
+          // eslint-disable-next-line no-await-in-loop
+          await submissionApplication(subitem.id);
+          processedSubitems.add(subitem.id);
+        }
+      }
+
+      // Check if we've processed all expected subitems
+      if (processedSubitems?.size >= totalSubitems
+        || processedSubitems?.size === selectedFunderIds.length) {
+        // All done, clean up and close
+        totalSubitems = 0;
+        processedSubitems = new Set();
+        await getData();
+        setSelectedFunders([]);
+        setSelectedDoucments([]);
+        setTextNote('');
+        setStep((isContract || isResubmit) ? steps.documents
+          : (inputPrevSubmission ? steps.funders : steps.qualification));
+        setLoading(false);
+        setEventLoading(false);
+        if (newItemEventUnSubs) {
+          newItemEventUnSubs();
+        }
+        handleClose();
+      } else {
+        // Still missing some submissions, wait a bit more
+        timeoutHandler = setTimeout(handleSubmissionTimeout, 10000); // Check again in 10 seconds
+      }
+    } catch (error) {
+      // Log error for debugging
+      // eslint-disable-next-line no-console
+      console.error('Error in handleSubmissionTimeout:', error);
+      // On error, still clean up and close
+      setLoading(false);
+      setEventLoading(false);
+      if (newItemEventUnSubs) {
+        newItemEventUnSubs();
+      }
+    }
+  };
   const submitDeal = ({ data }) => {
     if (((data?.itemIds || [])[0] || '').toString() === leadId && data.columnId === 'subitems') {
       const pulseId = (data?.columnValue?.added_pulse || [])[0]?.linkedPulseId;
       submissionApplication(pulseId);
       processedSubitems.add(pulseId);
       if (processedSubitems?.size === totalSubitems) {
+        // Clear the timeout since we're done
+        if (timeoutHandler) {
+          clearTimeout(timeoutHandler);
+          timeoutHandler = null;
+        }
         totalSubitems = 0;
         processedSubitems = new Set();
         getData();
@@ -168,6 +251,8 @@ const SubmissionForm = ({
       if (hasAllowedFunders) {
         setEventLoading(true);
         newItemEventUnSubs = monday.listen(['change_column_values'], submitDeal);
+        // Set a 50-second timeout to handle missed events
+        timeoutHandler = setTimeout(handleSubmissionTimeout, 50000);
         return;
       }
     }
@@ -201,8 +286,13 @@ const SubmissionForm = ({
     handleClose();
   };
   useEffect(() => () => {
-    if (!newItemEventUnSubs) return;
-    newItemEventUnSubs();
+    if (newItemEventUnSubs) {
+      newItemEventUnSubs();
+    }
+    if (timeoutHandler) {
+      clearTimeout(timeoutHandler);
+      timeoutHandler = null;
+    }
   }, []);
   const selectedValues = {
     [steps.qualification]: [1],
