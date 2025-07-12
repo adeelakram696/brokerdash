@@ -5,8 +5,8 @@ import { SMSMobileIcon } from 'app/images/icons';
 import TextAreaField from 'app/components/Forms/TextAreaField';
 import { useContext, useState } from 'react';
 import { columnIds } from 'utils/constants';
-import { sendSmsToClient } from 'app/apis/mutation';
 import { LeadContext } from 'utils/contexts';
+import { sendSmsToClient } from '../mutations';
 import styles from './ActionsRow.module.scss';
 
 function SendSms() {

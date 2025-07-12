@@ -3,8 +3,8 @@ import { FireIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { env } from 'utils/constants';
-import { fetchLeadsFollowUps } from 'app/apis/query';
 import { createViewURL } from 'utils/helpers';
+import { fetchLeadsFollowUps } from '../queries';
 
 function LeadsFollowUpRemaining({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);

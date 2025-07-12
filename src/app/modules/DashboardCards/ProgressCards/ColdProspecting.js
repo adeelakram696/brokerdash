@@ -3,8 +3,8 @@ import { SnowIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { env } from 'utils/constants';
-import { fetchColdProspectings } from 'app/apis/query';
 import { createViewURL } from 'utils/helpers';
+import { fetchColdProspectings } from '../queries';
 
 function ColdProspecting({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);

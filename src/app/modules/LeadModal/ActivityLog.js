@@ -10,7 +10,7 @@ import {
 } from 'app/images/icons';
 import ThreadBox from 'app/components/ThreadBox';
 import dayjs from 'dayjs';
-import { createNewUpdate, sendNotification, updateSimpleColumnValue } from 'app/apis/mutation';
+import { updateSimpleColumnValue } from 'app/apis/mutation';
 import { columnIds } from 'utils/constants';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -20,6 +20,7 @@ import {
   ExclamationCircleTwoTone, MessageTwoTone, UserOutlined,
 } from '@ant-design/icons';
 import SelectField from 'app/components/Forms/SelectField';
+import { createNewUpdate, sendNotification } from './mutations';
 import styles from './LeadModal.module.scss';
 
 function ActivityLog() {

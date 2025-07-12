@@ -3,11 +3,11 @@ import {
   Spin,
 } from 'antd';
 import { useEffect, useState, useRef } from 'react';
-import { getAllOpenApprovals } from 'app/apis/query';
 import dayjs from 'dayjs';
 import { sortData } from 'utils/helpers';
 import { env } from 'utils/constants';
 import drawer from 'drawerjs';
+import { getAllOpenApprovals } from './queries';
 import { findApprovals } from './transformData';
 import DataList from './DataList';
 import styles from './OpenApprovalsBoard.module.scss';

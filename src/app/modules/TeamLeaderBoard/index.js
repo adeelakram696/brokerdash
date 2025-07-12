@@ -6,16 +6,18 @@ import {
 } from 'antd';
 import {
   fetchBoardColorColumnStrings,
-  getTeamTotalActivities,
-  getDealFunds,
-  fetchTeamLeadersBoardEmployees,
-  fetchTeamGoals,
 } from 'app/apis/query';
 import { useEffect, useRef, useState } from 'react';
 import { columnIds, env } from 'utils/constants';
 import monday from 'utils/mondaySdk';
 import { logo } from 'app/images';
 import IconImg from 'app/components/IconImg';
+import {
+  getTeamTotalActivities,
+  getDealFunds,
+  fetchTeamLeadersBoardEmployees,
+  fetchTeamGoals,
+} from './queries';
 import styles from './TeamLeaderBoard.module.scss';
 import { durations, statuses } from './data';
 import AgentLeaderBoard from './AgentLeaderboard';

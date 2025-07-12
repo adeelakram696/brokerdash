@@ -1,8 +1,118 @@
 /* eslint-disable no-await-in-loop */
 import _ from 'lodash';
-import { columnIds, env } from 'utils/constants';
+import { boardNames, columnIds, env } from 'utils/constants';
 import { calculateDateDifference, convertToNumber, getColumnValue } from 'utils/helpers';
 import monday from 'utils/mondaySdk';
+
+export const fetchLeadersBoardEmployees = async () => {
+  const query = `query {
+    items(ids: [${env.leaderEmployeeItemId}]) {
+      column_values(ids: ["person"]){
+        value
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  const resValue = JSON.parse(res.data.items[0].column_values[0].value);
+  const personIds = resValue.personsAndTeams.map((persons) => persons.id);
+  const usersQuery = `query {
+    teams(ids: [1070128]) {
+      users(ids: [${personIds}]) {
+        id
+        name
+        photo_thumb
+      }
+    }
+  }`;
+  const usersResp = await monday.api(usersQuery);
+  const usersList = usersResp.data.teams[0].users;
+  return usersList;
+};
+
+const fetchAssignedLeads = async (cursor, dates, users, board) => {
+  const empIds = users.map((emp) => (`"person-${emp.id}"`));
+  const userRule = `{ column_id: "${columnIds[board].assginee}", compare_value: [${empIds}], operator: any_of}`;
+  const query = `query {
+    boards(ids: [${env.boards[board]}]) {
+      items_page(
+      ${!cursor ? `query_params: {
+        rules: [
+          { column_id: "${columnIds[board].last_rep_assigned_date}", compare_value: [${dates}], operator: between}
+          ${users.length > 0 ? userRule : ''}
+       ]
+       }` : ''}
+        limit: 500
+        ${cursor ? `cursor: "${cursor}"` : ''}
+      ) {
+        cursor
+        items {
+          id
+          name
+          board{
+            id
+          }
+          column_values(ids: ["${columnIds[board].assginee}"]) {
+            id
+            text
+            value
+          }
+        }
+      }
+    }
+  }`;
+  const res = await monday.api(query);
+  return res;
+};
+
+export const getAllLeadsAssigned = async (dates, users) => {
+  const dateArray = dates.map((date) => `"${date.format('YYYY-MM-DD')}"`);
+  let res = null;
+  let itemsList = [];
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchAssignedLeads(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dateArray,
+      users,
+      boardNames.leads,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    res = await fetchAssignedLeads(
+      res ? res.data.boards[0].items_page.cursor : null,
+      dateArray,
+      users,
+      boardNames.deals,
+    );
+    itemsList = [...itemsList, ...res.data.boards[0].items_page.items];
+  } while (res.data.boards[0].items_page.cursor);
+  const data = itemsList.reduce((prev, curr) => {
+    const obj = prev;
+    const owner = getColumnValue(
+      curr.column_values || [],
+      columnIds[env.boards[curr.board.id]].assginee,
+    );
+    if (_.isEmpty(owner)) return obj;
+    const person = users.find(
+      (emp) => owner.personsAndTeams[0].id === Number(emp.id),
+    );
+    if (!person) return obj;
+    if (!obj[person.id]) {
+      obj[person.id] = {
+        // items: [curr],
+        count: 1,
+        person,
+      };
+    } else {
+      // obj[person.id].items += [...obj[person.id].items, curr];
+      obj[person.id].count += 1;
+    }
+    return obj;
+  }, {});
+  return data;
+};
 
 export const fetchAllLeadsAssigned = async (cursor, employees) => {
   const empIds = employees.map((emp) => `"person-${emp.id}"`);

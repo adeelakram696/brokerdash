@@ -3,7 +3,7 @@ import en from 'app/locales/en';
 import classNames from 'classnames';
 import { env } from 'utils/constants';
 import { useEffect, useState } from 'react';
-import { fetchLeadsRotatedData } from 'app/apis/query';
+import { fetchLeadsRotatedData } from '../queries';
 import Header from '../Header';
 import DataTable from '../DataTable';
 import styles from '../DasboardCards.module.scss';

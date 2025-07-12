@@ -3,8 +3,8 @@ import { DocIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { columnIds, env } from 'utils/constants';
-import { fetchDocReviews } from 'app/apis/query';
 import { createViewURL } from 'utils/helpers';
+import { fetchDocReviews } from '../queries';
 
 function DocReviews({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);

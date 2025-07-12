@@ -2,7 +2,7 @@ import {
   Flex, Spin, DatePicker,
 } from 'antd';
 import {
-  fetchUser, fetchUsers, getDealsFundedByMonth,
+  fetchUser, fetchUsers,
 } from 'app/apis/query';
 import { fetchCommissionSettings } from 'app/apis/apis';
 import { useEffect, useRef, useState } from 'react';
@@ -12,6 +12,9 @@ import dayjs from 'dayjs';
 import IconImg from 'app/components/IconImg';
 import { logo } from 'app/images';
 import { columnIds } from 'utils/constants';
+import {
+  getDealsFundedByMonth,
+} from './queries';
 import styles from './TeamCommissions.module.scss';
 import { transformData } from './transform';
 import DataTableComissions from './DataTable';

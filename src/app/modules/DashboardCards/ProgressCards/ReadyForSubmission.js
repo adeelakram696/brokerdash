@@ -3,8 +3,8 @@ import { PaperPlanIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { columnIds, env } from 'utils/constants';
-import { fetchReadyForSubmissions } from 'app/apis/query';
 import { createViewURL } from 'utils/helpers';
+import { fetchReadyForSubmissions } from '../queries';
 
 function ReadyForSubmission({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);

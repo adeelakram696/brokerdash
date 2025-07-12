@@ -3,18 +3,18 @@ import {
   Spin,
 } from 'antd';
 import { useEffect, useState, useRef } from 'react';
-import { fetchUsers } from 'app/apis/query';
+import { fetchUser } from 'app/apis/query';
 import dayjs from 'dayjs';
 import { sortData } from 'utils/helpers';
 import { env } from 'utils/constants';
 import drawer from 'drawerjs';
-import { getAllApprovals } from './queries';
+import { fetchBrokerUsers, fetchBrokerApprovals, fetchUsersByIds } from './apis';
 import { findApprovals } from './transformData';
 import DataList from './DataList';
 import styles from './ApprovalsBoard.module.scss';
 import { checkDateFilter, matchBroker, matchStages } from './data';
 
-function ApprovalsBoardModule() {
+function BrokerApprovalsBoardModule() {
   const sortingRef = useRef();
   const stages = drawer.get('stages');
   const [data, setData] = useState([]);
@@ -34,28 +34,39 @@ function ApprovalsBoardModule() {
   };
   const fetchData = async (isLoading = true) => {
     setLoading(true && isLoading);
-    const res = await getAllApprovals();
-    const transformed = findApprovals(res);
-    setLoading(false);
-    const sortKeys = Object.keys(sortingRef.current || {});
-    sortBy(transformed, (sortKeys || [])[0] || 'maxApproved', sortingRef.current?.type || 'number', !isLoading);
+    const currentUser = fetchUser();
+    if (!currentUser?.id) {
+      setLoading(false);
+      return;
+    }
+    try {
+      // First, get the broker users list
+      const userIds = await fetchBrokerUsers(currentUser.id);
+      // Also update the users list with only selected users
+      const users = await fetchUsersByIds(userIds);
+      const list = (users || []).map((u) => ({
+        label: u.name,
+        value: u.name,
+      }));
+      const filterList = (users || []).map((u) => (u.name));
+      setUsersList(list);
+      setFilter((prevFilter) => ({ ...prevFilter, broker: filterList }));
+
+      // Then, fetch approvals for all users
+      const res = await fetchBrokerApprovals(userIds);
+      const transformed = findApprovals(res);
+      setLoading(false);
+      const sortKeys = Object.keys(sortingRef.current || {});
+      sortBy(transformed, (sortKeys || [])[0] || 'maxApproved', sortingRef.current?.type || 'number', !isLoading);
+    } catch (error) {
+      // Error fetching broker approvals
+      setLoading(false);
+    }
   };
-  const getUsersList = async () => {
-    const res = await fetchUsers();
-    const list = (res || []).map((u) => ({
-      label: u.name,
-      value: u.name,
-    }));
-    const filterList = (res || []).map((u) => (u.name));
-    setUsersList(list);
-    setFilter({ ...filter, broker: filterList });
-  };
+
   const handleFilter = (filterValue) => {
     setFilter({ ...filter, ...filterValue });
   };
-  useEffect(() => {
-    getUsersList();
-  }, []);
   useEffect(() => {
     fetchData();
   }, []);
@@ -104,7 +115,7 @@ function ApprovalsBoardModule() {
           {filtered.length}
         </Flex>
         <Flex className={styles.heading}>
-          Approvals
+          Broker Approvals
         </Flex>
         <Flex className={styles.headingduration}>
           between
@@ -129,4 +140,4 @@ function ApprovalsBoardModule() {
   );
 }
 
-export default ApprovalsBoardModule;
+export default BrokerApprovalsBoardModule;

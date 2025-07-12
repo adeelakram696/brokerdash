@@ -11,12 +11,12 @@ import {
 import { CloseCircleFilled } from '@ant-design/icons';
 import { allowedFunders, columnIds, env } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
-import { sendSubmission } from 'app/apis/mutation';
 import { getColumnLinkedIds } from 'utils/helpers';
 import { validateSubmission } from 'utils/validateSubmission';
 import { resendSubmissionApplication, submissionApplication } from 'app/apis/reSubmitSubmission';
-import { fetchLeadClientDetails } from 'app/apis/query';
 import monday from 'utils/mondaySdk';
+import { sendSubmission } from '../mutations';
+import { fetchLeadClientDetails } from '../queries';
 import styles from './SubmissionForm.module.scss';
 import {
   qualifications, stepData, steps,

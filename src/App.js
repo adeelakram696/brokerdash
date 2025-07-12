@@ -27,6 +27,7 @@ import ManagerFunnelBoard from 'app/pages/ManagerFunnelBoard';
 import ApprovalsBoard from 'app/pages/ApprovalsBoard';
 import OpenApprovalsBoard from 'app/pages/OpenApprovalsBoard';
 import TeamCommissions from 'app/pages/TeamCommissions';
+import BrokerApprovalsBoard from 'app/pages/BrokerApprovalsBoard';
 
 const Dashboard = lazy(() => import('./app/pages/dashboard'));
 const LeadView = lazy(() => import('app/pages/LeadView'));
@@ -116,6 +117,11 @@ function App() {
           <Route exact path="/open-approvals-board">
             <Suspense fallback={<div>Loading...</div>}>
               <OpenApprovalsBoard />
+            </Suspense>
+          </Route>
+          <Route exact path="/broker-approvals-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <BrokerApprovalsBoard />
             </Suspense>
           </Route>
           <Route exact path="/team-commissions">

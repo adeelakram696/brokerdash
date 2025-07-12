@@ -4,22 +4,25 @@ import {
   Modal, Flex, Spin, message,
   Skeleton,
 } from 'antd';
+import { columnIds, env } from 'utils/constants';
+import { LeadContext } from 'utils/contexts';
+import { ctaBtn } from 'app/apis/mutation';
+import { getColumnValue, getQueryParams } from 'utils/helpers';
+import monday from 'utils/mondaySdk';
+import _ from 'lodash';
 import {
   fetchBoardColorColumnStrings,
   fetchBoardDropDownColumnStrings,
+} from 'app/apis/query';
+import { updateStageToSubmission } from './mutations';
+import {
   fetchFunders,
   fetchNewItemBaseInfo,
   fetchLeadClientDetails,
   fetchLeadDocs,
   fetchLeadUpdates,
   fetchMarkAsImportant,
-} from 'app/apis/query';
-import { columnIds, env } from 'utils/constants';
-import { LeadContext } from 'utils/contexts';
-import { ctaBtn, updateStageToSubmission } from 'app/apis/mutation';
-import { getColumnValue, getQueryParams } from 'utils/helpers';
-import monday from 'utils/mondaySdk';
-import _ from 'lodash';
+} from './queries';
 import styles from './LeadModal.module.scss';
 import ModalHeader from './Header';
 import ActionRow from './ActionsRow';

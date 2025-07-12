@@ -4,11 +4,12 @@ import {
   Spin,
 } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { fetchUser, fetchUsers, getThisWeekLeadsDeals } from 'app/apis/query';
+import { fetchUser, fetchUsers } from 'app/apis/query';
 import dayjs from 'dayjs';
 import SelectField from 'app/components/Forms/SelectField';
 import classNames from 'classnames';
 import { env } from 'utils/constants';
+import { getThisWeekLeadsDeals } from './queries';
 import styles from './ManagerFunnelBoard.module.scss';
 import FunnelChart from './Funnel';
 import { transformToFunnel } from './transformData';

@@ -5,8 +5,7 @@ import {
   Spin,
 } from 'antd';
 import {
-  fetchLeadersBoardEmployees, fetchBoardColorColumnStrings, fetchAllUsers,
-  getAllLeadsAssigned,
+  fetchBoardColorColumnStrings, fetchAllUsers,
 } from 'app/apis/query';
 import { useEffect, useRef, useState } from 'react';
 import { env } from 'utils/constants';
@@ -16,12 +15,14 @@ import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { customSort, numberWithCommas } from 'utils/helpers';
 import {
+  fetchLeadersBoardEmployees, getAllLeadsAssigned,
+
+  getAllAssignedLeadsDeals, getDealFunds, getDisqualifiedLeadsDeals, getTeamTotalActivities,
+} from './queries';
+import {
   actionTypesList, actionTypesTitles, conversions, mergeTeamData,
 } from './data';
 import styles from './LeaderBoards.module.scss';
-import {
-  getAllAssignedLeadsDeals, getDealFunds, getDisqualifiedLeadsDeals, getTeamTotalActivities,
-} from './queries';
 
 const { RangePicker } = DatePicker;
 

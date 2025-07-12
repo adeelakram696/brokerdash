@@ -3,10 +3,10 @@ import {
 } from 'antd';
 import { MatrixContext } from 'utils/contexts';
 import { useEffect, useRef, useState } from 'react';
-import { fetchMetricsGoals, getAllNewLeadsPages, getAllSubmittedDeals } from 'app/apis/query';
 import { columnIds, env } from 'utils/constants';
 import dayjs from 'dayjs';
 import monday from 'utils/mondaySdk';
+import { fetchMetricsGoals, getAllNewLeadsPages, getAllSubmittedDeals } from './queries';
 import NewLeads from './NewLeads';
 import NewDealsSubmitted from './NewDealsSubmitted';
 import LeadsWithOfferToPitch from './LeadsWithOfferToPitch';

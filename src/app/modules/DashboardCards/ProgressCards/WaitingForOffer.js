@@ -3,8 +3,8 @@ import { ClockIcon } from 'app/images/icons';
 import en from 'app/locales/en';
 import { useEffect, useState } from 'react';
 import { columnIds, env } from 'utils/constants';
-import { fetchWaitingForOffer } from 'app/apis/query';
 import { createViewURL } from 'utils/helpers';
+import { fetchWaitingForOffer } from '../queries';
 
 function WaitingForOffer({ updateTotal }) {
   const [currentValue, setCurrentValue] = useState(0);
