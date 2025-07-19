@@ -73,7 +73,7 @@ function BrokerApprovalsBoardModule() {
   useEffect(() => {
     const intervalId = setInterval(
       () => { fetchData(false); }
-      , (1000 * env.intervalTime),
+      , (1000 * env.ApiIntervalTime),
     );
     return () => {
       if (intervalId) clearInterval(intervalId);

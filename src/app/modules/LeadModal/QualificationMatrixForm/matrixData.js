@@ -7,8 +7,25 @@ export const fundersIntakeCalc = (values, funders) => {
   filtered = filtered.isPastSetttled
     ? funders.filter((funder) => funder.pastSettledDefaults)
     : filtered;
-  filtered = values.acceptOnlineBank
-    ? filtered.filter((funder) => funder.acceptOnlineBanking)
+  // Handle acceptOnlineBank and prevPaymentHistory filtering
+  if (values.acceptOnlineBank || values.prevPaymentHistory) {
+    filtered = filtered.filter((funder) => {
+      // If funder has AcceptBankAndPrevPaymentHistory requirement
+      if (funder.AcceptBankAndPrevPaymentHistory) {
+        // Only include if BOTH values match the funder's requirements
+        return values.acceptOnlineBank && values.prevPaymentHistory
+               && funder.acceptOnlineBanking && funder.prevPaymentHistory;
+      }
+
+      // Otherwise, apply individual filters
+      const acceptOnlineBankMatch = !values.acceptOnlineBank || funder.acceptOnlineBanking;
+      const prevPaymentHistoryMatch = !values.prevPaymentHistory || funder.prevPaymentHistory;
+
+      return acceptOnlineBankMatch && prevPaymentHistoryMatch;
+    });
+  }
+  filtered = values.funderInPast
+    ? filtered.filter((funder) => funder.fundedInPast)
     : filtered;
   return (filtered || []).map((funder) => {
     let minMonthRevenue = false;
@@ -90,6 +107,9 @@ export const transformFundersforQM = (funder, columns) => ({
   tier: convertToNumber(columns[columnIds.funders.tier], true),
   pastSettledDefaults: columns[columnIds.funders.past_settled_defaults] === 'v',
   acceptOnlineBanking: columns[columnIds.funders.accept_online_banking] === 'v',
+  fundedInPast: columns[columnIds.funders.funded_in_the_past_30_days] === 'v',
+  prevPaymentHistory: columns[columnIds.funders.previous_payment_history] === 'v',
+  AcceptBankAndPrevPaymentHistory: columns[columnIds.funders.accept_online_banks_and_previous_payment_history] === 'v',
   monthlyPriority: columns[columnIds.funders.monthly_priority] === 'v',
   testingFunder: columns[columnIds.funders.testing_funder] === 'v',
 });

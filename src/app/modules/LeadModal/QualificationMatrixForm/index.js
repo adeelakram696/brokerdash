@@ -53,7 +53,9 @@ function QualificationMatrixForm({ show, handleClose }) {
     const totalCredits = getColumnSum('totalCredit', sampleRow, values);
     const monthCashFlow = Math.round(totalCredits / monthsCount);
     const isPastSetttled = values.past_settled_defaults === 'yes';
+    const funderInPast = values.funded_in_the_past_30_days;
     const acceptOnlineBank = values.has_online_bank;
+    const prevPaymentHistory = values.previous_payment_history;
     const totalBankActivityCounts = bankActivityColumns.reduce((prev, current) => {
       if (!current.totalCount) return prev;
       const val = { [current.key]: _.sumBy(sampleRow, (r) => (values[`${current.key}-${r.id}`] ? convertToNumber(values[`${current.key}-${r.id}`]) : 0)) };
@@ -125,6 +127,8 @@ function QualificationMatrixForm({ show, handleClose }) {
       ...matrixData,
       isPastSetttled,
       acceptOnlineBank,
+      funderInPast,
+      prevPaymentHistory,
     }, funders);
     const sortedData = _.sortBy(fundersData.qualified, ['tier'], ['asc']);
     matrixData.fundersPriority = sortedData.slice(0, 7).map((i) => i.funder);
@@ -339,12 +343,36 @@ function QualificationMatrixForm({ show, handleClose }) {
             </Flex>
           </Flex>
           <Flex flex={1} className={styles.inputRow} justify="space-between">
+            <Flex flex={0.4} className={styles.label}>Funded In The Past 30 Days</Flex>
+            <Flex flex={0.6} className={styles.value}>
+              <Form.Item
+                noStyle
+                valuePropName="checked"
+                name="funded_in_the_past_30_days"
+              >
+                <Checkbox />
+              </Form.Item>
+            </Flex>
+          </Flex>
+          <Flex flex={1} className={styles.inputRow} justify="space-between">
             <Flex flex={0.4} className={styles.label}>Has Online Bank</Flex>
             <Flex flex={0.6} className={styles.value}>
               <Form.Item
                 noStyle
                 valuePropName="checked"
                 name="has_online_bank"
+              >
+                <Checkbox />
+              </Form.Item>
+            </Flex>
+          </Flex>
+          <Flex flex={1} className={styles.inputRow} justify="space-between">
+            <Flex flex={0.4} className={styles.label}>Has Previous Payment History</Flex>
+            <Flex flex={0.6} className={styles.value}>
+              <Form.Item
+                noStyle
+                valuePropName="checked"
+                name="previous_payment_history"
               >
                 <Checkbox />
               </Form.Item>
