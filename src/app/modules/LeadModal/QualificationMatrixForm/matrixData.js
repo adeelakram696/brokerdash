@@ -13,8 +13,7 @@ export const fundersIntakeCalc = (values, funders) => {
       // If funder has AcceptBankAndPrevPaymentHistory requirement
       if (funder.AcceptBankAndPrevPaymentHistory) {
         // Only include if BOTH values match the funder's requirements
-        return values.acceptOnlineBank && values.prevPaymentHistory
-               && funder.acceptOnlineBanking && funder.prevPaymentHistory;
+        return values.acceptOnlineBank && values.prevPaymentHistory;
       }
 
       // Otherwise, apply individual filters
