@@ -121,6 +121,7 @@ function QualificationMatrixForm({ show, handleClose }) {
     const ficoScore = extractLeastNumber(creditScore);
     const fundersData = fundersIntakeCalc({
       ficoScore,
+      creditScore, // Pass original credit score value as well
       industry,
       state,
       timeInBusiness,

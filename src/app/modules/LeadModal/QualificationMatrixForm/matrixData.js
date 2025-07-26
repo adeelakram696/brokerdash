@@ -1,7 +1,43 @@
 import { columnIds } from 'utils/constants';
-import { convertToNumber } from 'utils/helpers';
+import { convertToNumber, extractLeastNumber } from 'utils/helpers';
 
 const isBlank = (value) => value === '';
+const checkFunderIndustryRequirements = (values, industryReqs) => {
+  if (!industryReqs || !values.industry) return true;
+
+  const industryConfig = industryReqs[values.industry];
+  if (!industryConfig) return true; // No specific requirements for this industry
+
+  // Check time in business
+  if (industryConfig.TimeInBusiness != null) {
+    if (!values.timeInBusiness || values.timeInBusiness < industryConfig.TimeInBusiness) {
+      return false;
+    }
+  }
+
+  // Check credit score (handle both single value and range formats)
+  if (industryConfig.CreditScore != null) {
+    const requiredScore = industryConfig.CreditScore;
+    const actualScore = extractLeastNumber(values.ficoScore?.toString() || values.creditScore?.toString() || '');
+
+    if (!actualScore || actualScore < requiredScore) {
+      return false;
+    }
+  }
+
+  // Check monthly revenue (compare with monthCashFlow)
+  if (industryConfig.MonthlyRevenue != null) {
+    const requiredRevenue = industryConfig.MonthlyRevenue;
+    const actualRevenue = convertToNumber(values.monthCashFlow || 0);
+
+    if (actualRevenue < requiredRevenue) {
+      return false;
+    }
+  }
+
+  return true; // All checks passed
+};
+
 export const fundersIntakeCalc = (values, funders) => {
   let filtered = funders.filter((funder) => !funder.testingFunder);
   filtered = filtered.isPastSetttled
@@ -27,6 +63,18 @@ export const fundersIntakeCalc = (values, funders) => {
     ? filtered.filter((funder) => funder.fundedInPast)
     : filtered;
   return (filtered || []).map((funder) => {
+    // Check funder-specific industry requirements first
+    let industryReqs = null;
+    if (funder.funderSpecificIndustryRequirements) {
+      try {
+        industryReqs = JSON.parse(funder.funderSpecificIndustryRequirements);
+      } catch (e) {
+        // Invalid JSON, ignore industry requirements
+      }
+    }
+
+    const passesIndustryReqs = checkFunderIndustryRequirements(values, industryReqs);
+
     let minMonthRevenue = false;
     if (funder.monthlyPriority) {
       const monthsRevInd = [2, 3].filter((ind) => convertToNumber(values[`totalCredit-${ind}`]) > 0);
@@ -64,6 +112,7 @@ export const fundersIntakeCalc = (values, funders) => {
       || (Number(!values.min_daily_balnc
         || isAvgbalanceZero
         || values.min_daily_balnc >= funder.minAvgDailyBalance)),
+      industrySpecificReqs: Number(passesIndustryReqs),
       tier: funder.tier,
     };
     const trueCount = Object.values(funderCounts).filter((v) => Number(v) === 1).length;
@@ -71,8 +120,10 @@ export const fundersIntakeCalc = (values, funders) => {
     return funderCounts;
   }).reduce((prev, curr) => {
     const obj = prev;
-    if (curr.ranking === 13) obj.qualified = [...obj.qualified, curr];
-    else obj.disqualified = [...obj.disqualified, curr];
+    if (curr.ranking === 14) {
+      obj.qualified = [...obj.qualified, curr];
+    // Changed from 13 to 14 since we added industrySpecificReqs
+    } else { obj.disqualified = [...obj.disqualified, curr]; }
     return obj;
   }, { qualified: [], disqualified: [] });
 };
@@ -111,4 +162,6 @@ export const transformFundersforQM = (funder, columns) => ({
   AcceptBankAndPrevPaymentHistory: columns[columnIds.funders.accept_online_banks_and_previous_payment_history] === 'v',
   monthlyPriority: columns[columnIds.funders.monthly_priority] === 'v',
   testingFunder: columns[columnIds.funders.testing_funder] === 'v',
+  funderSpecificIndustryRequirements:
+  columns[columnIds.funders.funder_specific_industry_requirements],
 });

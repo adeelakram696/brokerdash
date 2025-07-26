@@ -534,6 +534,7 @@ export const columnIds = {
     accept_online_banking: 'check__1',
     previous_payment_history: 'boolean_mkt02ccc',
     accept_online_banks_and_previous_payment_history: 'boolean_mkt014k6',
+    funder_specific_industry_requirements: 'long_text_mkt7eyc9',
   },
   commissionSettings: {
     name: 'name',
