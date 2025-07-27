@@ -116,6 +116,8 @@ export const fundersIntakeCalc = (values, funders) => {
       tier: funder.tier,
     };
     const trueCount = Object.values(funderCounts).filter((v) => Number(v) === 1).length;
+    // subtracting tier 1 from truecount to adjust ranking as
+    // tier 1 also gets count as trueCount but we need to ignore tier key
     funderCounts.ranking = trueCount - Number(funder.tier === 1);
     return funderCounts;
   }).reduce((prev, curr) => {

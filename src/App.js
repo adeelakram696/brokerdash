@@ -28,6 +28,7 @@ import ApprovalsBoard from 'app/pages/ApprovalsBoard';
 import OpenApprovalsBoard from 'app/pages/OpenApprovalsBoard';
 import TeamCommissions from 'app/pages/TeamCommissions';
 import BrokerApprovalsBoard from 'app/pages/BrokerApprovalsBoard';
+import ManagerLeaderBoard from 'app/pages/ManagerLeaderBoard';
 
 const Dashboard = lazy(() => import('./app/pages/dashboard'));
 const LeadView = lazy(() => import('app/pages/LeadView'));
@@ -132,6 +133,11 @@ function App() {
           <Route exact path="/user-commissions">
             <Suspense fallback={<div>Loading...</div>}>
               <TeamCommissions isUser />
+            </Suspense>
+          </Route>
+          <Route exact path="/manager-leader-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <ManagerLeaderBoard />
             </Suspense>
           </Route>
         </Switch>
