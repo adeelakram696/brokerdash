@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import axios from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
@@ -270,18 +271,135 @@ export function maskNumber(input, showMask) {
   return maskedInput;
 }
 export function verifyDateFormat(dateString) {
-  // Define regex patterns for the date formats
-  const formats = [
-    { regex: /^\d{4}-\d{1,2}-\d{1,2}$/, format: 'YYYY-D-M' },
-    { regex: /^\d{1,2}\/\d{1,2}\/\d{4}$/, format: 'M/D/YYYY' },
-    { regex: /^\d{1,2}-\d{1,2}-\d{4}$/, format: 'M-D-YYYY' },
-  ];
+  if (!dateString || typeof dateString !== 'string') return null;
 
-  // Find the matching format
-  const matchingFormat = formats.find(({ regex }) => regex.test(dateString));
+  // Trim whitespace
+  const trimmedDate = dateString.trim();
 
-  // Return the format if found, otherwise null
-  return matchingFormat ? matchingFormat.format : null;
+  // Try to intelligently parse different date formats
+  // Split the date by common delimiters
+  const delimiters = ['-', '/', '.', ' '];
+  let delimiter = '';
+  let parts = [];
+
+  // Use traditional for loop instead of for...of to avoid regenerator-runtime
+  for (let i = 0; i < delimiters.length; i += 1) {
+    const del = delimiters[i];
+    if (trimmedDate.includes(del)) {
+      delimiter = del;
+      parts = trimmedDate.split(del).map((p) => p.trim());
+      break;
+    }
+  }
+
+  // If no delimiter found, check if it's a compact format
+  if (parts.length === 0) {
+    // Check for compact formats like YYYYMMDD or DDMMYYYY
+    if (/^\d{8}$/.test(trimmedDate)) {
+      // Try YYYYMMDD first
+      const year1 = trimmedDate.substring(0, 4);
+      const month1 = trimmedDate.substring(4, 6);
+      const day1 = trimmedDate.substring(6, 8);
+      if (parseInt(year1) >= 1900 && parseInt(year1) <= 2100
+          && parseInt(month1) >= 1 && parseInt(month1) <= 12
+          && parseInt(day1) >= 1 && parseInt(day1) <= 31) {
+        return 'YYYYMMDD';
+      }
+      // Try DDMMYYYY
+      const day2 = trimmedDate.substring(0, 2);
+      const month2 = trimmedDate.substring(2, 4);
+      const year2 = trimmedDate.substring(4, 8);
+      if (parseInt(year2) >= 1900 && parseInt(year2) <= 2100
+          && parseInt(month2) >= 1 && parseInt(month2) <= 12
+          && parseInt(day2) >= 1 && parseInt(day2) <= 31) {
+        return 'DDMMYYYY';
+      }
+    }
+    return null;
+  }
+
+  // Must have exactly 3 parts for a valid date
+  if (parts.length !== 3) return null;
+
+  // Convert parts to numbers for validation
+  const nums = parts.map((p) => parseInt(p));
+  if (nums.some((n) => Number.isNaN(n) || n <= 0)) return null;
+
+  // Determine the format based on the values
+  const [first, second, third] = nums;
+
+  // Helper to get the delimiter character for format string
+  const getDelimiterChar = () => {
+    if (delimiter === '/') return '/';
+    if (delimiter === '.') return '.';
+    if (delimiter === ' ') return ' ';
+    return '-';
+  };
+  const del = getDelimiterChar();
+
+  // Check if first part is definitely a year (4 digits or > 31)
+  if (parts[0].length === 4 || first > 31) {
+    // Year is first (YYYY-MM-DD or YYYY-DD-MM)
+    if (second > 12 && second <= 31 && third >= 1 && third <= 12) {
+      // YYYY-DD-MM format (day > 12, so it can't be month)
+      return `YYYY${del}D${del}M`;
+    } if (second >= 1 && second <= 12 && third >= 1 && third <= 31) {
+      // YYYY-MM-DD format (standard ISO)
+      return `YYYY${del}M${del}D`;
+    }
+  }
+
+  // Check if last part is definitely a year (4 digits or > 31)
+  if (parts[2].length === 4 || third > 31) {
+    // Year is last (MM-DD-YYYY or DD-MM-YYYY)
+    if (first > 12 && first <= 31 && second >= 1 && second <= 12) {
+      // DD-MM-YYYY format (first > 12, so it can't be month)
+      return `D${del}M${del}YYYY`;
+    } if (first >= 1 && first <= 12 && second > 12 && second <= 31) {
+      // MM-DD-YYYY format (second > 12, so it can't be month)
+      return `M${del}D${del}YYYY`;
+    } if (first >= 1 && first <= 12 && second >= 1 && second <= 12) {
+      // Ambiguous case - both could be month or day
+      // Default to US format (MM-DD-YYYY) for slash delimiter, EU format (DD-MM-YYYY) for others
+      if (delimiter === '/') {
+        return `M${del}D${del}YYYY`;
+      }
+      return `D${del}M${del}YYYY`;
+    }
+  }
+
+  // Check for 2-digit year formats
+  if (parts[2].length <= 2 && third >= 0 && third <= 99) {
+    // Assume 2-digit year
+    const yearSuffix = parts[2].length === 2 ? 'YY' : 'Y';
+    if (first > 12 && first <= 31 && second >= 1 && second <= 12) {
+      // DD-MM-YY format
+      return `D${del}M${del}${yearSuffix}`;
+    } if (first >= 1 && first <= 12 && second > 12 && second <= 31) {
+      // MM-DD-YY format
+      return `M${del}D${del}${yearSuffix}`;
+    } if (first >= 1 && first <= 12 && second >= 1 && second <= 12) {
+      // Ambiguous - default based on delimiter
+      if (delimiter === '/') {
+        return `M${del}D${del}${yearSuffix}`;
+      }
+      return `D${del}M${del}${yearSuffix}`;
+    }
+  }
+
+  // Middle year format (rare but possible)
+  if (parts[1].length === 4 || second > 31) {
+    if (first >= 1 && first <= 12 && third >= 1 && third <= 31) {
+      // MM-YYYY-DD format
+      return `M${del}YYYY${del}D`;
+    } if (first >= 1 && first <= 31 && third >= 1 && third <= 12) {
+      // DD-YYYY-MM format
+      return `D${del}YYYY${del}M`;
+    }
+  }
+
+  // If we couldn't determine the format, return null
+  return null;
 }
 export const sortData = (data, columnName, columnType, order) => data.sort((a, b) => {
   const valueA = a[columnName];
