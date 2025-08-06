@@ -1,0 +1,68 @@
+.leftCol {
+  background-color: rgba(255, 255, 255, 0.059);
+  height: 100%;
+}
+.funnelChart {
+  height: 95vh;
+}
+.dataTable {
+  width: 100%;
+  padding: 10px;
+}
+.offTrackNumber {
+  font-size: 12px;
+  color: white;
+  margin-top: -65px;
+  margin-left: 30px;
+  cursor: pointer;
+}
+.listTitle {
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  padding: 5px 0px;
+  margin-bottom: 5px;
+}
+.itemRow {
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.171);
+  font-size: 13px;
+  padding: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.351);
+  }
+}
+.list {
+  padding: 0px 10px;
+  border-right: 1px solid rgba(255, 255, 255, 0.228);
+  border-left: 1px solid rgba(255, 255, 255, 0.228);
+  overflow-y: auto;
+  max-height: 91vh;
+}
+.tabs {
+  width: 100%;
+}
+.tabsBar {
+  color: white;
+}
+.agentName {
+  color:rgb(110, 247, 135);
+}
+.durations {
+  min-width: 100px;
+}
+.filterField {
+  margin: 5px 10px 0 0;
+}
+.filterFieldDatePicker {
+  background-color: transparent;
+  color: white;
+  border-radius: 0;
+  &:focus-within {
+    background-color: transparent;
+  }
+  &:hover {
+    background-color: transparent;
+  }
+}

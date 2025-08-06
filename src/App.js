@@ -24,6 +24,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import './App.scss';
 import TeamLeaderBoard from 'app/pages/TeamLeaderBoard';
 import ManagerFunnelBoard from 'app/pages/ManagerFunnelBoard';
+import BatchManagerFunnelBoard from 'app/pages/BatchManagerFunnelBoard';
 import ApprovalsBoard from 'app/pages/ApprovalsBoard';
 import OpenApprovalsBoard from 'app/pages/OpenApprovalsBoard';
 import TeamCommissions from 'app/pages/TeamCommissions';
@@ -108,6 +109,16 @@ function App() {
           <Route exact path="/user-funnel-board">
             <Suspense fallback={<div>Loading...</div>}>
               <ManagerFunnelBoard isUser />
+            </Suspense>
+          </Route>
+          <Route exact path="/batch-funnel-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <BatchManagerFunnelBoard />
+            </Suspense>
+          </Route>
+          <Route exact path="/batch-user-funnel-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <BatchManagerFunnelBoard isUser />
             </Suspense>
           </Route>
           <Route exact path="/approvals-board">
