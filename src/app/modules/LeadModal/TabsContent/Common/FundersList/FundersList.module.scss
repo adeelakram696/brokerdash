@@ -102,3 +102,12 @@
 .failed {
   border:2px solid #CC4141;
 }
+.errorText {
+  color: #CC4141;
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.failedMessage {
+  margin-left: 10px;
+}

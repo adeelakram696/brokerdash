@@ -22,6 +22,7 @@ function FundingOffer({
     (item) => (item.value === data[columnIds.subItem.product_type]),
   );
   const apiResponse = safeJsonParse(data[columnIds.subItem.api_submission_response]);
+  console.log(apiResponse);
   return (
     <Flex style={{ marginBottom: 10, paddingRight: 10 }}>
       <Flex style={{ background: typeColor?.color }} className={styles.dndContainer} vertical justify="space-between">
@@ -44,6 +45,14 @@ function FundingOffer({
               >
                 <ExpendCollapseIcon isExpend={isExpended} />
               </Flex>
+            </Flex>
+            <Flex className={styles.failedMessage} justify="flex-end">
+              {apiResponse?.errorMsg === 'Submission Failed' ? (
+                <Flex className={styles.errorText} flex={0.95}>
+                  Submission Failed due to
+                  {apiResponse?.message}
+                </Flex>
+              ) : null}
             </Flex>
             <ExpendedData isExpended={isExpended} data={data} />
           </Flex>
