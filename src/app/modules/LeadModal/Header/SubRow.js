@@ -5,7 +5,7 @@ import {
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { updateClientInformation, updateSimpleColumnValue } from 'app/apis/mutation';
+import { updateClientInformation } from 'app/apis/mutation';
 import { boardNames, columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import SelectField from 'app/components/Forms/SelectField';

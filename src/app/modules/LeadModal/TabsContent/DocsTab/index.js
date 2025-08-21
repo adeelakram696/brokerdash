@@ -2,18 +2,23 @@ import {
   Flex, Card, Button, Checkbox,
   Dropdown,
   Typography,
+  Input,
 } from 'antd';
 import en from 'app/locales/en';
 import classNames from 'classnames';
 import { DownloadIcon } from 'app/images/icons';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import FileIcon from 'app/components/FileIcon';
-import { useContext, useEffect, useState } from 'react';
+import {
+  useContext, useEffect, useState, useCallback, useRef,
+} from 'react';
 import { columnIds } from 'utils/constants';
 import { LeadContext } from 'utils/contexts';
 import monday from 'utils/mondaySdk';
 import { formatBytes } from 'utils/helpers';
 import dayjs from 'dayjs';
+import { updateSimpleColumnValue } from 'app/apis/mutation';
+import { debounce } from 'lodash';
 import styles from './DocsTab.module.scss';
 import parentStyles from '../../LeadModal.module.scss';
 
@@ -39,6 +44,53 @@ function DocsTab() {
   const [downloadDocs, setDownloadDocs] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [sortingBy, setSortingBy] = useState(sortingItems[0]);
+  const [docTags, setDocTags] = useState({});
+  const docTagsRef = useRef({});
+
+  // Parse doc_tags from details and initialize state
+  useEffect(() => {
+    if (details && details[columnIds[board]?.doc_tags]) {
+      try {
+        const parsedTags = JSON.parse(details[columnIds[board].doc_tags] || '{}');
+        setDocTags(parsedTags);
+        docTagsRef.current = parsedTags;
+      } catch (e) {
+        setDocTags({});
+        docTagsRef.current = {};
+      }
+    }
+  }, [details, board]);
+
+  // Debounced function to update doc_tags in Monday.com
+  const updateDocTags = useCallback(
+    debounce(async (newTags) => {
+      try {
+        const jsonString = JSON.stringify(newTags).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        await updateSimpleColumnValue(
+          leadId,
+          boardId,
+          jsonString,
+          columnIds[board].doc_tags,
+        );
+      } catch (error) {
+        console.error('Error updating doc tags:', error);
+      }
+    }, 2000),
+    [leadId, boardId, board],
+  );
+
+  // Handle tag change for a specific document
+  const handleTagChange = (docId, value) => {
+    const newTags = { ...docTagsRef.current };
+    if (value && value.trim()) {
+      newTags[docId] = value.trim();
+    } else {
+      delete newTags[docId];
+    }
+    setDocTags(newTags);
+    docTagsRef.current = newTags;
+    updateDocTags(newTags);
+  };
 
   const uploadFile = async () => {
     await monday.execute('triggerFilesUpload', {
@@ -131,15 +183,16 @@ function DocsTab() {
           <Flex className={styles.documentList} vertical>
             <Flex vertical>
               <Flex flex={1} className={styles.headerContainer}>
-                <Flex flex={0.7}>Name</Flex>
-                <Flex flex={0.2}>Date Uploaded</Flex>
+                <Flex flex={0.5}>Name</Flex>
+                <Flex flex={0.25}>Type</Flex>
+                <Flex flex={0.15}>Date Uploaded</Flex>
                 <Flex flex={0.1}>Size</Flex>
               </Flex>
               <Flex vertical>
                 {
                   docs.assets?.map((doc) => (
                     <Flex flex={1} key={doc.id} className={styles.documentItem} align="center">
-                      <Flex flex={0.7} className={styles.documentNameContainer}>
+                      <Flex flex={0.5} className={styles.documentNameContainer}>
                         <Flex className={styles.tickBox}>
                           <Checkbox onClick={() => {
                             let docsList = [...selectedDocs, doc.id];
@@ -158,10 +211,19 @@ function DocsTab() {
                           onClick={() => { handleDocClick(doc.id); }}
                           className={styles.docName}
                         >
-                          <Text style={{ fontSize: 12 }} ellipsis>{doc.name}</Text>
+                          <Text style={{ fontSize: 12 }}>{doc.name}</Text>
                         </Flex>
                       </Flex>
-                      <Flex className={styles.fileSize} flex={0.2}>
+                      <Flex flex={0.25} style={{ paddingRight: '10px' }}>
+                        <Input
+                          placeholder="Doc Type"
+                          value={docTags[doc.id] || ''}
+                          onChange={(e) => handleTagChange(doc.id, e.target.value)}
+                          size="small"
+                          style={{ fontSize: 12 }}
+                        />
+                      </Flex>
+                      <Flex className={styles.fileSize} flex={0.15}>
                         {dayjs(doc.created_at).format('DD MMM YY')}
                       </Flex>
                       <Flex className={styles.fileSize} flex={0.1}>

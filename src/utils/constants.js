@@ -213,6 +213,7 @@ export const columnIds = {
     assginee_gci: 'numeric_mkpsr85w',
     shared_gci: 'numeric_mkps34w1',
     approval_date: 'date_15__1',
+    doc_tags: 'long_text_mkv1p6q4',
   },
   leads: {
     name: 'name',
@@ -368,6 +369,7 @@ export const columnIds = {
     approvd_application: 'button64__1',
     logic_application: 'button_1__1',
     midway_application: 'button_mknfn59g',
+    doc_tags: 'long_text_mkv1hgkc',
   },
   subItem: {
     funding_accounts: 'connect_boards5',
