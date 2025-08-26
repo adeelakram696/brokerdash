@@ -30,6 +30,7 @@ import OpenApprovalsBoard from 'app/pages/OpenApprovalsBoard';
 import TeamCommissions from 'app/pages/TeamCommissions';
 import BrokerApprovalsBoard from 'app/pages/BrokerApprovalsBoard';
 import ManagerLeaderBoard from 'app/pages/ManagerLeaderBoard';
+import BatchLeaderBoard from 'app/pages/BatchLeaderBoard';
 
 const Dashboard = lazy(() => import('./app/pages/dashboard'));
 const LeadView = lazy(() => import('app/pages/LeadView'));
@@ -89,6 +90,11 @@ function App() {
           <Route exact path="/leader-board-filter">
             <Suspense fallback={<div>Loading...</div>}>
               <LeaderBoard withFilter />
+            </Suspense>
+          </Route>
+          <Route exact path="/batch-leader-board">
+            <Suspense fallback={<div>Loading...</div>}>
+              <BatchLeaderBoard />
             </Suspense>
           </Route>
           <Route exact path="/daily-matrics">
