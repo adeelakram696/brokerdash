@@ -184,7 +184,7 @@ function DocsTab() {
             <Flex vertical>
               <Flex flex={1} className={styles.headerContainer}>
                 <Flex flex={0.5}>Name</Flex>
-                <Flex flex={0.25}>Type</Flex>
+                <Flex flex={0.25}>Doc Label</Flex>
                 <Flex flex={0.15}>Date Uploaded</Flex>
                 <Flex flex={0.1}>Size</Flex>
               </Flex>
@@ -216,7 +216,7 @@ function DocsTab() {
                       </Flex>
                       <Flex flex={0.25} style={{ paddingRight: '10px' }}>
                         <Input
-                          placeholder="Doc Type"
+                          placeholder="e.g. May 2025 Statement x1234"
                           value={docTags[doc.id] || ''}
                           onChange={(e) => handleTagChange(doc.id, e.target.value)}
                           size="small"

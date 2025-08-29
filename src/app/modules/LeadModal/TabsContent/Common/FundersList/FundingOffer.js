@@ -22,7 +22,6 @@ function FundingOffer({
     (item) => (item.value === data[columnIds.subItem.product_type]),
   );
   const apiResponse = safeJsonParse(data[columnIds.subItem.api_submission_response]);
-  console.log(apiResponse);
   return (
     <Flex style={{ marginBottom: 10, paddingRight: 10 }}>
       <Flex style={{ background: typeColor?.color }} className={styles.dndContainer} vertical justify="space-between">
@@ -30,7 +29,7 @@ function FundingOffer({
         <Flex style={{ color: typeColor.fontColor || '#FFF' }} className={styles.typeText}>{data[columnIds.subItem.product_type] || '-'}</Flex>
         <Flex className={styles.draggingIconEnd}><DragingIcon color={typeColor.color2} /></Flex>
       </Flex>
-      <Flex className={classNames(styles.contentContainer, { [styles.failed]: apiResponse?.errorMsg === 'Submission Failed' })}>
+      <Flex className={classNames(styles.contentContainer, { [styles.failed]: apiResponse?.errorMsg === 'Submission Failed' || apiResponse?.errorMsg === 'Validation Failed' })} flex={1} vertical>
         <Flex vertical flex={1}>
           <DataRow
             data={data}
@@ -51,6 +50,14 @@ function FundingOffer({
                 <Flex className={styles.errorText} flex={0.95}>
                   Submission Failed due to
                   {apiResponse?.message}
+                </Flex>
+              ) : null}
+              {apiResponse?.errorMsg === 'Validation Failed' ? (
+                <Flex className={styles.errorText} flex={0.95}>
+                  Submission Failed due to
+                  {' '}
+                  {' '}
+                  {apiResponse?.validationErrors.map((err) => `${err.message} ,`)}
                 </Flex>
               ) : null}
             </Flex>
