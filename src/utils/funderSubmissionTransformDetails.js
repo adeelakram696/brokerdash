@@ -4,6 +4,7 @@ import {
 import { decodeJson } from './encrypt';
 import { CFGMSSubmissionPayload } from './funderTransforms/CFGMS';
 import { OnDeckSubmissionPayload } from './funderTransforms/OnDeck';
+import { ExpansionECGSubmissionPayload } from './funderTransforms/ExpansionECG';
 
 export const transformDealDetails = (item) => {
   const qmDataEncoded = item.column_values.find(
@@ -98,6 +99,7 @@ export const transformDealDetails = (item) => {
 const submissionTranformFunctions = {
   OnDeckSubmissionPayload,
   CFGMSSubmissionPayload,
+  ExpansionECGSubmissionPayload,
 };
 
 export const transformIntoSubmission = (item, funder) => {

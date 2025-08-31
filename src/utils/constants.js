@@ -893,6 +893,7 @@ export const legendColors = [
 export const submissionFunders = {
   onDeck: 'OnDeck',
   cfgms: 'CFGMS',
+  // expansionECG: 'ExpansionECG',
 };
 
 export const allowedFunders = [
@@ -901,6 +902,7 @@ export const allowedFunders = [
   6765205008,
   // 6765205031,
   6765204931,
+  // 6765204998, // Expansion / ECG
 ];
 
 export const fundersServices = {
@@ -909,6 +911,7 @@ export const fundersServices = {
   // 6765205031: submissionFunders.onDeck, // ONDECK canada
   6976521906: submissionFunders.cfgms, // API TEST
   6765204931: submissionFunders.cfgms, // CFGMS
+  // 6765204998: submissionFunders.expansionECG, // Expansion / ECG
 };
 
 export const entityMapping = {

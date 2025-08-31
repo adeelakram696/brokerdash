@@ -1,5 +1,6 @@
 import { onDeckSchema } from 'app/schemas/onDeckSchema';
 import CFGMSchema from 'app/schemas/CFGMSSchema';
+import { expansionECGSchema } from 'app/schemas/expansionECGSchema';
 import {
   allowedFunders, columnIds, env, fundersServices,
 } from './constants';
@@ -114,9 +115,38 @@ const CFGMSPayloadValidation = async (payload) => {
   }
 };
 
+const ExpansionECGPayloadValidation = async (payload) => {
+  try {
+    await expansionECGSchema.validate(payload, { abortEarly: false });
+    return null;
+  } catch (err) {
+    let validationErrors = [];
+    if (err.inner) {
+      validationErrors = err.inner.map((e) => ({
+        value: e.value,
+        path: e.path,
+        message: e.message,
+      }));
+    }
+    const combinedErrors = validationErrors.reduce((acc, curr) => {
+      const { path, message, value } = curr;
+
+      if (!acc[path]) {
+        acc[path] = { path, value, messages: [] };
+      }
+
+      acc[path].messages.push(message);
+
+      return acc;
+    }, {});
+    return Object.values(combinedErrors);
+  }
+};
+
 const validateBeforeSubmissionFunc = {
   OnDeckPayloadValidation,
   CFGMSPayloadValidation,
+  ExpansionECGPayloadValidation,
 };
 export const validateBeforeSubmission = async (item, funder) => {
   const functionName = `${funder}PayloadValidation`;

@@ -438,7 +438,7 @@ export function cutStringAfterLimit(text, limit) {
 }
 
 export function formatDate(date, format) {
-  const formattedDate = dayjs(date, ['YYYY-MM-DD', 'YYYY/MM/DD', 'DD-MM-YYYY', 'MM/DD/YYYY', 'MM-DD-YYYY', 'MM/DD/YYYY', 'M-D-YYYY', 'M/D/YYYY', 'M-D-YY', 'M/D/YY'], true);
+  const formattedDate = dayjs(date, ['YYYY-MM-DD', 'YYYY/MM/DD', 'DD-MM-YYYY', 'MM/DD/YYYY', 'MM-DD-YYYY', 'MM/DD/YYYY', 'DD/MM/YYYY', 'M-D-YYYY', 'M/D/YYYY', 'M-D-YY', 'M/D/YY'], true);
   return formattedDate.isValid() ? formattedDate.format(format) : '';
 }
 
@@ -465,7 +465,6 @@ export function safeJsonParse(input) {
   try {
     return JSON.parse(input);
   } catch (error) {
-    console.error('Invalid JSON string:', error);
     return null; // Return null or a fallback value
   }
 }
